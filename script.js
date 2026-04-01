@@ -107,7 +107,13 @@ window.addEventListener('scroll', () => {
   }
 });
 
-// Custom icon cursor — rotates icon + color every 10 seconds
+// Custom icon cursor — rotates icon + color every 5 seconds
+// Skip on Living Traces page
+if (document.body.dataset.page === 'living-traces') {
+  document.body.style.cursor = 'auto';
+  document.documentElement.style.setProperty('--custom-cursor', 'auto');
+}
+if (document.body.dataset.page !== 'living-traces')
 (function() {
   const totalIcons = 13;
   const brandColors = ['#2490cf', '#f8e166', '#9dd3b2', '#e7e2de', '#675d52', '#1a1413'];
