@@ -14,7 +14,7 @@ if (heroSlides.length > 0) {
     heroSlides[slideIndex].classList.remove('active');
     slideIndex = (slideIndex + 1) % heroSlides.length;
     heroSlides[slideIndex].classList.add('active');
-  }, 6000);
+  }, 5000);
 }
 
 // Scroll fade-in animations

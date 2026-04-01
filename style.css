@@ -215,6 +215,21 @@ img { max-width: 100%; display: block; }
   opacity: 1;
 }
 
+/* Per-slide adjustments */
+.hero-slide-1 {
+  background-position: 75% center;
+  background-size: cover;
+}
+
+.hero-slide-3 {
+  background-position: 70% center;
+  background-size: cover;
+}
+
+.hero-slide-5 {
+  transform: scaleX(-1);
+}
+
 .hero-overlay {
   position: absolute;
   inset: 0;
