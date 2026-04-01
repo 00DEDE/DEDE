@@ -103,7 +103,7 @@
 
   <script src="script.js"></script>
   <script>
-    // Cursor fragment trail — noisy dissolving particles
+    // Cursor dot particle trail — scattered grain like macro poster
     (function() {
       const canvas = document.createElement('canvas');
       canvas.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;';
@@ -117,12 +117,7 @@
       resize();
       window.addEventListener('resize', resize);
 
-      const fragments = [];
-      const BASE_SIZE = 14;
-      let breathTime = 0;
-      let dist = 0;
-      let lastX = -1, lastY = -1;
-      let mouseX = -100, mouseY = -100;
+      const dots = [];
 
       // Click to reveal cursor position
       var clickMarker = null;
@@ -132,113 +127,60 @@
 
       document.addEventListener('mousemove', function(e) {
         var mx = e.clientX, my = e.clientY;
-        mouseX = mx;
-        mouseY = my;
 
-        if (lastX >= 0) {
-          var dx = mx - lastX, dy = my - lastY;
-          dist += Math.sqrt(dx * dx + dy * dy);
-        }
-        lastX = mx;
-        lastY = my;
+        // Spawn a burst of dots every move event
+        var count = 8 + Math.floor(Math.random() * 8);
+        for (var i = 0; i < count; i++) {
+          var angle = Math.random() * Math.PI * 2;
+          var spread = Math.random() * 60;
+          var r = 0.5 + Math.random() * 2.5;
 
-        if (dist < 20 + Math.random() * 15) return;
-        dist = 0;
-
-        // Spawn main fragment
-        var roll = Math.random();
-        var type;
-        if (roll < 0.45) type = 'circle';
-        else if (roll < 0.72) type = 'L';
-        else type = 'T';
-
-        var angle = Math.random() * Math.PI * 2;
-        var spread = 12 + Math.random() * 30;
-
-        fragments.push({
-          x: mx + Math.cos(angle) * spread,
-          y: my + Math.sin(angle) * spread,
-          type: type,
-          life: 1,
-          decay: 0.018 + Math.random() * 0.014,
-          phase: Math.random() * Math.PI * 2,
-          noiseX: (Math.random() - 0.5) * 1.5,
-          noiseY: (Math.random() - 0.5) * 1.5
-        });
-
-        // Spawn extra tiny noise particles that break away
-        var extras = 2 + Math.floor(Math.random() * 4);
-        for (var i = 0; i < extras; i++) {
-          var a2 = Math.random() * Math.PI * 2;
-          var s2 = 8 + Math.random() * 40;
-          fragments.push({
-            x: mx + Math.cos(a2) * s2,
-            y: my + Math.sin(a2) * s2,
-            type: 'dot',
-            life: 0.6 + Math.random() * 0.4,
-            decay: 0.03 + Math.random() * 0.03,
-            phase: Math.random() * Math.PI * 2,
-            noiseX: (Math.random() - 0.5) * 3,
-            noiseY: (Math.random() - 0.5) * 3
+          dots.push({
+            x: mx + Math.cos(angle) * spread,
+            y: my + Math.sin(angle) * spread,
+            r: r,
+            life: 1,
+            decay: 0.02 + Math.random() * 0.025,
+            driftX: (Math.random() - 0.5) * 2,
+            driftY: (Math.random() - 0.5) * 2
           });
         }
       });
 
       function loop() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        breathTime += 0.02;
+        ctx.fillStyle = '#fff';
 
-        for (var i = fragments.length - 1; i >= 0; i--) {
-          var f = fragments[i];
-          f.life -= f.decay;
+        for (var i = dots.length - 1; i >= 0; i--) {
+          var d = dots[i];
+          d.life -= d.decay;
 
-          if (f.life <= 0) {
-            fragments.splice(i, 1);
+          if (d.life <= 0) {
+            dots.splice(i, 1);
             continue;
           }
 
-          // Noisy drift — jitter every frame
-          f.x += f.noiseX + (Math.random() - 0.5) * 1.2;
-          f.y += f.noiseY + (Math.random() - 0.5) * 1.2;
+          // Jittery drift
+          d.x += d.driftX + (Math.random() - 0.5) * 1.5;
+          d.y += d.driftY + (Math.random() - 0.5) * 1.5;
 
-          ctx.globalAlpha = f.life * 0.6;
-          ctx.fillStyle = '#fff';
-
-          if (f.type === 'dot') {
-            // Tiny breaking-apart particles
-            var dotSize = 1.5 + Math.random() * 2;
-            ctx.beginPath();
-            ctx.arc(f.x, f.y, dotSize, 0, Math.PI * 2);
-            ctx.fill();
-          } else if (f.type === 'circle') {
-            var breathScale = 1 + 0.2 * Math.sin(breathTime * 2 + f.phase);
-            var size = BASE_SIZE * breathScale;
-            ctx.beginPath();
-            ctx.arc(f.x, f.y, size / 2, 0, Math.PI * 2);
-            ctx.fill();
-          } else {
-            var breathScale2 = 1 + 0.2 * Math.sin(breathTime * 2 + f.phase);
-            var size2 = BASE_SIZE * breathScale2;
-            ctx.font = size2 + 'px ABCMonumentGroteskMono, monospace';
-            ctx.textBaseline = 'middle';
-            ctx.textAlign = 'center';
-            ctx.fillText(f.type, f.x, f.y);
-          }
+          ctx.globalAlpha = d.life;
+          ctx.beginPath();
+          ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+          ctx.fill();
         }
 
-        // Click marker — crosshair flash to show cursor position
+        // Click marker — crosshair to locate cursor
         if (clickMarker) {
           clickMarker.life -= 0.03;
           if (clickMarker.life <= 0) {
             clickMarker = null;
           } else {
             var cx = clickMarker.x, cy = clickMarker.y;
-            var a = clickMarker.life;
-            ctx.globalAlpha = a * 0.8;
+            ctx.globalAlpha = clickMarker.life;
             ctx.strokeStyle = '#fff';
             ctx.lineWidth = 1;
-            // Crosshair
-            var arm = 12 + (1 - a) * 8;
+            var arm = 14;
             ctx.beginPath();
             ctx.moveTo(cx - arm, cy);
             ctx.lineTo(cx - 4, cy);
@@ -249,11 +191,6 @@
             ctx.moveTo(cx, cy + 4);
             ctx.lineTo(cx, cy + arm);
             ctx.stroke();
-            // Center dot
-            ctx.fillStyle = '#fff';
-            ctx.beginPath();
-            ctx.arc(cx, cy, 2, 0, Math.PI * 2);
-            ctx.fill();
           }
         }
 
