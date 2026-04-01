@@ -124,17 +124,26 @@
       const dotOffsets = [];
       for (var i = 0; i < NUM_DOTS; i++) {
         var a = Math.random() * Math.PI * 2;
-        var r = Math.sqrt(Math.random()) * RADIUS;
+        // Allow some dots to spill outside — use a wider random range
+        var r = Math.sqrt(Math.random()) * RADIUS * (0.8 + Math.random() * 0.5);
         dotOffsets.push({
           baseX: Math.cos(a) * r,
           baseY: Math.sin(a) * r,
-          dist: r,
-          angle: a
+          // Per-dot wander speed and phase
+          wanderPhase: Math.random() * Math.PI * 2,
+          wanderSpeed: 0.3 + Math.random() * 0.7,
+          wanderAmt: 1.5 + Math.random() * 3
         });
       }
 
       var mouseX = -200, mouseY = -200;
       var time = 0;
+
+      // Organic breathing — layered sine waves at different speeds
+      var breathTarget = 1;
+      var breathCurrent = 1;
+      var breathTimer = 0;
+      var breathInterval = 60 + Math.random() * 80;
 
       document.addEventListener('mousemove', function(e) {
         mouseX = e.clientX;
@@ -151,20 +160,26 @@
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         time += 0.03;
 
-        // Breathing scale — ease in/out for organic feel
-        var t = (Math.sin(time) + 1) / 2; // 0 to 1
-        // Cubic ease in-out
-        var eased = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-        var breath = 1 + 0.12 * (eased * 2 - 1);
+        // Random breathing — pick a new target scale at random intervals
+        breathTimer++;
+        if (breathTimer >= breathInterval) {
+          breathTimer = 0;
+          breathInterval = 40 + Math.random() * 100;
+          breathTarget = 0.88 + Math.random() * 0.28; // range 0.88 to 1.16
+        }
+        // Smooth lerp toward target
+        breathCurrent += (breathTarget - breathCurrent) * 0.02;
 
         ctx.fillStyle = '#fff';
         ctx.globalAlpha = 1;
 
         for (var i = 0; i < NUM_DOTS; i++) {
           var d = dotOffsets[i];
-          var scale = breath;
-          var x = mouseX + d.baseX * scale;
-          var y = mouseY + d.baseY * scale;
+          // Per-dot wander — each dot drifts slightly on its own
+          var wx = Math.sin(time * d.wanderSpeed + d.wanderPhase) * d.wanderAmt;
+          var wy = Math.cos(time * d.wanderSpeed * 0.8 + d.wanderPhase + 1.5) * d.wanderAmt;
+          var x = mouseX + d.baseX * breathCurrent + wx;
+          var y = mouseY + d.baseY * breathCurrent + wy;
 
           ctx.beginPath();
           ctx.arc(x, y, DOT_R, 0, Math.PI * 2);
