@@ -137,7 +137,9 @@
       }
 
       var mouseX = -200, mouseY = -200;
+      var prevMouseX = -200, prevMouseY = -200;
       var time = 0;
+      var trails = []; // dots that have shed off
 
       // Organic breathing — layered sine waves at different speeds
       var breathTarget = 1;
@@ -146,8 +148,31 @@
       var breathInterval = 60 + Math.random() * 80;
 
       document.addEventListener('mousemove', function(e) {
+        prevMouseX = mouseX;
+        prevMouseY = mouseY;
         mouseX = e.clientX;
         mouseY = e.clientY;
+
+        // Shed a few dots as trails based on movement speed
+        var dx = mouseX - prevMouseX, dy = mouseY - prevMouseY;
+        var speed = Math.sqrt(dx * dx + dy * dy);
+        if (speed > 2) {
+          var count = Math.min(Math.floor(speed / 4), 6);
+          for (var i = 0; i < count; i++) {
+            var pick = Math.floor(Math.random() * NUM_DOTS);
+            var d = dotOffsets[pick];
+            var wx = Math.sin(time * d.wanderSpeed + d.wanderPhase) * d.wanderAmt;
+            var wy = Math.cos(time * d.wanderSpeed * 0.8 + d.wanderPhase + 1.5) * d.wanderAmt;
+            trails.push({
+              x: prevMouseX + d.baseX * breathCurrent + wx,
+              y: prevMouseY + d.baseY * breathCurrent + wy,
+              life: 0.6 + Math.random() * 0.4,
+              decay: 0.008 + Math.random() * 0.012,
+              driftX: (Math.random() - 0.5) * 0.5,
+              driftY: (Math.random() - 0.5) * 0.5
+            });
+          }
+        }
       });
 
       // Click crosshair
@@ -183,6 +208,22 @@
 
           ctx.beginPath();
           ctx.arc(x, y, DOT_R, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // Render trailing dots that shed off
+        for (var j = trails.length - 1; j >= 0; j--) {
+          var tr = trails[j];
+          tr.life -= tr.decay;
+          if (tr.life <= 0) {
+            trails.splice(j, 1);
+            continue;
+          }
+          tr.x += tr.driftX;
+          tr.y += tr.driftY;
+          ctx.globalAlpha = tr.life;
+          ctx.beginPath();
+          ctx.arc(tr.x, tr.y, DOT_R, 0, Math.PI * 2);
           ctx.fill();
         }
 
