@@ -93,6 +93,15 @@ body {
   100% { background-position: 100% 100%; }
 }
 
+/* Custom cursor applied via JS */
+:root {
+  --custom-cursor: auto;
+}
+
+*, *::before, *::after {
+  cursor: var(--custom-cursor) !important;
+}
+
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
   font-weight: 500;

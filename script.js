@@ -106,3 +106,46 @@ window.addEventListener('scroll', () => {
     header.style.boxShadow = 'none';
   }
 });
+
+// Custom icon cursor — rotates icon + color every 10 seconds
+(function() {
+  const totalIcons = 13;
+  const brandColors = ['#2490cf', '#f8e166', '#9dd3b2', '#e7e2de', '#675d52', '#1a1413'];
+  const cachedSVGs = [];
+  let cursorIndex = 0;
+  let colorIndex = 0;
+
+  // Fetch all cursor SVGs at startup
+  const fetches = [];
+  for (let i = 1; i <= totalIcons; i++) {
+    fetches.push(
+      fetch('cursors/icon-' + i + '.svg')
+        .then(r => r.text())
+        .then(svg => { cachedSVGs[i - 1] = svg; })
+    );
+  }
+
+  function applyCursor(iconIdx, clrIdx) {
+    const svg = cachedSVGs[iconIdx];
+    if (!svg) return;
+    const color = brandColors[clrIdx];
+    // Replace the fill color in the SVG style
+    const colored = svg.replace(/fill:\s*#[0-9a-fA-F]{6}/, 'fill: ' + color);
+    const encoded = 'data:image/svg+xml,' + encodeURIComponent(colored);
+    document.body.style.cursor = 'url("' + encoded + '") 12 12, auto';
+    // Also apply to all interactive elements
+    document.documentElement.style.setProperty('--custom-cursor', 'url("' + encoded + '") 12 12, auto');
+  }
+
+  Promise.all(fetches).then(function() {
+    // Apply first cursor immediately
+    applyCursor(cursorIndex, colorIndex);
+
+    // Rotate every 10 seconds
+    setInterval(function() {
+      cursorIndex = (cursorIndex + 1) % totalIcons;
+      colorIndex = (colorIndex + 1) % brandColors.length;
+      applyCursor(cursorIndex, colorIndex);
+    }, 10000);
+  });
+})();
