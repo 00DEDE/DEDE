@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Living Traces</title>
+  <title>Living Traces — Home</title>
   <link rel="stylesheet" href="style.css">
   <style>
     @font-face {
@@ -12,117 +12,99 @@
       font-weight: 400;
       font-style: normal;
     }
-    body {
-      background: #000;
-      cursor: none !important;
-      margin: 0;
-      overflow: hidden;
-    }
+    body { background: #000; cursor: none !important; }
     body * { cursor: none !important; }
-
-    /* Full-bleed logo */
-    .intro-logo {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100vw;
-      z-index: 50;
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      transition: none;
-    }
-    .intro-logo img {
-      width: 100vw;
-      height: auto;
-      display: block;
-    }
-
-    /* Circle container */
-    .circle-wrap {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      opacity: 0;
-      transition: opacity 1.5s ease;
-    }
-    .circle-wrap.visible {
-      opacity: 1;
-    }
-
-    /* Bottom prompt */
-    .prompt {
-      position: fixed;
-      bottom: 40px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-family: 'ABCMonumentGroteskMono', monospace;
-      font-size: 0.75rem;
-      letter-spacing: 0.08em;
-      color: #fff;
-      opacity: 0;
-      transition: opacity 1.5s ease;
-      text-transform: uppercase;
-      user-select: none;
-      pointer-events: none;
-    }
-    .prompt.visible {
-      opacity: 0.5;
+    .logo-img { transform: scale(2); transform-origin: left center; }
+    .footer-logo-link {
+      -webkit-mask-image: url('MICRO/MICRO_LOGO.svg');
+      mask-image: url('MICRO/MICRO_LOGO.svg');
     }
   </style>
 </head>
 <body data-page="living-traces">
 
-  <!-- Full-bleed logo at bottom -->
-  <div class="intro-logo" id="intro-logo">
-    <img src="MICRO/MICRO_LOGO.svg" alt="Living Traces">
-  </div>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-inner">
+      <a href="living-traces-home.html" class="logo">
+        <img src="MICRO/MICRO_LOGO.svg" alt="Living Traces" class="logo-img">
+      </a>
+      <nav class="nav">
+        <button class="menu-toggle" aria-label="Toggle menu">
+          <span></span><span></span><span></span>
+        </button>
+        <ul class="nav-links">
+          <li><a href="index.html">Our Work</a></li>
+          <li><a href="index.html">Our Four Worlds</a></li>
+          <li><a href="index.html">UNESCO</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="uncover.html">Uncover</a></li>
+          <li>
+            <button class="nav-search" aria-label="Search">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </button>
+          </li>
+          <li><a href="#" class="btn-nav">Become Involved</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
 
-  <!-- Circle -->
-  <div class="circle-wrap" id="circle-wrap">
+  <main style="margin-top: 70px; min-height: calc(100vh - 70px); display: flex; align-items: center; justify-content: center;">
     <canvas id="poster-circle"></canvas>
-  </div>
+  </main>
 
-  <!-- Prompt -->
-  <div class="prompt" id="prompt">complete the ellipse</div>
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-top">
+      <div class="footer-logo">
+        <a href="#" class="footer-logo-link" aria-label="Back to top"></a>
+      </div>
+
+      <div class="footer-columns">
+        <div class="footer-col">
+          <h4>About UNESCO</h4>
+          <ul>
+            <li><a href="#">Our Mission</a></li>
+            <li><a href="#">Who We Are</a></li>
+            <li><a href="#">Where We Work</a></li>
+            <li><a href="#">Partnerships</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Our Work</h4>
+          <ul>
+            <li><a href="#">Monuments</a></li>
+            <li><a href="#">Natural Sciences</a></li>
+            <li><a href="#">Intangible Heritage</a></li>
+            <li><a href="#">Languages</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <ul>
+            <li><a href="#">Publications</a></li>
+            <li><a href="#">Multimedia</a></li>
+            <li><a href="#">News &amp; Events</a></li>
+            <li><a href="index.html" class="footer-highlight">UNESCO</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-tagline">
+        <span>Safeguard<br>Humanity's<br>Inheritance</span>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Use</a>
+      <a href="#">Contact Us</a>
+    </div>
+  </footer>
 
   <script>
-    // ---- INTRO ANIMATION ----
-    (function() {
-      var logo = document.getElementById('intro-logo');
-      var circleWrap = document.getElementById('circle-wrap');
-      var prompt = document.getElementById('prompt');
-      var phase = 0; // 0 = full bleed, 1 = shrinking, 2 = done
-
-      // Phase 0: Logo sits full-bleed for 1.5s, then starts shrinking
-      setTimeout(function() {
-        phase = 1;
-        // Animate logo: shrink and move to top center
-        logo.style.transition = 'all 2s cubic-bezier(0.4, 0, 0.2, 1)';
-        logo.style.bottom = 'auto';
-        logo.style.top = '30px';
-        logo.style.left = '50%';
-        logo.style.transform = 'translateX(-50%)';
-        logo.style.width = 'auto';
-
-        var logoImg = logo.querySelector('img');
-        logoImg.style.transition = 'all 2s cubic-bezier(0.4, 0, 0.2, 1)';
-        logoImg.style.width = '180px';
-
-        // Show circle and prompt after logo starts moving
-        setTimeout(function() {
-          circleWrap.classList.add('visible');
-        }, 800);
-
-        setTimeout(function() {
-          prompt.classList.add('visible');
-          phase = 2;
-        }, 1800);
-      }, 1500);
-    })();
-
-    // ---- CONCENTRIC DOT CIRCLE ----
+    // Concentric dot circle — vinyl/fingerprint pattern with breathing
     (function() {
       var canvas = document.getElementById('poster-circle');
       var ctx = canvas.getContext('2d');
@@ -220,25 +202,11 @@
         requestAnimationFrame(loop);
       }
       loop();
-
-      // ---- CLICK INSIDE CENTER HOLE → navigate ----
-      canvas.style.cursor = 'none';
-      canvas.addEventListener('click', function(e) {
-        var rect = canvas.getBoundingClientRect();
-        // Click position relative to canvas center (in CSS pixels)
-        var clickX = e.clientX - rect.left - rect.width / 2;
-        var clickY = e.clientY - rect.top - rect.height / 2;
-        var dist = Math.sqrt(clickX * clickX + clickY * clickY);
-        // Center hole visual radius = 50 canvas px / 2 (retina) = 25 CSS px
-        if (dist <= 25) {
-          window.location.href = 'living-traces-home.html';
-        }
-      });
     })();
   </script>
   <script src="script.js"></script>
   <script>
-    // ---- CURSOR — mini concentric ring disc ----
+    // Cursor — mini concentric ring disc
     (function() {
       const canvas = document.createElement('canvas');
       canvas.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;';
@@ -281,10 +249,23 @@
       var breathCurrent = 1;
       var breathTimer = 0;
       var breathInterval = 60 + Math.random() * 60;
+      var cursorColor = '#fff';
 
       document.addEventListener('mousemove', function(e) {
         mouseX = e.clientX;
         mouseY = e.clientY;
+
+        canvas.style.display = 'none';
+        var el = document.elementFromPoint(mouseX, mouseY);
+        canvas.style.display = '';
+        if (el) {
+          var bg = getComputedStyle(el).backgroundColor;
+          var match = bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+          if (match) {
+            var lum = (parseInt(match[1]) + parseInt(match[2]) + parseInt(match[3])) / 3;
+            cursorColor = lum > 180 ? '#000' : '#fff';
+          }
+        }
       });
 
       var clickMarker = null;
@@ -304,7 +285,7 @@
         }
         breathCurrent += (breathTarget - breathCurrent) * 0.015;
 
-        ctx.fillStyle = '#fff';
+        ctx.fillStyle = cursorColor;
         ctx.globalAlpha = 1;
 
         var pulseWave = time * 0.5;
@@ -334,7 +315,7 @@
           } else {
             var cx = clickMarker.x, cy = clickMarker.y;
             ctx.globalAlpha = clickMarker.life;
-            ctx.strokeStyle = '#fff';
+            ctx.strokeStyle = cursorColor;
             ctx.lineWidth = 1;
             var arm = 14;
             ctx.beginPath();
