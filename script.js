@@ -132,9 +132,9 @@ window.addEventListener('scroll', () => {
     // Replace the fill color in the SVG style
     const colored = svg.replace(/fill:\s*#[0-9a-fA-F]{6}/, 'fill: ' + color);
     const encoded = 'data:image/svg+xml,' + encodeURIComponent(colored);
-    document.body.style.cursor = 'url("' + encoded + '") 12 12, auto';
+    document.body.style.cursor = 'url("' + encoded + '") 24 24, auto';
     // Also apply to all interactive elements
-    document.documentElement.style.setProperty('--custom-cursor', 'url("' + encoded + '") 12 12, auto');
+    document.documentElement.style.setProperty('--custom-cursor', 'url("' + encoded + '") 24 24, auto');
   }
 
   Promise.all(fetches).then(function() {
@@ -146,6 +146,6 @@ window.addEventListener('scroll', () => {
       cursorIndex = (cursorIndex + 1) % totalIcons;
       colorIndex = (colorIndex + 1) % brandColors.length;
       applyCursor(cursorIndex, colorIndex);
-    }, 10000);
+    }, 5000);
   });
 })();
