@@ -12,8 +12,7 @@
       font-weight: 400;
       font-style: normal;
     }
-    body { background: #000; cursor: none !important; }
-    body * { cursor: none !important; }
+    body { background: #000; }
     .footer-logo-link {
       -webkit-mask-image: url('MICRO/MICRO_LOGO.svg');
       mask-image: url('MICRO/MICRO_LOGO.svg');
@@ -102,7 +101,7 @@
 
   <script src="script.js"></script>
   <script>
-    // Cursor fragment trail — small squares + L/T letters
+    // Cursor fragment trail — blurry dissolving circles + L/T letters
     (function() {
       const canvas = document.createElement('canvas');
       canvas.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;';
@@ -117,7 +116,7 @@
       window.addEventListener('resize', resize);
 
       const fragments = [];
-      const BASE_SIZE = 18;
+      const BASE_SIZE = 16;
       let breathTime = 0;
       let dist = 0;
       let lastX = -1, lastY = -1;
@@ -125,7 +124,6 @@
       document.addEventListener('mousemove', function(e) {
         var mx = e.clientX, my = e.clientY;
 
-        // Accumulate distance traveled
         if (lastX >= 0) {
           var dx = mx - lastX, dy = my - lastY;
           dist += Math.sqrt(dx * dx + dy * dy);
@@ -133,19 +131,17 @@
         lastX = mx;
         lastY = my;
 
-        // Only spawn when cursor has moved enough distance apart
-        if (dist < 30 + Math.random() * 20) return;
+        if (dist < 25 + Math.random() * 20) return;
         dist = 0;
 
         var roll = Math.random();
         var type;
-        if (roll < 0.5) type = 'square';
+        if (roll < 0.5) type = 'circle';
         else if (roll < 0.75) type = 'L';
         else type = 'T';
 
-        // Scatter further from cursor for a loose tail feel
         var angle = Math.random() * Math.PI * 2;
-        var spread = 20 + Math.random() * 30;
+        var spread = 15 + Math.random() * 35;
 
         fragments.push({
           x: mx + Math.cos(angle) * spread,
@@ -153,7 +149,10 @@
           type: type,
           life: 1,
           decay: 0.015 + Math.random() * 0.012,
-          phase: Math.random() * Math.PI * 2
+          phase: Math.random() * Math.PI * 2,
+          noiseX: (Math.random() - 0.5) * 0.8,
+          noiseY: (Math.random() - 0.5) * 0.8,
+          blur: 2 + Math.random() * 4
         });
       });
 
@@ -170,15 +169,23 @@
             continue;
           }
 
-          // Breathing scale: subtle oscillation between 0.8 and 1.2
+          // Drift with noise
+          f.x += f.noiseX;
+          f.y += f.noiseY;
+
           var breathScale = 1 + 0.2 * Math.sin(breathTime * 2 + f.phase);
           var size = BASE_SIZE * breathScale;
 
-          ctx.globalAlpha = f.life * 0.7;
+          // Increase blur as life fades
+          var blurAmount = f.blur + (1 - f.life) * 6;
+          ctx.filter = 'blur(' + blurAmount + 'px)';
+          ctx.globalAlpha = f.life * 0.5;
           ctx.fillStyle = '#fff';
 
-          if (f.type === 'square') {
-            ctx.fillRect(f.x - size / 2, f.y - size / 2, size, size);
+          if (f.type === 'circle') {
+            ctx.beginPath();
+            ctx.arc(f.x, f.y, size / 2, 0, Math.PI * 2);
+            ctx.fill();
           } else {
             ctx.font = size + 'px ABCMonumentGroteskMono, monospace';
             ctx.textBaseline = 'middle';
@@ -187,6 +194,7 @@
           }
         }
 
+        ctx.filter = 'none';
         ctx.globalAlpha = 1;
         requestAnimationFrame(loop);
       }
