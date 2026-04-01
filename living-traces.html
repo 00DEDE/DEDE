@@ -118,12 +118,24 @@
 
       const fragments = [];
       const BASE_SIZE = 18;
-      let spawnCounter = 0;
       let breathTime = 0;
+      let dist = 0;
+      let lastX = -1, lastY = -1;
 
       document.addEventListener('mousemove', function(e) {
-        spawnCounter++;
-        if (spawnCounter % 3 !== 0) return;
+        var mx = e.clientX, my = e.clientY;
+
+        // Accumulate distance traveled
+        if (lastX >= 0) {
+          var dx = mx - lastX, dy = my - lastY;
+          dist += Math.sqrt(dx * dx + dy * dy);
+        }
+        lastX = mx;
+        lastY = my;
+
+        // Only spawn when cursor has moved enough distance apart
+        if (dist < 30 + Math.random() * 20) return;
+        dist = 0;
 
         var roll = Math.random();
         var type;
@@ -131,12 +143,16 @@
         else if (roll < 0.75) type = 'L';
         else type = 'T';
 
+        // Scatter further from cursor for a loose tail feel
+        var angle = Math.random() * Math.PI * 2;
+        var spread = 20 + Math.random() * 30;
+
         fragments.push({
-          x: e.clientX + (Math.random() - 0.5) * 10,
-          y: e.clientY + (Math.random() - 0.5) * 10,
+          x: mx + Math.cos(angle) * spread,
+          y: my + Math.sin(angle) * spread,
           type: type,
           life: 1,
-          decay: 0.02 + Math.random() * 0.015,
+          decay: 0.015 + Math.random() * 0.012,
           phase: Math.random() * Math.PI * 2
         });
       });
