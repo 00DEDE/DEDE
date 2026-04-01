@@ -190,14 +190,35 @@ img { max-width: 100%; display: block; }
   min-height: 90vh;
   display: flex;
   align-items: center;
-  background: url('https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=1600&h=900&fit=crop') center/cover no-repeat;
   padding: 0 2rem;
   margin-top: 70px;
+  overflow: hidden;
+}
+
+/* Slideshow */
+.hero-slideshow {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.hero-slide {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 1.5s ease;
+}
+
+.hero-slide.active {
+  opacity: 1;
 }
 
 .hero-overlay {
   position: absolute;
   inset: 0;
+  z-index: 1;
   background: linear-gradient(
     to right,
     rgba(0,0,0,0.55) 0%,
@@ -205,8 +226,6 @@ img { max-width: 100%; display: block; }
     rgba(0,0,0,0.05) 100%
   );
 }
-
-/* Mosaic decoration on the right side */
 .hero-content {
   position: relative;
   z-index: 2;

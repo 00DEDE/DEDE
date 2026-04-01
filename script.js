@@ -6,6 +6,17 @@ menuToggle.addEventListener('click', () => {
   navLinks.classList.toggle('open');
 });
 
+// Hero slideshow
+const heroSlides = document.querySelectorAll('.hero-slide');
+if (heroSlides.length > 0) {
+  let slideIndex = 0;
+  setInterval(() => {
+    heroSlides[slideIndex].classList.remove('active');
+    slideIndex = (slideIndex + 1) % heroSlides.length;
+    heroSlides[slideIndex].classList.add('active');
+  }, 6000);
+}
+
 // Scroll fade-in animations
 const observerOptions = {
   threshold: 0.15,
