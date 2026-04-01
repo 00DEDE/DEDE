@@ -578,23 +578,24 @@ img { max-width: 100%; display: block; }
   max-width: var(--max-width);
   margin: 0 auto;
   display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: start;
-  gap: 4rem;
+  grid-template-columns: 1.2fr 2fr 1fr;
+  gap: 3rem;
   padding-bottom: 3rem;
 }
 
 .footer-logo {
   display: flex;
+  align-self: stretch;
 }
 
 .footer-logo-link {
   display: block;
-  width: 140px;
-  height: 140px;
+  width: 100%;
+  aspect-ratio: 2 / 1;
+  height: 100%;
   background-color: #2491d0;
-  -webkit-mask: url('UNESCO_BRAND LOGO V2.svg') no-repeat left top / contain;
-  mask: url('UNESCO_BRAND LOGO V2.svg') no-repeat left top / contain;
+  -webkit-mask: url('UNESCO_BRAND LOGO V2.svg') no-repeat left center / contain;
+  mask: url('UNESCO_BRAND LOGO V2.svg') no-repeat left center / contain;
   transition: background-color 0.3s ease;
 }
 
@@ -635,15 +636,14 @@ img { max-width: 100%; display: block; }
 
 .footer-tagline {
   text-align: right;
-  font-family: var(--font-heading);
-  font-size: clamp(2.2rem, 4vw, 3.2rem);
-  font-weight: 900;
-  line-height: 1.1;
 }
 
-.tagline-blue { color: #2491d0 !important; }
-.tagline-brown { color: #675d52 !important; }
-.tagline-green { color: #9dd3b2 !important; }
+.footer-tagline span {
+  font-size: clamp(1.4rem, 2.5vw, 2rem);
+  font-weight: 900;
+  line-height: 1.1;
+  color: var(--gray-300);
+}
 
 .footer-bottom {
   max-width: var(--max-width);
