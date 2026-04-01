@@ -26,6 +26,17 @@ document.querySelectorAll('.stat-card, .world-block, .stats-heading, .worlds-hea
   observer.observe(el);
 });
 
+// Rotating text with gaussian blur transition
+const rotatingItems = document.querySelectorAll('.rotating-text-item');
+if (rotatingItems.length > 0) {
+  let currentIndex = 0;
+  setInterval(() => {
+    rotatingItems[currentIndex].classList.remove('active');
+    currentIndex = (currentIndex + 1) % rotatingItems.length;
+    rotatingItems[currentIndex].classList.add('active');
+  }, 10000);
+}
+
 // Header background on scroll
 const header = document.querySelector('.header');
 window.addEventListener('scroll', () => {

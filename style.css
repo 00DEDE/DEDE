@@ -37,10 +37,14 @@
    VARIABLES & RESET
    ======================== */
 :root {
-  --yellow: #F2C94C;
+  --yellow: #f8e166;
   --yellow-dark: #D4A72C;
   --blue: #2491d0;
   --blue-dark: #1b6fa0;
+  --green: #9dd3b2;
+  --cream: #e7e2de;
+  --brown: #675d52;
+  --dark-black: #1a1413;
   --dark: #675d52;
   --gray-700: #675d52;
   --gray-500: #666;
@@ -294,10 +298,30 @@ img { max-width: 100%; display: block; }
   font-size: clamp(1.5rem, 3vw, 2rem);
   font-weight: 800;
   margin-bottom: 3rem;
+  min-height: 3rem;
 }
 
-.highlight {
-  color: var(--yellow-dark);
+/* Rotating text animation */
+.rotating-text {
+  position: relative;
+  display: block;
+}
+
+.rotating-text-item {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  opacity: 0;
+  filter: blur(8px);
+  transition: opacity 0.8s ease, filter 0.8s ease;
+}
+
+.rotating-text-item.active {
+  position: relative;
+  opacity: 1;
+  filter: blur(0);
 }
 
 /* Stats images row */
@@ -367,16 +391,30 @@ img { max-width: 100%; display: block; }
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 0;
+  gap: 1.25rem;
 }
 
 .stat-card {
   padding: 2rem 1.5rem;
-  border-top: 4px solid;
+  border-radius: 16px;
 }
 
-.stat-yellow { border-color: var(--yellow); }
-.stat-blue { border-color: var(--blue); }
+/* Card backgrounds from brand colors */
+.stat-bg-blue {
+  background: var(--blue);
+}
+
+.stat-bg-green {
+  background: var(--green);
+}
+
+.stat-bg-yellow {
+  background: var(--yellow);
+}
+
+.stat-bg-brown {
+  background: var(--brown);
+}
 
 .stat-number {
   font-size: 3.5rem;
@@ -385,18 +423,30 @@ img { max-width: 100%; display: block; }
   margin-bottom: 1rem;
 }
 
-.stat-yellow .stat-number { color: var(--yellow-dark); }
-.stat-blue .stat-number { color: var(--blue); }
+/* Number colors */
+.stat-bg-blue .stat-number { color: var(--yellow); }
+.stat-bg-green .stat-number { color: var(--dark-black); }
+.stat-bg-yellow .stat-number { color: var(--blue); }
+.stat-bg-brown .stat-number { color: var(--blue); }
+
+/* Body text colors */
+.stat-bg-blue p,
+.stat-bg-green p,
+.stat-bg-yellow p {
+  color: var(--dark-black);
+}
+
+.stat-bg-brown p {
+  color: var(--cream);
+}
 
 .stat-card p {
   font-size: 0.8rem;
   line-height: 1.6;
-  color: var(--gray-700);
   margin-bottom: 0.75rem;
 }
 
 .stat-detail {
-  color: var(--gray-500) !important;
   font-size: 0.75rem !important;
 }
 
