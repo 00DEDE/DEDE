@@ -6,6 +6,12 @@
   <title>UNESCO — Living Traces</title>
   <link rel="stylesheet" href="style.css">
   <style>
+    @font-face {
+      font-family: 'ABCMonumentGroteskMono';
+      src: url('MICRO/ABCMonumentGroteskMono-Regular-Trial.otf') format('opentype');
+      font-weight: 400;
+      font-style: normal;
+    }
     body { background: #000; }
     .footer-logo-link {
       -webkit-mask-image: url('MICRO/MICRO_LOGO.svg');
@@ -95,7 +101,7 @@
 
   <script src="script.js"></script>
   <script>
-    // Cursor particle trail
+    // Cursor fragment trail — small squares + L/T letters
     (function() {
       const canvas = document.createElement('canvas');
       canvas.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;';
@@ -109,44 +115,55 @@
       resize();
       window.addEventListener('resize', resize);
 
-      const particles = [];
-      let mouseX = -100, mouseY = -100;
+      const fragments = [];
+      const SIZE = 4; // uniform small size for squares and letters
+      let spawnCounter = 0;
 
       document.addEventListener('mousemove', function(e) {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-        // Spawn a cluster of fragments
-        var count = 3 + Math.floor(Math.random() * 3);
-        for (var i = 0; i < count; i++) {
-          particles.push({
-            x: mouseX + (Math.random() - 0.5) * 12,
-            y: mouseY + (Math.random() - 0.5) * 12,
-            vx: (Math.random() - 0.5) * 1.5,
-            vy: (Math.random() - 0.5) * 1.5,
-            size: 1 + Math.random() * 2.5,
-            life: 1,
-            decay: 0.02 + Math.random() * 0.03
-          });
-        }
+        spawnCounter++;
+        // Drop a fragment every 3rd move event to avoid overcrowding
+        if (spawnCounter % 3 !== 0) return;
+
+        var roll = Math.random();
+        var type;
+        if (roll < 0.5) type = 'square';
+        else if (roll < 0.75) type = 'L';
+        else type = 'T';
+
+        fragments.push({
+          x: e.clientX + (Math.random() - 0.5) * 6,
+          y: e.clientY + (Math.random() - 0.5) * 6,
+          type: type,
+          life: 1,
+          decay: 0.025 + Math.random() * 0.015
+        });
       });
+
+      ctx.font = SIZE + 'px ABCMonumentGroteskMono, monospace';
+      ctx.textBaseline = 'top';
 
       function loop() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.font = SIZE + 'px ABCMonumentGroteskMono, monospace';
+        ctx.textBaseline = 'top';
 
-        for (var i = particles.length - 1; i >= 0; i--) {
-          var p = particles[i];
-          p.x += p.vx;
-          p.y += p.vy;
-          p.life -= p.decay;
+        for (var i = fragments.length - 1; i >= 0; i--) {
+          var f = fragments[i];
+          f.life -= f.decay;
 
-          if (p.life <= 0) {
-            particles.splice(i, 1);
+          if (f.life <= 0) {
+            fragments.splice(i, 1);
             continue;
           }
 
-          ctx.globalAlpha = p.life * 0.6;
+          ctx.globalAlpha = f.life * 0.7;
           ctx.fillStyle = '#fff';
-          ctx.fillRect(p.x, p.y, p.size, p.size);
+
+          if (f.type === 'square') {
+            ctx.fillRect(f.x, f.y, SIZE, SIZE);
+          } else {
+            ctx.fillText(f.type, f.x, f.y);
+          }
         }
 
         ctx.globalAlpha = 1;
