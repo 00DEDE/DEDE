@@ -50,8 +50,8 @@
 
     .postcard {
       position: absolute;
-      width: 160px;
-      height: 230px;
+      width: 180px;
+      height: 180px;
       opacity: 0;
       transition: opacity 1s ease;
       perspective: 1200px;
@@ -101,7 +101,11 @@
       box-shadow: 0 4px 20px rgba(0,0,0,0.15);
     }
 
-    .postcard-front img,
+    .postcard-front img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
     .postcard-back img {
       width: 100%;
       height: 100%;
@@ -316,8 +320,8 @@
         var layerW = layer.clientWidth;
         var layerH = layer.clientHeight;
 
-        var cardW = 160;
-        var cardH = 230;
+        var cardW = 180;
+        var cardH = 180;
         var gap = 16;
         var totalW = 6 * cardW + 5 * gap;
         var startX = (layerW - totalW) / 2;
