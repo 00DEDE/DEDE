@@ -578,9 +578,8 @@ img { max-width: 100%; display: block; }
   max-width: var(--max-width);
   margin: 0 auto;
   display: flex;
-  justify-content: space-between;
   align-items: flex-start;
-  gap: 3rem;
+  gap: 4rem;
   padding-bottom: 3rem;
 }
 
@@ -591,8 +590,8 @@ img { max-width: 100%; display: block; }
 
 .footer-logo-link {
   display: block;
-  width: 330px;
-  height: 330px;
+  width: 180px;
+  height: 180px;
   background-color: #2491d0;
   -webkit-mask: url('UNESCO_BRAND LOGO V2.svg') no-repeat left center / contain;
   mask: url('UNESCO_BRAND LOGO V2.svg') no-repeat left center / contain;
@@ -603,11 +602,17 @@ img { max-width: 100%; display: block; }
   background-color: #665d52;
 }
 
+.footer-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
 .footer-columns {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
-  margin-left: auto;
 }
 
 .footer-col h4 {
