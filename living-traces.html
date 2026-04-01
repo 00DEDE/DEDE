@@ -238,7 +238,8 @@
       window.addEventListener('resize', resize);
 
       // Generate concentric ring dots for cursor
-      const CURSOR_R = 18;
+      // Center hole is 50 canvas px at 2x = 25px visual radius = 25px cursor radius
+      const CURSOR_R = 25;
       const CENTER_HOLE = 2;
       const cursorDots = [];
       var ringSpacing = 2.5;
@@ -256,7 +257,7 @@
             baseR: r + rNoise,
             baseAngle: baseAngle + aNoise,
             phase: Math.random() * Math.PI * 2,
-            speed: 0.2 + Math.random() * 0.4
+            speed: 0.3 + Math.random() * 0.5
           });
         }
       }
@@ -266,11 +267,26 @@
       var breathTarget = 1;
       var breathCurrent = 1;
       var breathTimer = 0;
-      var breathInterval = 80 + Math.random() * 60;
+      var breathInterval = 60 + Math.random() * 60;
+      var cursorColor = '#fff';
 
       document.addEventListener('mousemove', function(e) {
         mouseX = e.clientX;
         mouseY = e.clientY;
+
+        // Detect background color under cursor
+        canvas.style.display = 'none';
+        var el = document.elementFromPoint(mouseX, mouseY);
+        canvas.style.display = '';
+        if (el) {
+          var bg = getComputedStyle(el).backgroundColor;
+          // Check if background is light (white/near-white)
+          var match = bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+          if (match) {
+            var lum = (parseInt(match[1]) + parseInt(match[2]) + parseInt(match[3])) / 3;
+            cursorColor = lum > 180 ? '#000' : '#fff';
+          }
+        }
       });
 
       // Click crosshair
@@ -281,32 +297,32 @@
 
       function loop() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        time += 0.015;
+        time += 0.025;
 
-        // Subtle breathing — less than the big circle
+        // Breathing
         breathTimer++;
         if (breathTimer >= breathInterval) {
           breathTimer = 0;
-          breathInterval = 80 + Math.random() * 80;
-          breathTarget = 0.96 + Math.random() * 0.08;
+          breathInterval = 50 + Math.random() * 80;
+          breathTarget = 0.93 + Math.random() * 0.14;
         }
-        breathCurrent += (breathTarget - breathCurrent) * 0.01;
+        breathCurrent += (breathTarget - breathCurrent) * 0.015;
 
-        ctx.fillStyle = '#fff';
+        ctx.fillStyle = cursorColor;
         ctx.globalAlpha = 1;
 
-        // Gentle jellyfish pulse — subtle
-        var pulseWave = time * 0.4;
+        // Jellyfish pulse
+        var pulseWave = time * 0.5;
 
         for (var i = 0; i < cursorDots.length; i++) {
           var d = cursorDots[i];
           var rFactor = d.baseR / CURSOR_R;
-          var ringPhase = rFactor * Math.PI * 1.2;
+          var ringPhase = rFactor * Math.PI * 1.4;
           var pulse = Math.sin(pulseWave - ringPhase);
-          var amplitude = 0.03 + rFactor * 0.04;
+          var amplitude = 0.04 + rFactor * 0.06;
           var r = d.baseR * breathCurrent * (1 + pulse * amplitude);
 
-          var wobble = Math.sin(time * d.speed + d.phase) * 0.15;
+          var wobble = Math.sin(time * d.speed + d.phase) * 0.3;
           r += wobble;
 
           var angle = d.baseAngle;
@@ -314,7 +330,7 @@
           var y = mouseY + Math.sin(angle) * r;
 
           ctx.beginPath();
-          ctx.arc(x, y, 0.4, 0, Math.PI * 2);
+          ctx.arc(x, y, 0.7, 0, Math.PI * 2);
           ctx.fill();
         }
 
@@ -326,7 +342,7 @@
           } else {
             var cx = clickMarker.x, cy = clickMarker.y;
             ctx.globalAlpha = clickMarker.life;
-            ctx.strokeStyle = '#fff';
+            ctx.strokeStyle = cursorColor;
             ctx.lineWidth = 1;
             var arm = 14;
             ctx.beginPath();
