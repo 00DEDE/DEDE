@@ -37,6 +37,17 @@ if (rotatingItems.length > 0) {
   }, 10000);
 }
 
+// Rotating word in "Preserve/Prepare/Protect What Makes Us Human"
+const worldsWords = document.querySelectorAll('.worlds-word');
+if (worldsWords.length > 0) {
+  let worldsIndex = 0;
+  setInterval(() => {
+    worldsWords[worldsIndex].classList.remove('active');
+    worldsIndex = (worldsIndex + 1) % worldsWords.length;
+    worldsWords[worldsIndex].classList.add('active');
+  }, 3000);
+}
+
 // Auto-size stat numbers to match the content width of the card
 function sizeStatNumbers() {
   const canvas = document.createElement('canvas');

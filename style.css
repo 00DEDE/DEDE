@@ -394,10 +394,32 @@ img { max-width: 100%; display: block; }
 }
 
 .worlds-heading {
-  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-size: clamp(4.375rem, 8.75vw, 7rem);
   font-weight: 900;
   line-height: 1.05;
   margin-bottom: 4rem;
+}
+
+.worlds-rotating-word {
+  position: relative;
+  display: inline-block;
+}
+
+.worlds-word {
+  color: #2491d0;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  filter: blur(12px);
+  transition: opacity 1s ease, filter 1s ease;
+  white-space: nowrap;
+}
+
+.worlds-word.active {
+  position: relative;
+  opacity: 1;
+  filter: blur(0);
 }
 
 .world-block {
