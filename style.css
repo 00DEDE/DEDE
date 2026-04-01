@@ -1,4 +1,39 @@
 /* ========================
+   FONTS
+   ======================== */
+@font-face {
+  font-family: 'Inter Tight';
+  src: url('INTER TIGHT/InterTight-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter Tight';
+  src: url('INTER TIGHT/InterTight-Italic-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'ABC Diatype';
+  src: url('DIATYPE/ABCDiatype-Regular-Trial.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'ABC Diatype';
+  src: url('DIATYPE/ABCDiatype-RegularItalic-Trial.otf') format('opentype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* ========================
    VARIABLES & RESET
    ======================== */
 :root {
@@ -12,7 +47,8 @@
   --gray-300: #bbb;
   --gray-100: #f5f5f5;
   --white: #fff;
-  --font: 'Inter', sans-serif;
+  --font-body: 'ABC Diatype', sans-serif;
+  --font-heading: 'Inter Tight', sans-serif;
   --max-width: 1200px;
 }
 
@@ -27,10 +63,15 @@ html {
 }
 
 body {
-  font-family: var(--font);
+  font-family: var(--font-body);
   color: var(--dark);
   line-height: 1.6;
   overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 500;
 }
 
 a {
