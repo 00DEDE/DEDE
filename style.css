@@ -481,7 +481,7 @@ img { max-width: 100%; display: block; }
   display: block;
   margin-bottom: 1.5rem;
   flex: 1;
-  width: 200px;
+  width: 300px;
   object-fit: contain;
   object-position: left bottom;
 }
