@@ -481,9 +481,9 @@ img { max-width: 100%; display: block; }
   display: block;
   margin-bottom: 1.5rem;
   flex: 1;
-  max-width: 100%;
+  width: 200px;
   object-fit: contain;
-  object-position: left top;
+  object-position: left bottom;
 }
 
 .world-text h3 {
