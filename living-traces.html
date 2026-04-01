@@ -12,7 +12,8 @@
       font-weight: 400;
       font-style: normal;
     }
-    body { background: #000; }
+    body { background: #000; cursor: none !important; }
+    body * { cursor: none !important; }
     .footer-logo-link {
       -webkit-mask-image: url('MICRO/MICRO_LOGO.svg');
       mask-image: url('MICRO/MICRO_LOGO.svg');
@@ -116,12 +117,12 @@
       window.addEventListener('resize', resize);
 
       const fragments = [];
-      const SIZE = 4; // uniform small size for squares and letters
+      const BASE_SIZE = 18;
       let spawnCounter = 0;
+      let breathTime = 0;
 
       document.addEventListener('mousemove', function(e) {
         spawnCounter++;
-        // Drop a fragment every 3rd move event to avoid overcrowding
         if (spawnCounter % 3 !== 0) return;
 
         var roll = Math.random();
@@ -131,21 +132,18 @@
         else type = 'T';
 
         fragments.push({
-          x: e.clientX + (Math.random() - 0.5) * 6,
-          y: e.clientY + (Math.random() - 0.5) * 6,
+          x: e.clientX + (Math.random() - 0.5) * 10,
+          y: e.clientY + (Math.random() - 0.5) * 10,
           type: type,
           life: 1,
-          decay: 0.025 + Math.random() * 0.015
+          decay: 0.02 + Math.random() * 0.015,
+          phase: Math.random() * Math.PI * 2
         });
       });
 
-      ctx.font = SIZE + 'px ABCMonumentGroteskMono, monospace';
-      ctx.textBaseline = 'top';
-
       function loop() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.font = SIZE + 'px ABCMonumentGroteskMono, monospace';
-        ctx.textBaseline = 'top';
+        breathTime += 0.02;
 
         for (var i = fragments.length - 1; i >= 0; i--) {
           var f = fragments[i];
@@ -156,12 +154,19 @@
             continue;
           }
 
+          // Breathing scale: subtle oscillation between 0.8 and 1.2
+          var breathScale = 1 + 0.2 * Math.sin(breathTime * 2 + f.phase);
+          var size = BASE_SIZE * breathScale;
+
           ctx.globalAlpha = f.life * 0.7;
           ctx.fillStyle = '#fff';
 
           if (f.type === 'square') {
-            ctx.fillRect(f.x, f.y, SIZE, SIZE);
+            ctx.fillRect(f.x - size / 2, f.y - size / 2, size, size);
           } else {
+            ctx.font = size + 'px ABCMonumentGroteskMono, monospace';
+            ctx.textBaseline = 'middle';
+            ctx.textAlign = 'center';
             ctx.fillText(f.type, f.x, f.y);
           }
         }
