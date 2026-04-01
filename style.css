@@ -248,9 +248,12 @@ img { max-width: 100%; display: block; }
   margin: 0 auto;
   width: 100%;
   color: var(--white);
+  transform: translateY(-25%);
 }
 
 .hero h1 {
+  font-family: var(--font-heading);
+  font-weight: 500;
   font-size: clamp(2.8rem, 6vw, 4.5rem);
   font-weight: 900;
   line-height: 1.05;
