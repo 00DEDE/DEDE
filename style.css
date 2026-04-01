@@ -990,6 +990,8 @@ img { max-width: 100%; display: block; }
 @media (max-width: 600px) {
   .hero { min-height: 70vh; }
 
+  .hero-content { transform: none; }
+
   .hero h1 { font-size: 2.4rem; }
 
   .stats-grid {
