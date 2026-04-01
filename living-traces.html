@@ -121,36 +121,36 @@
 
       // Generate dots arranged in concentric rings
       var dots = [];
-      var CENTER_HOLE = 0.02; // ratio — small dark center
+      // Center hole matches cursor size (~25px radius = 50px diameter at 2x = 100 canvas px)
+      var CENTER_HOLE_PX = 50; // in canvas pixels (2x retina)
 
       function generateDots() {
         dots = [];
         var size = canvas.width;
-        var cx = size / 2;
-        var cy = size / 2;
         var maxR = size / 2 - 2;
-        var ringSpacing = 2.8; // pixels between rings
-        var numRings = Math.floor((maxR - maxR * CENTER_HOLE) / ringSpacing);
+        var ringSpacing = 5; // wider spacing so rings are distinct
+        var numRings = Math.floor((maxR - CENTER_HOLE_PX) / ringSpacing);
 
         for (var ring = 0; ring < numRings; ring++) {
-          var r = maxR * CENTER_HOLE + ring * ringSpacing;
+          var r = CENTER_HOLE_PX + ring * ringSpacing;
           var circumference = 2 * Math.PI * r;
-          // Denser dots along each ring
-          var numDots = Math.floor(circumference / 2.2);
+          // Dots along each ring — spaced so individual ring is visible
+          var numDots = Math.floor(circumference / 3);
 
           for (var d = 0; d < numDots; d++) {
-            // Skip some dots randomly for grain texture
-            if (Math.random() < 0.3) continue;
+            // Skip some dots for grain texture
+            if (Math.random() < 0.2) continue;
 
             var baseAngle = (d / numDots) * Math.PI * 2;
-            // Add noise to angle and radius
-            var angleNoise = (Math.random() - 0.5) * (0.8 / (ring + 5));
-            var radiusNoise = (Math.random() - 0.5) * 2;
+            // Tight radius noise — keeps dots on their ring
+            var radiusNoise = (Math.random() - 0.5) * 1.2;
+            // Small angle noise for texture
+            var angleNoise = (Math.random() - 0.5) * (0.4 / (ring + 5));
 
             dots.push({
               baseR: r + radiusNoise,
               baseAngle: baseAngle + angleNoise,
-              // Per-dot animation phase
+              ring: ring,
               phase: Math.random() * Math.PI * 2,
               speed: 0.2 + Math.random() * 0.6
             });
@@ -187,6 +187,9 @@
         ctx.fillStyle = '#fff';
         ctx.globalAlpha = 1;
 
+        // Slow rotation — inner rings rotate faster than outer
+        var baseRotation = time * 0.15;
+
         for (var i = 0; i < dots.length; i++) {
           var d = dots[i];
           // Breathing affects radius — dots closer to edge move more
@@ -197,7 +200,10 @@
           var wobble = Math.sin(time * d.speed + d.phase) * 0.4;
           r += wobble;
 
-          var angle = d.baseAngle;
+          // Revolve — inner rings spin faster
+          var spinSpeed = 1 / (0.5 + rFactor * 2);
+          var angle = d.baseAngle + baseRotation * spinSpeed;
+
           var x = cx + Math.cos(angle) * r;
           var y = cy + Math.sin(angle) * r;
 
