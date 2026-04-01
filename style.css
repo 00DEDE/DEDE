@@ -71,6 +71,7 @@ body {
   color: var(--dark);
   line-height: 1.6;
   overflow-x: hidden;
+  background-color: #e7e2de;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -481,7 +482,7 @@ img { max-width: 100%; display: block; }
   display: block;
   margin-bottom: 1.5rem;
   flex: 1;
-  width: 300px;
+  width: 200px;
   object-fit: contain;
   object-position: left bottom;
 }
