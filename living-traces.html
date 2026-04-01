@@ -12,95 +12,59 @@
       font-weight: 400;
       font-style: normal;
     }
-    body { background: #000; cursor: none !important; }
+    body {
+      background: #000;
+      cursor: none !important;
+      margin: 0;
+      overflow: hidden;
+    }
     body * { cursor: none !important; }
-    .logo-img { transform: scale(2); transform-origin: left center; }
-    .footer-logo-link {
-      -webkit-mask-image: url('MICRO/MICRO_LOGO.svg');
-      mask-image: url('MICRO/MICRO_LOGO.svg');
+    .poster-circle {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 55vmin;
+      height: 55vmin;
+      border-radius: 50%;
+      overflow: hidden;
+    }
+    .poster-circle img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
   </style>
 </head>
 <body data-page="living-traces">
 
-  <!-- Header -->
-  <header class="header">
-    <div class="header-inner">
-      <a href="living-traces.html" class="logo">
-        <img src="MICRO/MICRO_LOGO.svg" alt="Living Traces" class="logo-img">
-      </a>
-      <nav class="nav">
-        <button class="menu-toggle" aria-label="Toggle menu">
-          <span></span><span></span><span></span>
-        </button>
-        <ul class="nav-links">
-          <li><a href="index.html">Our Work</a></li>
-          <li><a href="index.html">Our Four Worlds</a></li>
-          <li><a href="index.html">UNESCO</a></li>
-          <li><a href="about.html">About Us</a></li>
-          <li><a href="uncover.html">Uncover</a></li>
-          <li>
-            <button class="nav-search" aria-label="Search">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            </button>
-          </li>
-          <li><a href="#" class="btn-nav">Become Involved</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
+  <div class="poster-circle" id="poster-circle">
+    <img src="MICRO/MACRO_POSTER_IMAGE 1.png" alt="Macro Poster">
+  </div>
 
-  <main style="margin-top: 70px; min-height: calc(100vh - 70px);"></main>
+  <script>
+    // Poster circle breathing
+    (function() {
+      var el = document.getElementById('poster-circle');
+      var breathTarget = 1;
+      var breathCurrent = 1;
+      var timer = 0;
+      var interval = 60 + Math.random() * 80;
 
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="footer-top">
-      <div class="footer-logo">
-        <a href="#" class="footer-logo-link" aria-label="Back to top"></a>
-      </div>
-
-      <div class="footer-columns">
-        <div class="footer-col">
-          <h4>About UNESCO</h4>
-          <ul>
-            <li><a href="#">Our Mission</a></li>
-            <li><a href="#">Who We Are</a></li>
-            <li><a href="#">Where We Work</a></li>
-            <li><a href="#">Partnerships</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>Our Work</h4>
-          <ul>
-            <li><a href="#">Monuments</a></li>
-            <li><a href="#">Natural Sciences</a></li>
-            <li><a href="#">Intangible Heritage</a></li>
-            <li><a href="#">Languages</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>Resources</h4>
-          <ul>
-            <li><a href="#">Publications</a></li>
-            <li><a href="#">Multimedia</a></li>
-            <li><a href="#">News &amp; Events</a></li>
-            <li><a href="index.html" class="footer-highlight">UNESCO</a></li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="footer-tagline">
-        <span>Safeguard<br>Humanity's<br>Inheritance</span>
-      </div>
-    </div>
-
-    <div class="footer-bottom">
-      <a href="#">Privacy Policy</a>
-      <a href="#">Terms of Use</a>
-      <a href="#">Contact Us</a>
-    </div>
-  </footer>
-
+      function loop() {
+        timer++;
+        if (timer >= interval) {
+          timer = 0;
+          interval = 40 + Math.random() * 100;
+          breathTarget = 0.94 + Math.random() * 0.14;
+        }
+        breathCurrent += (breathTarget - breathCurrent) * 0.015;
+        el.style.transform = 'translate(-50%, -50%) scale(' + breathCurrent + ')';
+        requestAnimationFrame(loop);
+      }
+      loop();
+    })();
+  </script>
   <script src="script.js"></script>
   <script>
     // Dot circle cursor — breathing cluster of tiny dots
