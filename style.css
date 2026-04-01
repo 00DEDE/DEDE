@@ -448,7 +448,7 @@ img { max-width: 100%; display: block; }
   display: grid;
   grid-template-columns: 1.2fr 1fr;
   gap: 3rem;
-  align-items: center;
+  align-items: end;
   margin-bottom: 4rem;
 }
 
@@ -475,11 +475,10 @@ img { max-width: 100%; display: block; }
 }
 
 .world-text h3 {
-  font-size: 1.3rem;
+  font-size: 1.95rem;
   font-weight: 700;
   margin-bottom: 0.75rem;
-  text-decoration: underline;
-  text-underline-offset: 4px;
+  text-decoration: none;
 }
 
 .world-text p {
