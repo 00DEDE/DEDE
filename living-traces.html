@@ -187,23 +187,28 @@
         ctx.fillStyle = '#fff';
         ctx.globalAlpha = 1;
 
-        // Slow rotation — inner rings rotate faster than outer
-        var baseRotation = time * 0.15;
+        // Jellyfish pulse — wave ripples outward from center
+        // Inner rings contract while outer rings expand, then reverses
+        var pulseWave = time * 1.2;
 
         for (var i = 0; i < dots.length; i++) {
           var d = dots[i];
-          // Breathing affects radius — dots closer to edge move more
-          var rFactor = d.baseR / (size / 2);
-          var r = d.baseR * (1 + (breathCurrent - 1) * rFactor);
+          var maxR = size / 2;
+          var rFactor = d.baseR / maxR; // 0 at center, 1 at edge
 
-          // Subtle per-dot wobble
-          var wobble = Math.sin(time * d.speed + d.phase) * 0.4;
+          // Jellyfish: radial wave — each ring gets the pulse at a delay based on its distance
+          // Inner rings lead, outer rings follow with a phase lag
+          var ringPhase = rFactor * Math.PI * 1.5;
+          var pulse = Math.sin(pulseWave - ringPhase);
+          // Outer rings have more amplitude
+          var amplitude = 0.06 + rFactor * 0.08;
+          var r = d.baseR * breathCurrent * (1 + pulse * amplitude);
+
+          // Per-dot wobble
+          var wobble = Math.sin(time * d.speed + d.phase) * 0.3;
           r += wobble;
 
-          // Revolve — inner rings spin faster
-          var spinSpeed = 1 / (0.5 + rFactor * 2);
-          var angle = d.baseAngle + baseRotation * spinSpeed;
-
+          var angle = d.baseAngle;
           var x = cx + Math.cos(angle) * r;
           var y = cy + Math.sin(angle) * r;
 
