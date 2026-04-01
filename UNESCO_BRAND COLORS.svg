@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 288 144">
+  <!-- Generator: Adobe Illustrator 30.2.1, SVG Export Plug-In . SVG Version: 2.1.1 Build 1)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #9dd3b2;
+      }
+
+      .st1 {
+        fill: #1a1413;
+      }
+
+      .st2 {
+        font-family: MyriadPro-Regular, 'Myriad Pro';
+        font-size: 5px;
+      }
+
+      .st3 {
+        fill: #f8e166;
+      }
+
+      .st4 {
+        fill: #e7e2de;
+      }
+
+      .st5 {
+        fill: #2490cf;
+      }
+
+      .st6 {
+        fill: #675d52;
+      }
+    </style>
+  </defs>
+  <rect class="st5" x="31.13" y="34.01" width="35.26" height="75.97"/>
+  <rect class="st3" x="69.23" y="34.01" width="35.26" height="75.97"/>
+  <rect class="st0" x="107.32" y="34.01" width="35.26" height="75.97"/>
+  <rect class="st4" x="145.42" y="34.01" width="35.26" height="75.97"/>
+  <rect class="st6" x="183.51" y="34.01" width="35.26" height="75.97"/>
+  <rect class="st1" x="221.61" y="34.01" width="35.26" height="75.97"/>
+  <text class="st2" transform="translate(34.91 118.09)"><tspan x="0" y="0">HEX# 2490cf</tspan></text>
+  <text class="st2" transform="translate(74.84 118.09)"><tspan x="0" y="0">HEX# f8e166</tspan></text>
+  <text class="st2" transform="translate(111.78 118.09)"><tspan x="0" y="0">HEX# 9dd3b2</tspan></text>
+  <text class="st2" transform="translate(148.9 118.09)"><tspan x="0" y="0">HEX# e7e2de</tspan></text>
+  <text class="st2" transform="translate(187.35 118.09)"><tspan x="0" y="0">HEX# 675d52</tspan></text>
+  <text class="st2" transform="translate(225.35 118.09)"><tspan x="0" y="0">HEX# 1a1413</tspan></text>
+</svg>
