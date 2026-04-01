@@ -371,7 +371,7 @@ img { max-width: 100%; display: block; }
 .stat-bg-brown p { color: #e7e2de; }
 
 .stat-card-text {
-  margin-top: auto;
+  margin-top: 0;
 }
 
 .stat-card p {
