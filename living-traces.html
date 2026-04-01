@@ -118,12 +118,18 @@
       chaosCanvas.style.height = window.innerHeight + 'px';
       cCtx.scale(2, 2);
 
-      // Load the MICRO logo SVG as an image, inverted to white
+      // Load the MICRO logo SVG, fix viewBox and make white
       var logoImg = new Image();
-      // Fetch the SVG and inject white fill
       fetch('MICRO/MICRO_LOGO.svg').then(function(r) { return r.text(); }).then(function(svg) {
-        var whiteSvg = svg.replace(/<style>[\s\S]*?<\/style>/, '<style>.st0 { fill: #fff; font-family: sans-serif; font-size: 48.66px; letter-spacing: .05em; }</style>');
-        logoImg.src = 'data:image/svg+xml,' + encodeURIComponent(whiteSvg);
+        // Widen viewBox so full text is visible
+        var fixed = svg.replace('viewBox="0 0 288 288"', 'viewBox="0 0 620 200"');
+        // Make text white
+        fixed = fixed.replace(/fill:\s*[^;}"]+/, 'fill: #fff');
+        // If no fill in style, add it
+        if (fixed.indexOf('fill: #fff') === -1) {
+          fixed = fixed.replace('.st0 {', '.st0 { fill: #fff;');
+        }
+        logoImg.src = 'data:image/svg+xml,' + encodeURIComponent(fixed);
       });
 
       var W = window.innerWidth;
