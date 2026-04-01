@@ -217,8 +217,8 @@ img { max-width: 100%; display: block; }
 
 /* Per-slide adjustments */
 .hero-slide-1 {
-  background-position: 75% center;
-  background-size: cover;
+  background-position: 85% center;
+  background-size: 120%;
 }
 
 .hero-slide-3 {
