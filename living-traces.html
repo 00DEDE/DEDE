@@ -133,7 +133,7 @@
       var W = window.innerWidth;
       var H = window.innerHeight;
       var startTime = null;
-      var DURATION = 3000;
+      var DURATION = 5000;
       var running = true;
 
       logoImg.onload = function() {
@@ -302,7 +302,7 @@
           var source = audioCtx.createMediaStreamSource(stream);
           analyser = audioCtx.createAnalyser();
           analyser.fftSize = 256;
-          analyser.smoothingTimeConstant = 0.75;
+          analyser.smoothingTimeConstant = 0.88;
           source.connect(analyser);
           freqData = new Uint8Array(analyser.frequencyBinCount);
           audioReady = true;
@@ -333,11 +333,11 @@
         audio.mid = midSum / Math.max(1, midN) / 255;
         audio.treble = trebSum / Math.max(1, len - bassN - midN) / 255;
 
-        // Smooth for organic movement
-        smoothAudio.volume += (audio.volume - smoothAudio.volume) * 0.25;
-        smoothAudio.bass += (audio.bass - smoothAudio.bass) * 0.25;
-        smoothAudio.mid += (audio.mid - smoothAudio.mid) * 0.2;
-        smoothAudio.treble += (audio.treble - smoothAudio.treble) * 0.3;
+        // Slow smooth — holds shape so user can see their voice in the circle
+        smoothAudio.volume += (audio.volume - smoothAudio.volume) * 0.07;
+        smoothAudio.bass += (audio.bass - smoothAudio.bass) * 0.07;
+        smoothAudio.mid += (audio.mid - smoothAudio.mid) * 0.05;
+        smoothAudio.treble += (audio.treble - smoothAudio.treble) * 0.09;
       }
 
       // ---- SPEECH RECOGNITION ----
@@ -475,8 +475,8 @@
         }
         breathCurrent += (breathTarget - breathCurrent) * 0.012;
 
-        // Audio-reactive breathing boost
-        var audioBreath = 1 + smoothAudio.volume * 0.15;
+        // Audio-reactive breathing boost — large so voice visibly swells the circle
+        var audioBreath = 1 + smoothAudio.volume * 0.5;
 
         ctx.fillStyle = '#fff';
         ctx.globalAlpha = 1;
@@ -494,15 +494,15 @@
           var wobble = Math.sin(time * d.speed + d.phase) * 0.3;
           r += wobble;
 
-          // Audio-reactive displacement: bass → inner, treble → outer
-          var audioPush = smoothAudio.bass * (1 - rFactor) * 12
-                        + smoothAudio.treble * rFactor * 8;
+          // Audio-reactive displacement — dramatic so each voice reshapes the circle
+          var audioPush = smoothAudio.bass * (1 - rFactor) * 45
+                        + smoothAudio.treble * rFactor * 35;
           r += audioPush;
 
           var angle = d.baseAngle;
           // Mid frequencies → angular flow in middle rings
           var midFactor = 1 - Math.abs(rFactor - 0.5) * 2;
-          angle += smoothAudio.mid * midFactor * 0.04 * Math.sin(time * 2 + d.phase);
+          angle += smoothAudio.mid * midFactor * 0.18 * Math.sin(time * 1.5 + d.phase);
 
           var x = cx + Math.cos(angle) * r;
           var y = cy + Math.sin(angle) * r;
