@@ -121,6 +121,43 @@
     .postcard.aligning {
       transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1), left 1.2s cubic-bezier(0.4, 0, 0.2, 1), top 1.2s cubic-bezier(0.4, 0, 0.2, 1), width 1.2s cubic-bezier(0.4, 0, 0.2, 1), height 1.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
+
+    /* Clickable postcards after alignment */
+    .postcard.clickable {
+      pointer-events: auto;
+      cursor: pointer;
+    }
+
+    /* Text block below cards */
+    .postcard-text {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 6;
+      max-width: 600px;
+      text-align: center;
+      font-family: var(--font-body);
+      color: #675d52;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+      pointer-events: none;
+    }
+    .postcard-text.visible {
+      opacity: 1;
+    }
+    .postcard-text h3 {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      letter-spacing: 0.04em;
+      margin: 0 0 0.5rem 0;
+      color: #675d52;
+    }
+    .postcard-text p {
+      font-size: 0.85rem;
+      line-height: 1.6;
+      margin: 0;
+      color: #675d52;
+    }
   </style>
 </head>
 <body>
@@ -194,6 +231,12 @@
     </div>
   </div>
 
+  <!-- Postcard description text -->
+  <div class="postcard-text" id="postcard-text">
+    <h3 id="postcard-title"></h3>
+    <p id="postcard-desc"></p>
+  </div>
+
   <!-- Drawing canvas -->
   <iframe id="sketch-frame" class="uncover-frame" src="unesco_textile_sketch.html" title="UNESCO Textile Sketch" allowtransparency="true"></iframe>
   <div class="uncover-spacer"></div>
@@ -258,26 +301,61 @@
     (function() {
       const postcards = document.querySelectorAll('.postcard');
       const layer = document.getElementById('postcard-layer');
+      const textBlock = document.getElementById('postcard-text');
+      const textTitle = document.getElementById('postcard-title');
+      const textDesc = document.getElementById('postcard-desc');
       const hitCounts = new Array(6).fill(0);
       const HITS_NEEDED = 5;
       const HIT_RADIUS = 140;
       let allRevealed = false;
       let animating = false;
+      let aligned = false;
+      let drawingActive = true;
+      let flippedToFront = -1; // index of card currently showing front, -1 = none
 
-      // Listen for shape positions from the iframe
+      // Postcard text content
+      const cardData = [
+        {
+          title: 'Rice Terraces Of The Philippine Cordilleras',
+          desc: 'Carved into the mountains over two thousand years ago, the Rice Terraces of the Philippine Cordilleras reveal a profound dialogue between people and landscape. These living terraces sustain communities and agricultural knowledge. Through UNESCO recognition, conservation programs and local stewardship have helped preserve this fragile cultural landscape for future generations.'
+        },
+        {
+          title: 'Lines And Geoglyphs Of Nazca And Palpa',
+          desc: 'Etched across the desert nearly two millennia ago, the Lines and Geoglyphs of Nazca and Palpa form immense drawings visible only from the sky. They reflect ancient knowledge, ritual, and communication with the cosmos. Through UNESCO protection, research, monitoring, and preservation efforts safeguard these fragile markings against erosion and human disturbance.'
+        },
+        {
+          title: 'Whistled Language Of La Gomera (Silbo Gomero)',
+          desc: 'Across the deep valleys of La Gomera, voices transform into the wind. The whistled language Silbo Gomero carries messages across cliffs and ravines, turning breath into actual communication shaped by landscape. Through UNESCO recognition and education, this remarkable language continues to echo through the mountains, keeping an ancient dialogue between the people and the land they call home, alive.'
+        },
+        {
+          title: 'Al\u2011Sadu Weaving Tradition',
+          desc: 'Across the deserts of Arabian Peninsula, threads become the maps of memory. The Al\u2011Sadu Weaving Tradition transforms wool into geometric patterns that tell ancient stories of nomadic life, land, and true identity. Through UNESCO safeguarding and cultural transmission, this woven tradition continues to unite multiple generations together across a forever changing desert landscape.'
+        },
+        {
+          title: 'Samarra Archaeological City',
+          desc: 'Within the land of the Samarra Archaeological City rises the sweeping spiral of the Great Mosque\u2019s Malwiya minaret, a bold expression of the imagination and ambition of the Abbasid Caliphate. Once a vast imperial capital, Samarra reveals how architecture can shape an entire city and culture. Through UNESCO\u2019s protection, research, and global collaboration the city continues to be preserved its fragile ruins, preserving a vital monumental chapter of Islamic civilization for the world to not only study, but to remember, and develop from.'
+        },
+        {
+          title: 'Confraternity Of Flowers And Palms',
+          desc: 'This community\u2011based ritual tradition practiced during seasonal religious festivities in El Salvador, invites participants to craft elaborate palm and floral decorations carried in processions. The practice blends Indigenous and Catholic influences, reinforcing social cohesion, intergenerational knowledge, and spiritual identity. Through collective making and celebration, the confraternity sustains cultural continuity while expressing devotion, landscape knowledge, and communal belonging.'
+        }
+      ];
+
+      // Listen for draw mode changes from iframe
       window.addEventListener('message', function(e) {
-        if (!e.data || e.data.type !== 'shape' || allRevealed) return;
-        checkHits(e.data.x, e.data.y);
+        if (!e.data) return;
+        if (e.data.type === 'drawMode') {
+          drawingActive = e.data.drawing;
+        }
+        if (e.data.type === 'shape' && !allRevealed) {
+          checkHits(e.data.x, e.data.y);
+        }
       });
 
       function checkHits(sx, sy) {
-        const layerW = layer.clientWidth;
-        const layerH = layer.clientHeight;
-
         postcards.forEach(function(card, i) {
           if (card.classList.contains('revealed')) return;
 
-          // Get card center in pixels
           var rect = card.getBoundingClientRect();
           var layerRect = layer.getBoundingClientRect();
           var cx = rect.left - layerRect.left + rect.width / 2;
@@ -286,7 +364,6 @@
           var dist = Math.sqrt((sx - cx) * (sx - cx) + (sy - cy) * (sy - cy));
           if (dist < HIT_RADIUS) {
             hitCounts[i]++;
-            // Gradually increase opacity as hint
             if (hitCounts[i] < HITS_NEEDED) {
               card.style.opacity = Math.min(0.3, hitCounts[i] / HITS_NEEDED * 0.3);
             }
@@ -304,10 +381,8 @@
         if (revealed.length === 6 && !animating) {
           allRevealed = true;
           animating = true;
-          // Hide the drawing hint
           var hint = document.querySelector('.uncover-hint');
           if (hint) hint.classList.add('hidden');
-          // Wait, then align and flip
           setTimeout(alignAndFlip, 2000);
         }
       }
@@ -323,22 +398,17 @@
         var startX = (layerW - totalW) / 2;
         var centerY = (layerH - cardH) / 2;
 
-        // Store original positions, then animate to aligned row
         postcards.forEach(function(card, i) {
           var rect = card.getBoundingClientRect();
           var layerRect = layer.getBoundingClientRect();
-
-          // Set current position as explicit pixels (remove % positioning)
           var currentLeft = rect.left - layerRect.left;
           var currentTop = rect.top - layerRect.top;
           card.style.left = currentLeft + 'px';
           card.style.top = currentTop + 'px';
         });
 
-        // Force reflow
         layer.offsetHeight;
 
-        // Animate to aligned positions
         postcards.forEach(function(card, i) {
           card.classList.add('aligning');
           var targetX = startX + i * (cardW + gap);
@@ -346,14 +416,67 @@
           card.style.top = centerY + 'px';
         });
 
-        // After alignment completes, flip cards one by one
+        // After alignment, flip to backs one by one, then enable clicking
         setTimeout(function() {
           postcards.forEach(function(card, i) {
             setTimeout(function() {
               card.classList.add('flipped');
+              // After last card flips, enable click interaction
+              if (i === 5) {
+                setTimeout(enableClicking, 600);
+              }
             }, i * 400);
           });
         }, 1500);
+      }
+
+      function enableClicking() {
+        aligned = true;
+        // Position text block below the cards
+        positionTextBlock();
+        // Update hint
+        var hint = document.querySelector('.uncover-hint');
+        if (hint) {
+          hint.textContent = 'click a card to reveal its story';
+          hint.classList.remove('hidden');
+        }
+
+        postcards.forEach(function(card, i) {
+          card.classList.add('clickable');
+          card.addEventListener('click', function(e) {
+            if (!aligned || drawingActive) return;
+            e.stopPropagation();
+            handleCardClick(i);
+          });
+        });
+      }
+
+      function positionTextBlock() {
+        // Place text block below the card row
+        var firstCard = postcards[0].getBoundingClientRect();
+        var textTop = firstCard.bottom + 24;
+        textBlock.style.top = textTop + 'px';
+      }
+
+      function handleCardClick(index) {
+        if (flippedToFront === index) {
+          // Clicking same card again — flip back to letter side
+          postcards[index].classList.add('flipped');
+          flippedToFront = -1;
+          textBlock.classList.remove('visible');
+        } else {
+          // If another card is showing front, flip it back first
+          if (flippedToFront >= 0) {
+            postcards[flippedToFront].classList.add('flipped');
+          }
+          // Flip this card to front
+          postcards[index].classList.remove('flipped');
+          flippedToFront = index;
+          // Show text
+          textTitle.textContent = cardData[index].title;
+          textDesc.textContent = cardData[index].desc;
+          textBlock.classList.add('visible');
+        }
       }
     })();
   </script>

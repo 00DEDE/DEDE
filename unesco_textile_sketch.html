@@ -151,6 +151,9 @@ new p5(function(p) {
       updateCursor();
       prevX = p.mouseX;
       prevY = p.mouseY;
+      if (window.parent !== window) {
+        window.parent.postMessage({ type: 'drawMode', drawing: drawing }, '*');
+      }
     }
     if (p.key === ' ') {
       shapes = []; lastShape = null;
