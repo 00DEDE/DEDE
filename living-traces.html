@@ -51,9 +51,7 @@
   </header>
 
   <main style="margin-top: 70px; min-height: calc(100vh - 70px); display: flex; align-items: center; justify-content: center;">
-    <div id="poster-circle" style="width: 55vmin; height: 55vmin; border-radius: 50%; overflow: hidden;">
-      <img src="MICRO/MACRO_POSTER_IMAGE 1.png" alt="Macro Poster" style="width: 100%; height: 100%; object-fit: cover;">
-    </div>
+    <canvas id="poster-circle"></canvas>
   </main>
 
   <!-- Footer -->
@@ -106,23 +104,108 @@
   </footer>
 
   <script>
-    // Poster circle breathing — organic random scale
+    // Concentric dot circle — vinyl/fingerprint pattern with breathing
     (function() {
-      var el = document.getElementById('poster-circle');
+      var canvas = document.getElementById('poster-circle');
+      var ctx = canvas.getContext('2d');
+
+      // Size the canvas
+      function sizeCanvas() {
+        var s = Math.min(window.innerWidth, window.innerHeight) * 0.55;
+        canvas.width = s * 2;  // 2x for retina sharpness
+        canvas.height = s * 2;
+        canvas.style.width = s + 'px';
+        canvas.style.height = s + 'px';
+        generateDots();
+      }
+
+      // Generate dots arranged in concentric rings
+      var dots = [];
+      var CENTER_HOLE = 0.02; // ratio — small dark center
+
+      function generateDots() {
+        dots = [];
+        var size = canvas.width;
+        var cx = size / 2;
+        var cy = size / 2;
+        var maxR = size / 2 - 2;
+        var ringSpacing = 2.8; // pixels between rings
+        var numRings = Math.floor((maxR - maxR * CENTER_HOLE) / ringSpacing);
+
+        for (var ring = 0; ring < numRings; ring++) {
+          var r = maxR * CENTER_HOLE + ring * ringSpacing;
+          var circumference = 2 * Math.PI * r;
+          // Denser dots along each ring
+          var numDots = Math.floor(circumference / 2.2);
+
+          for (var d = 0; d < numDots; d++) {
+            // Skip some dots randomly for grain texture
+            if (Math.random() < 0.3) continue;
+
+            var baseAngle = (d / numDots) * Math.PI * 2;
+            // Add noise to angle and radius
+            var angleNoise = (Math.random() - 0.5) * (0.8 / (ring + 5));
+            var radiusNoise = (Math.random() - 0.5) * 2;
+
+            dots.push({
+              baseR: r + radiusNoise,
+              baseAngle: baseAngle + angleNoise,
+              // Per-dot animation phase
+              phase: Math.random() * Math.PI * 2,
+              speed: 0.2 + Math.random() * 0.6
+            });
+          }
+        }
+      }
+
+      sizeCanvas();
+      window.addEventListener('resize', sizeCanvas);
+
+      var time = 0;
       var breathTarget = 1;
       var breathCurrent = 1;
-      var timer = 0;
-      var interval = 60 + Math.random() * 80;
+      var breathTimer = 0;
+      var breathInterval = 60 + Math.random() * 80;
 
       function loop() {
-        timer++;
-        if (timer >= interval) {
-          timer = 0;
-          interval = 40 + Math.random() * 100;
-          breathTarget = 0.94 + Math.random() * 0.14;
+        var size = canvas.width;
+        var cx = size / 2;
+        var cy = size / 2;
+
+        ctx.clearRect(0, 0, size, size);
+        time += 0.02;
+
+        // Organic breathing
+        breathTimer++;
+        if (breathTimer >= breathInterval) {
+          breathTimer = 0;
+          breathInterval = 40 + Math.random() * 100;
+          breathTarget = 0.96 + Math.random() * 0.1;
         }
-        breathCurrent += (breathTarget - breathCurrent) * 0.015;
-        el.style.transform = 'scale(' + breathCurrent + ')';
+        breathCurrent += (breathTarget - breathCurrent) * 0.012;
+
+        ctx.fillStyle = '#fff';
+        ctx.globalAlpha = 1;
+
+        for (var i = 0; i < dots.length; i++) {
+          var d = dots[i];
+          // Breathing affects radius — dots closer to edge move more
+          var rFactor = d.baseR / (size / 2);
+          var r = d.baseR * (1 + (breathCurrent - 1) * rFactor);
+
+          // Subtle per-dot wobble
+          var wobble = Math.sin(time * d.speed + d.phase) * 0.4;
+          r += wobble;
+
+          var angle = d.baseAngle;
+          var x = cx + Math.cos(angle) * r;
+          var y = cy + Math.sin(angle) * r;
+
+          ctx.beginPath();
+          ctx.arc(x, y, 0.8, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
         requestAnimationFrame(loop);
       }
       loop();
