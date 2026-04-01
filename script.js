@@ -37,6 +37,24 @@ if (rotatingItems.length > 0) {
   }, 10000);
 }
 
+// Auto-size stat numbers to fill card width
+function sizeStatNumbers() {
+  document.querySelectorAll('.stat-card').forEach(card => {
+    const number = card.querySelector('.stat-number');
+    if (!number) return;
+    const cardWidth = card.clientWidth - parseFloat(getComputedStyle(card).paddingLeft) - parseFloat(getComputedStyle(card).paddingRight);
+    let fontSize = 10;
+    number.style.fontSize = fontSize + 'px';
+    while (number.scrollWidth < cardWidth && fontSize < 400) {
+      fontSize += 2;
+      number.style.fontSize = fontSize + 'px';
+    }
+    number.style.fontSize = (fontSize - 2) + 'px';
+  });
+}
+sizeStatNumbers();
+window.addEventListener('resize', sizeStatNumbers);
+
 // Header background on scroll
 const header = document.querySelector('.header');
 window.addEventListener('scroll', () => {
