@@ -141,9 +141,15 @@
       opacity: 0;
       transition: opacity 0.6s ease;
       pointer-events: none;
+      padding: 1.5rem 2rem;
+      border-radius: 16px;
+      background: rgba(238, 235, 224, 0.55);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
     }
     .postcard-text.visible {
       opacity: 1;
+      pointer-events: auto;
     }
     .postcard-text h3 {
       font-family: var(--font-heading);
@@ -437,7 +443,7 @@
         // Update hint
         var hint = document.querySelector('.uncover-hint');
         if (hint) {
-          hint.textContent = 'click a card to reveal its story';
+          hint.textContent = 'click a card to uncover its story';
           hint.classList.remove('hidden');
         }
 
