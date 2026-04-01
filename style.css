@@ -474,6 +474,13 @@ img { max-width: 100%; display: block; }
   position: relative;
 }
 
+.world-icon {
+  width: 80px;
+  height: 80px;
+  display: block;
+  margin-bottom: 1.5rem;
+}
+
 .world-text h3 {
   font-size: 1.95rem;
   font-weight: 700;
