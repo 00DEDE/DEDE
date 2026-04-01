@@ -347,11 +347,11 @@ img { max-width: 100%; display: block; }
 .stat-number {
   font-family: var(--font-heading);
   font-weight: 700;
-  font-size: 100%;
+  font-size: 1rem;
   line-height: 0.9;
   margin-bottom: 1rem;
-  width: 100%;
-  overflow-wrap: break-word;
+  display: inline-block;
+  white-space: nowrap;
 }
 
 /* Number colors */

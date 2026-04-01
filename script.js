@@ -37,22 +37,42 @@ if (rotatingItems.length > 0) {
   }, 10000);
 }
 
-// Auto-size stat numbers to match the width of the text block beneath
+// Auto-size stat numbers to match the content width of the card
 function sizeStatNumbers() {
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+
   document.querySelectorAll('.stat-card').forEach(card => {
     const number = card.querySelector('.stat-number');
     if (!number) return;
-    const cardWidth = card.clientWidth - parseFloat(getComputedStyle(card).paddingLeft) - parseFloat(getComputedStyle(card).paddingRight);
-    let fontSize = 10;
-    number.style.fontSize = fontSize + 'px';
-    while (number.scrollWidth < cardWidth && fontSize < 600) {
-      fontSize += 1;
-      number.style.fontSize = fontSize + 'px';
+
+    const style = getComputedStyle(card);
+    const targetWidth = card.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+    const fontFamily = getComputedStyle(number).fontFamily;
+    const text = number.textContent;
+
+    let lo = 10, hi = 600, best = 10;
+    while (lo <= hi) {
+      const mid = Math.floor((lo + hi) / 2);
+      ctx.font = '700 ' + mid + 'px ' + fontFamily;
+      const measured = ctx.measureText(text).width;
+      if (measured <= targetWidth) {
+        best = mid;
+        lo = mid + 1;
+      } else {
+        hi = mid - 1;
+      }
     }
-    number.style.fontSize = (fontSize - 1) + 'px';
+    number.style.fontSize = best + 'px';
   });
 }
-sizeStatNumbers();
+
+// Run after fonts have loaded
+if (document.fonts && document.fonts.ready) {
+  document.fonts.ready.then(sizeStatNumbers);
+} else {
+  window.addEventListener('load', sizeStatNumbers);
+}
 window.addEventListener('resize', sizeStatNumbers);
 
 // Header background on scroll
