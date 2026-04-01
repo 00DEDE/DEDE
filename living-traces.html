@@ -30,15 +30,13 @@
       z-index: 50;
       pointer-events: none;
       opacity: 0;
+      transition: opacity 1.2s ease;
     }
     .intro-logo.show {
       opacity: 1;
     }
-    .intro-logo img {
-      width: 180px;
-      height: auto;
+    .intro-logo canvas {
       display: block;
-      filter: invert(1);
     }
     /* Chaos canvas for rapid logo stamps */
     #chaos-canvas {
@@ -92,7 +90,7 @@
 
   <!-- Final logo at top -->
   <div class="intro-logo" id="intro-logo">
-    <img src="MICRO/MICRO_LOGO.svg" alt="Living Traces">
+    <canvas id="logo-dot-canvas"></canvas>
   </div>
 
   <!-- Circle -->
@@ -118,17 +116,13 @@
       chaosCanvas.style.height = window.innerHeight + 'px';
       cCtx.scale(2, 2);
 
-      // Load the MICRO logo SVG, fix viewBox and make white
+      // Load the MICRO logo SVG, tighten viewBox and make white
       var logoImg = new Image();
       fetch('MICRO/MICRO_LOGO.svg').then(function(r) { return r.text(); }).then(function(svg) {
-        // Widen viewBox so full text is visible
-        var fixed = svg.replace('viewBox="0 0 288 288"', 'viewBox="0 0 620 200"');
-        // Make text white
-        fixed = fixed.replace(/fill:\s*[^;}"]+/, 'fill: #fff');
-        // If no fill in style, add it
-        if (fixed.indexOf('fill: #fff') === -1) {
-          fixed = fixed.replace('.st0 {', '.st0 { fill: #fff;');
-        }
+        // Tighten viewBox to text path bounds
+        var fixed = svg.replace('viewBox="0 0 288 288"', 'viewBox="10 120 270 45"');
+        // Make all paths white
+        fixed = fixed.replace('<svg ', '<svg fill="#fff" ');
         logoImg.src = 'data:image/svg+xml,' + encodeURIComponent(fixed);
       });
 
@@ -139,8 +133,121 @@
       var running = true;
 
       logoImg.onload = function() {
-        var aspect = logoImg.width / logoImg.height;
-        var frameCount = 0;
+        var aspect = logoImg.naturalWidth / logoImg.naturalHeight;
+
+        // ---- DOT LOGO: sample pixels from rendered SVG ----
+        var sampleW = 540, sampleH = Math.round(540 / aspect);
+        var sampleCanvas = document.createElement('canvas');
+        sampleCanvas.width = sampleW;
+        sampleCanvas.height = sampleH;
+        var sCtx = sampleCanvas.getContext('2d');
+        sCtx.drawImage(logoImg, 0, 0, sampleW, sampleH);
+        var imgData = sCtx.getImageData(0, 0, sampleW, sampleH);
+
+        // Find text bounding box in sample
+        var bMinX = sampleW, bMaxX = 0, bMinY = sampleH, bMaxY = 0;
+        for (var py = 0; py < sampleH; py++) {
+          for (var px = 0; px < sampleW; px++) {
+            if (imgData.data[(py * sampleW + px) * 4 + 3] > 128) {
+              if (px < bMinX) bMinX = px;
+              if (px > bMaxX) bMaxX = px;
+              if (py < bMinY) bMinY = py;
+              if (py > bMaxY) bMaxY = py;
+            }
+          }
+        }
+
+        var textW = bMaxX - bMinX + 1;
+        var textH = bMaxY - bMinY + 1;
+        var dispW = 180;
+        var dispH = Math.max(Math.round(dispW * (textH / textW)), 10);
+
+        var logoDotCanvas = document.getElementById('logo-dot-canvas');
+        var ldCtx = logoDotCanvas.getContext('2d');
+        logoDotCanvas.width = dispW * 2;
+        logoDotCanvas.height = dispH * 2;
+        logoDotCanvas.style.width = dispW + 'px';
+        logoDotCanvas.style.height = dispH + 'px';
+        ldCtx.scale(2, 2);
+
+        // Sample dots from text pixels
+        var logoDots = [];
+        var step = 2;
+        for (var py = bMinY; py <= bMaxY; py += step) {
+          for (var px = bMinX; px <= bMaxX; px += step) {
+            var idx = (Math.floor(py) * sampleW + Math.floor(px)) * 4;
+            if (imgData.data[idx + 3] > 128) {
+              if (Math.random() < 0.12) continue;
+              logoDots.push({
+                baseX: (px - bMinX) / textW * dispW,
+                baseY: (py - bMinY) / textH * dispH,
+                phase: Math.random() * Math.PI * 2,
+                speed: 0.2 + Math.random() * 0.6
+              });
+            }
+          }
+        }
+
+        var logoAnimRunning = false;
+        var lt = 0;
+        var lBreathTarget = 1, lBreathCurrent = 1;
+        var lBreathTimer = 0, lBreathInterval = 60 + Math.random() * 80;
+
+        function startLogoDotAnim() {
+          if (logoAnimRunning) return;
+          logoAnimRunning = true;
+          logoDotLoop();
+        }
+
+        function logoDotLoop() {
+          ldCtx.clearRect(0, 0, dispW, dispH);
+          lt += 0.02;
+
+          lBreathTimer++;
+          if (lBreathTimer >= lBreathInterval) {
+            lBreathTimer = 0;
+            lBreathInterval = 40 + Math.random() * 100;
+            lBreathTarget = 0.98 + Math.random() * 0.04;
+          }
+          lBreathCurrent += (lBreathTarget - lBreathCurrent) * 0.012;
+
+          ldCtx.fillStyle = '#fff';
+          var cx = dispW / 2;
+          var cy = dispH / 2;
+          var pulseWave = lt * 0.5;
+          var maxDist = Math.sqrt(cx * cx + cy * cy);
+
+          for (var i = 0; i < logoDots.length; i++) {
+            var d = logoDots[i];
+            var dx = d.baseX - cx;
+            var dy = d.baseY - cy;
+            var dist = Math.sqrt(dx * dx + dy * dy);
+            var rFactor = dist / maxDist;
+            var ringPhase = rFactor * Math.PI * 1.5;
+            var pulse = Math.sin(pulseWave - ringPhase);
+            var amplitude = 0.02 + rFactor * 0.03;
+            var scale = lBreathCurrent * (1 + pulse * amplitude);
+            var x = cx + dx * scale;
+            var y = cy + dy * scale;
+            var wobble = Math.sin(lt * d.speed + d.phase) * 0.2;
+            x += wobble;
+            y += Math.cos(lt * d.speed * 0.7 + d.phase) * 0.15;
+
+            ldCtx.beginPath();
+            ldCtx.arc(x, y, 0.4, 0, Math.PI * 2);
+            ldCtx.fill();
+          }
+
+          requestAnimationFrame(logoDotLoop);
+        }
+
+        // ---- CHAOS ANIMATION ----
+        var headerW = 180;
+        var headerH = headerW / aspect;
+        var headerX = W / 2 - headerW / 2;
+        var headerY = 30;
+        cCtx.globalAlpha = 1;
+        cCtx.drawImage(logoImg, headerX, headerY, headerW, headerH);
 
         function chaosLoop(timestamp) {
           if (!startTime) startTime = timestamp;
@@ -150,33 +257,35 @@
             cCtx.clearRect(0, 0, W, H);
             chaosCanvas.style.display = 'none';
             logo.classList.add('show');
-            setTimeout(function() {
-              circleWrap.classList.add('visible');
-            }, 500);
-            setTimeout(function() {
-              prompt.classList.add('visible');
-            }, 1500);
+            startLogoDotAnim();
+            circleWrap.classList.add('visible');
+            prompt.classList.add('visible');
             return;
           }
 
-          frameCount++;
-
-          // Skip frames randomly — creates bursts and pauses
-          if (Math.random() < 0.4) {
+          if (Math.random() < 0.35) {
             requestAnimationFrame(chaosLoop);
             return;
           }
 
-          // Only 1-2 stamps per active frame — sparse, not filling the screen
-          var stampsPerFrame = Math.random() < 0.7 ? 1 : 2;
+          cCtx.globalAlpha = 1;
+
+          var stampsPerFrame = Math.random() < 0.6 ? 1 : 2;
           for (var i = 0; i < stampsPerFrame; i++) {
-            var scale = 0.3 + Math.random() * 2.5;
+            var roll = Math.random();
+            var scale;
+            if (roll < 0.2) {
+              scale = 0.1 + Math.random() * 0.3;
+            } else if (roll < 0.7) {
+              scale = 0.5 + Math.random() * 2;
+            } else {
+              scale = (W / 180) * (0.7 + Math.random() * 0.6);
+            }
             var w = 180 * scale;
             var h = w / aspect;
-            var x = Math.random() * W * 0.9 + W * 0.05 - w / 2;
-            var y = Math.random() * H * 0.9 + H * 0.05 - h / 2;
+            var x = Math.random() * W - w / 2;
+            var y = Math.random() * H - h / 2;
 
-            cCtx.globalAlpha = 0.4 + Math.random() * 0.6;
             cCtx.drawImage(logoImg, x, y, w, h);
           }
 
