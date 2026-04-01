@@ -39,7 +39,7 @@
 :root {
   --yellow: #F2C94C;
   --yellow-dark: #D4A72C;
-  --blue: #2490cf;
+  --blue: #2491d0;
   --blue-dark: #1b6fa0;
   --dark: #675d52;
   --gray-700: #675d52;
@@ -119,7 +119,7 @@ img { max-width: 100%; display: block; }
 }
 
 .logo-img {
-  height: 40px;
+  height: 60px;
   width: auto;
 }
 
@@ -521,7 +521,7 @@ img { max-width: 100%; display: block; }
 }
 
 .footer-logo-img {
-  height: 50px;
+  height: 75px;
   width: auto;
 }
 
