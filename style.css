@@ -190,7 +190,7 @@ img { max-width: 100%; display: block; }
   min-height: 90vh;
   display: flex;
   align-items: center;
-  padding: 0 2rem;
+  padding: 0 1rem;
   margin-top: 70px;
   overflow: hidden;
 }
