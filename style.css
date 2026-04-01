@@ -75,6 +75,8 @@ body {
   background-image:
     radial-gradient(ellipse 80% 60% at 15% 20%, #ffffff 0%, transparent 70%),
     radial-gradient(ellipse 70% 50% at 85% 75%, #ffffff 0%, transparent 65%),
+    radial-gradient(ellipse 45% 45% at 30% 65%, #d9d3cd 0%, transparent 55%),
+    radial-gradient(ellipse 50% 40% at 75% 30%, #ddd7d1 0%, transparent 50%),
     radial-gradient(ellipse 60% 80% at 50% 50%, #ffffff 0%, transparent 60%),
     radial-gradient(ellipse 90% 40% at 70% 10%, #e7e2de 0%, transparent 70%),
     radial-gradient(ellipse 50% 70% at 25% 80%, #e7e2de 0%, transparent 65%);
