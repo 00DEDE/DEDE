@@ -335,6 +335,7 @@ img { max-width: 100%; display: block; }
   padding: 2rem 1.5rem;
   border-radius: 16px;
   min-height: 500px;
+  overflow: hidden;
 }
 
 /* Card backgrounds */

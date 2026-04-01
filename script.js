@@ -37,7 +37,7 @@ if (rotatingItems.length > 0) {
   }, 10000);
 }
 
-// Auto-size stat numbers to fill card width
+// Auto-size stat numbers to fill card width, then scale up 5x
 function sizeStatNumbers() {
   document.querySelectorAll('.stat-card').forEach(card => {
     const number = card.querySelector('.stat-number');
@@ -45,11 +45,11 @@ function sizeStatNumbers() {
     const cardWidth = card.clientWidth - parseFloat(getComputedStyle(card).paddingLeft) - parseFloat(getComputedStyle(card).paddingRight);
     let fontSize = 10;
     number.style.fontSize = fontSize + 'px';
-    while (number.scrollWidth < cardWidth && fontSize < 400) {
+    while (number.scrollWidth < cardWidth && fontSize < 2000) {
       fontSize += 2;
       number.style.fontSize = fontSize + 'px';
     }
-    number.style.fontSize = (fontSize - 2) + 'px';
+    number.style.fontSize = ((fontSize - 2) * 5) + 'px';
   });
 }
 sizeStatNumbers();
