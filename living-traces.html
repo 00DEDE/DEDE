@@ -21,6 +21,7 @@
     body * { cursor: none !important; }
 
     /* Full-bleed logo */
+    /* Final logo at top */
     .intro-logo {
       position: fixed;
       top: 30px;
@@ -28,12 +29,26 @@
       transform: translateX(-50%);
       z-index: 50;
       pointer-events: none;
+      opacity: 0;
+    }
+    .intro-logo.show {
+      opacity: 1;
     }
     .intro-logo img {
       width: 180px;
       height: auto;
       display: block;
       filter: invert(1);
+    }
+    /* Chaos canvas for rapid logo stamps */
+    #chaos-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 49;
+      pointer-events: none;
     }
 
     /* Circle container */
@@ -72,7 +87,10 @@
 </head>
 <body data-page="living-traces">
 
-  <!-- Full-bleed logo at bottom -->
+  <!-- Chaos canvas for rapid logo stamps -->
+  <canvas id="chaos-canvas"></canvas>
+
+  <!-- Final logo at top -->
   <div class="intro-logo" id="intro-logo">
     <img src="MICRO/MICRO_LOGO.svg" alt="Living Traces">
   </div>
@@ -86,35 +104,75 @@
   <div class="prompt" id="prompt">complete the ellipse</div>
 
   <script>
-    // ---- INTRO ANIMATION ----
+    // ---- INTRO ANIMATION — rapid chaotic logo stamps ----
     (function() {
+      var chaosCanvas = document.getElementById('chaos-canvas');
+      var cCtx = chaosCanvas.getContext('2d');
       var logo = document.getElementById('intro-logo');
-      var logoImg = logo.querySelector('img');
       var circleWrap = document.getElementById('circle-wrap');
       var prompt = document.getElementById('prompt');
 
-      // Calculate scale to make 180px logo fill the viewport width
-      var startScale = window.innerWidth / 180;
+      chaosCanvas.width = window.innerWidth * 2;
+      chaosCanvas.height = window.innerHeight * 2;
+      chaosCanvas.style.width = window.innerWidth + 'px';
+      chaosCanvas.style.height = window.innerHeight + 'px';
+      cCtx.scale(2, 2);
 
-      // Start: logo centered in viewport, scaled up to full-bleed
-      logo.style.top = '50%';
-      logo.style.transform = 'translate(-50%, -50%) scale(' + startScale + ')';
+      // Load the logo SVG as an image
+      var logoImg = new Image();
+      // Create a white version of the SVG inline
+      var svgText = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 288 288"><text font-family="sans-serif" font-size="48.66" letter-spacing=".05em" fill="white" transform="translate(13.61 161.71)">LIVING TRACES</text></svg>';
+      logoImg.src = 'data:image/svg+xml,' + encodeURIComponent(svgText);
 
-      // After 1.5s, shrink and move to top
-      setTimeout(function() {
-        logo.style.transition = 'transform 2s cubic-bezier(0.4, 0, 0.2, 1), top 2s cubic-bezier(0.4, 0, 0.2, 1)';
-        logo.style.top = '30px';
-        logo.style.transform = 'translateX(-50%) scale(1)';
+      var W = window.innerWidth;
+      var H = window.innerHeight;
+      var startTime = null;
+      var DURATION = 3000;
+      var running = true;
 
-        // Show circle and prompt as logo shrinks
-        setTimeout(function() {
-          circleWrap.classList.add('visible');
-        }, 800);
+      logoImg.onload = function() {
+        // The SVG is 288x288 but the text is wide — use aspect ratio
+        var aspect = logoImg.width / logoImg.height;
 
-        setTimeout(function() {
-          prompt.classList.add('visible');
-        }, 1800);
-      }, 1500);
+        function chaosLoop(timestamp) {
+          if (!startTime) startTime = timestamp;
+          var elapsed = timestamp - startTime;
+
+          if (elapsed >= DURATION) {
+            // Instant clear — no fade
+            cCtx.clearRect(0, 0, W, H);
+            chaosCanvas.style.display = 'none';
+            // Show final logo at top
+            logo.classList.add('show');
+            // Slowly reveal circle and prompt
+            setTimeout(function() {
+              circleWrap.classList.add('visible');
+            }, 500);
+            setTimeout(function() {
+              prompt.classList.add('visible');
+            }, 1500);
+            return;
+          }
+
+          // Stamp multiple logos per frame — volatile and rapid
+          var stampsPerFrame = 3 + Math.floor(Math.random() * 5);
+          for (var i = 0; i < stampsPerFrame; i++) {
+            // Random scale: from tiny to huge
+            var scale = 0.15 + Math.random() * 3.5;
+            var w = 180 * scale;
+            var h = w / aspect;
+            // Random position — centered around middle but can go anywhere
+            var x = Math.random() * W - w / 2;
+            var y = Math.random() * H - h / 2;
+
+            cCtx.globalAlpha = 0.3 + Math.random() * 0.7;
+            cCtx.drawImage(logoImg, x, y, w, h);
+          }
+
+          requestAnimationFrame(chaosLoop);
+        }
+        requestAnimationFrame(chaosLoop);
+      };
     })();
 
     // ---- CONCENTRIC DOT CIRCLE ----
