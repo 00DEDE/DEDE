@@ -388,7 +388,7 @@ img { max-width: 100%; display: block; }
    FOUR WORLDS SECTION
    ======================== */
 .worlds-section {
-  padding: 4rem 2rem 6rem;
+  padding: 4rem 2rem 4rem;
   max-width: var(--max-width);
   margin: 0 auto;
 }

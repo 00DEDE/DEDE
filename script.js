@@ -45,7 +45,7 @@ if (worldsWords.length > 0) {
     worldsWords[worldsIndex].classList.remove('active');
     worldsIndex = (worldsIndex + 1) % worldsWords.length;
     worldsWords[worldsIndex].classList.add('active');
-  }, 3000);
+  }, 5000);
 }
 
 // Auto-size stat numbers to match the content width of the card
