@@ -336,6 +336,8 @@ img { max-width: 100%; display: block; }
   border-radius: 16px;
   min-height: 500px;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Card backgrounds */
@@ -350,8 +352,10 @@ img { max-width: 100%; display: block; }
   font-size: 1rem;
   line-height: 0.9;
   margin-bottom: 1rem;
-  display: inline-block;
+  display: block;
   white-space: nowrap;
+  text-align: center;
+  letter-spacing: 0.02em;
 }
 
 /* Number colors */
@@ -366,14 +370,18 @@ img { max-width: 100%; display: block; }
 .stat-bg-yellow p { color: #675d52; }
 .stat-bg-brown p { color: #e7e2de; }
 
+.stat-card-text {
+  margin-top: auto;
+}
+
 .stat-card p {
-  font-size: 0.8rem;
+  font-size: 1rem;
   line-height: 1.6;
   margin-bottom: 0.75rem;
 }
 
 .stat-detail {
-  font-size: 0.75rem !important;
+  font-size: 0.9375rem !important;
 }
 
 /* ========================
