@@ -585,15 +585,17 @@ img { max-width: 100%; display: block; }
 
 .footer-logo {
   display: flex;
+  align-self: stretch;
 }
 
 .footer-logo-link {
   display: block;
-  width: 630px;
-  height: 630px;
+  width: 100%;
+  aspect-ratio: 2 / 1;
+  height: 100%;
   background-color: #2491d0;
-  -webkit-mask: url('UNESCO_BRAND LOGO V2.svg') no-repeat left top / contain;
-  mask: url('UNESCO_BRAND LOGO V2.svg') no-repeat left top / contain;
+  -webkit-mask: url('UNESCO_BRAND LOGO V2.svg') no-repeat left center / contain;
+  mask: url('UNESCO_BRAND LOGO V2.svg') no-repeat left center / contain;
   transition: background-color 0.3s ease;
 }
 

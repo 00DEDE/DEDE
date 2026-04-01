@@ -122,6 +122,11 @@ new p5(function(p) {
 
     // Load the colored image and assign it back
     p.loadImage(uri, img => { s.img = img; });
+
+    // Notify parent page of shape placement
+    if (window.parent !== window) {
+      window.parent.postMessage({ type: 'shape', x: x, y: y }, '*');
+    }
   }
 
   p.mouseMoved = function() {

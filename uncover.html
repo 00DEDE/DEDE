@@ -32,6 +32,94 @@
       z-index: 10;
       pointer-events: none;
       user-select: none;
+      transition: opacity 1s;
+    }
+    .uncover-hint.hidden { opacity: 0; }
+
+    /* Postcard layer */
+    .postcard-layer {
+      position: fixed;
+      top: 70px;
+      left: 0;
+      width: 100%;
+      height: calc(100vh - 70px);
+      z-index: 5;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .postcard {
+      position: absolute;
+      width: 160px;
+      height: 230px;
+      opacity: 0;
+      transition: opacity 1s ease;
+      perspective: 1200px;
+    }
+
+    /* Subtle pulse hint at postcard locations */
+    .postcard::before {
+      content: '';
+      position: absolute;
+      inset: -8px;
+      border-radius: 12px;
+      border: 1.5px dashed rgba(103, 93, 82, 0.15);
+      animation: postcard-pulse 3s ease-in-out infinite;
+    }
+    @keyframes postcard-pulse {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 0.8; }
+    }
+
+    .postcard.revealed {
+      opacity: 1;
+    }
+    .postcard.revealed::before {
+      display: none;
+    }
+
+    .postcard-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 1s ease;
+      transform-style: preserve-3d;
+    }
+
+    .postcard.flipped .postcard-inner {
+      transform: rotateY(180deg);
+    }
+
+    .postcard-front,
+    .postcard-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+
+    .postcard-front img,
+    .postcard-back img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .postcard-back {
+      transform: rotateY(180deg);
+    }
+
+    .postcard-back img {
+      object-fit: contain;
+      background: inherit;
+    }
+
+    /* Alignment animation */
+    .postcard.aligning {
+      transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1), left 1.2s cubic-bezier(0.4, 0, 0.2, 1), top 1.2s cubic-bezier(0.4, 0, 0.2, 1), width 1.2s cubic-bezier(0.4, 0, 0.2, 1), height 1.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
   </style>
 </head>
@@ -66,7 +154,47 @@
 
   <div class="uncover-hint">hover to place · click to grow · D to toggle drawing · space to clear</div>
 
-  <!-- Uncover Content -->
+  <!-- Postcard overlay layer -->
+  <div class="postcard-layer" id="postcard-layer">
+    <div class="postcard" data-index="0" style="left: 8%; top: 12%;">
+      <div class="postcard-inner">
+        <div class="postcard-front"><img src="T5_WEEK 11_POST CARDS/publication-web-resources/image/POSTCARD_1.png" alt="Rice Terraces"></div>
+        <div class="postcard-back"><img src="T5_WEEK 11_POST CARDS/publication-web-resources/image/2.svg" alt="U"></div>
+      </div>
+    </div>
+    <div class="postcard" data-index="1" style="left: 42%; top: 5%;">
+      <div class="postcard-inner">
+        <div class="postcard-front"><img src="T5_WEEK 11_POST CARDS/publication-web-resources/image/POSTCARD_2.png" alt="Nazca Lines"></div>
+        <div class="postcard-back"><img src="T5_WEEK 11_POST CARDS/publication-web-resources/image/83.svg" alt="N"></div>
+      </div>
+    </div>
+    <div class="postcard" data-index="2" style="left: 76%; top: 15%;">
+      <div class="postcard-inner">
+        <div class="postcard-front"><img src="T5_WEEK 11_POST CARDS/publication-web-resources/image/POSTCARD_3.png" alt="Intangible Heritage"></div>
+        <div class="postcard-back"><img src="T5_WEEK 11_POST CARDS/publication-web-resources/image/168.svg" alt="E"></div>
+      </div>
+    </div>
+    <div class="postcard" data-index="3" style="left: 5%; top: 55%;">
+      <div class="postcard-inner">
+        <div class="postcard-front"><img src="T5_WEEK 11_POST CARDS/publication-web-resources/image/POSTCARD_4.png" alt="Textile"></div>
+        <div class="postcard-back"><img src="T5_WEEK 11_POST CARDS/publication-web-resources/image/246.svg" alt="S"></div>
+      </div>
+    </div>
+    <div class="postcard" data-index="4" style="left: 45%; top: 58%;">
+      <div class="postcard-inner">
+        <div class="postcard-front"><img src="T5_WEEK 11_POST CARDS/publication-web-resources/image/POSTCARD_5.png" alt="Minaret"></div>
+        <div class="postcard-back"><img src="T5_WEEK 11_POST CARDS/publication-web-resources/image/330.svg" alt="C"></div>
+      </div>
+    </div>
+    <div class="postcard" data-index="5" style="left: 78%; top: 50%;">
+      <div class="postcard-inner">
+        <div class="postcard-front"><img src="T5_WEEK 11_POST CARDS/publication-web-resources/image/POSTCARD_6.png" alt="Festival"></div>
+        <div class="postcard-back"><img src="T5_WEEK 11_POST CARDS/publication-web-resources/image/414.svg" alt="O"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Drawing canvas -->
   <iframe id="sketch-frame" class="uncover-frame" src="unesco_textile_sketch.html" title="UNESCO Textile Sketch" allowtransparency="true"></iframe>
   <div class="uncover-spacer"></div>
 
@@ -121,15 +249,113 @@
 
   <script src="script.js"></script>
   <script>
-    // Auto-focus iframe so keyboard shortcuts work immediately
+    // Auto-focus iframe for keyboard shortcuts
     const frame = document.getElementById('sketch-frame');
-    frame.addEventListener('load', function() {
-      frame.focus();
-    });
-    // Re-focus iframe when user clicks on it
-    frame.addEventListener('mouseenter', function() {
-      frame.focus();
-    });
+    frame.addEventListener('load', function() { frame.focus(); });
+    frame.addEventListener('mouseenter', function() { frame.focus(); });
+
+    // Postcard reveal system
+    (function() {
+      const postcards = document.querySelectorAll('.postcard');
+      const layer = document.getElementById('postcard-layer');
+      const hitCounts = new Array(6).fill(0);
+      const HITS_NEEDED = 5;
+      const HIT_RADIUS = 140;
+      let allRevealed = false;
+      let animating = false;
+
+      // Listen for shape positions from the iframe
+      window.addEventListener('message', function(e) {
+        if (!e.data || e.data.type !== 'shape' || allRevealed) return;
+        checkHits(e.data.x, e.data.y);
+      });
+
+      function checkHits(sx, sy) {
+        const layerW = layer.clientWidth;
+        const layerH = layer.clientHeight;
+
+        postcards.forEach(function(card, i) {
+          if (card.classList.contains('revealed')) return;
+
+          // Get card center in pixels
+          var rect = card.getBoundingClientRect();
+          var layerRect = layer.getBoundingClientRect();
+          var cx = rect.left - layerRect.left + rect.width / 2;
+          var cy = rect.top - layerRect.top + rect.height / 2;
+
+          var dist = Math.sqrt((sx - cx) * (sx - cx) + (sy - cy) * (sy - cy));
+          if (dist < HIT_RADIUS) {
+            hitCounts[i]++;
+            // Gradually increase opacity as hint
+            if (hitCounts[i] < HITS_NEEDED) {
+              card.style.opacity = Math.min(0.3, hitCounts[i] / HITS_NEEDED * 0.3);
+            }
+            if (hitCounts[i] >= HITS_NEEDED) {
+              card.classList.add('revealed');
+              card.style.opacity = '';
+              checkAllRevealed();
+            }
+          }
+        });
+      }
+
+      function checkAllRevealed() {
+        var revealed = document.querySelectorAll('.postcard.revealed');
+        if (revealed.length === 6 && !animating) {
+          allRevealed = true;
+          animating = true;
+          // Hide the drawing hint
+          var hint = document.querySelector('.uncover-hint');
+          if (hint) hint.classList.add('hidden');
+          // Wait, then align and flip
+          setTimeout(alignAndFlip, 2000);
+        }
+      }
+
+      function alignAndFlip() {
+        var layerW = layer.clientWidth;
+        var layerH = layer.clientHeight;
+
+        var cardW = 160;
+        var cardH = 230;
+        var gap = 16;
+        var totalW = 6 * cardW + 5 * gap;
+        var startX = (layerW - totalW) / 2;
+        var centerY = (layerH - cardH) / 2;
+
+        // Store original positions, then animate to aligned row
+        postcards.forEach(function(card, i) {
+          var rect = card.getBoundingClientRect();
+          var layerRect = layer.getBoundingClientRect();
+
+          // Set current position as explicit pixels (remove % positioning)
+          var currentLeft = rect.left - layerRect.left;
+          var currentTop = rect.top - layerRect.top;
+          card.style.left = currentLeft + 'px';
+          card.style.top = currentTop + 'px';
+        });
+
+        // Force reflow
+        layer.offsetHeight;
+
+        // Animate to aligned positions
+        postcards.forEach(function(card, i) {
+          card.classList.add('aligning');
+          var targetX = startX + i * (cardW + gap);
+          card.style.left = targetX + 'px';
+          card.style.top = centerY + 'px';
+        });
+
+        // After alignment completes, flip cards one by one
+        setTimeout(function() {
+          postcards.forEach(function(card, i) {
+            setTimeout(function() {
+              card.classList.add('flipped');
+            }, i * 400);
+          });
+        }, 1500);
+      }
+    })();
   </script>
 </body>
 </html>
