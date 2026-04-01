@@ -9,13 +9,29 @@
     .uncover-section {
       margin-top: 70px;
       width: 100%;
-      height: calc(100vh - 70px);
+      height: 500vh;
+      position: relative;
     }
     .uncover-section iframe {
       width: 100%;
       height: 100%;
       border: none;
       display: block;
+    }
+    .uncover-hint {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--font-body);
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+      color: var(--dark);
+      opacity: 0.45;
+      z-index: 10;
+      pointer-events: none;
+      user-select: none;
+      transition: opacity 0.5s;
     }
   </style>
 </head>
@@ -48,9 +64,11 @@
     </div>
   </header>
 
+  <div class="uncover-hint">hover to place · click to grow · D to toggle drawing · space to clear</div>
+
   <!-- Uncover Content -->
   <section class="uncover-section">
-    <iframe src="unesco_textile_sketch.html" title="UNESCO Textile Sketch"></iframe>
+    <iframe id="sketch-frame" src="unesco_textile_sketch.html" title="UNESCO Textile Sketch" allowtransparency="true"></iframe>
   </section>
 
   <!-- Footer -->
@@ -103,5 +121,16 @@
   </footer>
 
   <script src="script.js"></script>
+  <script>
+    // Auto-focus iframe so keyboard shortcuts work immediately
+    const frame = document.getElementById('sketch-frame');
+    frame.addEventListener('load', function() {
+      frame.focus();
+    });
+    // Re-focus iframe when user clicks on it
+    frame.addEventListener('mouseenter', function() {
+      frame.focus();
+    });
+  </script>
 </body>
 </html>

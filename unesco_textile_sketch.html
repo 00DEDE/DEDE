@@ -5,8 +5,31 @@
 <title>UNESCO Textile</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { background: #eeebe0; overflow: hidden; }
-  canvas { display: block; }
+  body {
+    background-color: #e7e2de;
+    background-image:
+      radial-gradient(ellipse 80% 60% at 15% 20%, #ffffff 0%, transparent 70%),
+      radial-gradient(ellipse 70% 50% at 85% 75%, #ffffff 0%, transparent 65%),
+      radial-gradient(ellipse 45% 45% at 30% 65%, #d9d3cd 0%, transparent 55%),
+      radial-gradient(ellipse 50% 40% at 75% 30%, #ddd7d1 0%, transparent 50%),
+      radial-gradient(ellipse 60% 80% at 50% 50%, #ffffff 0%, transparent 60%),
+      radial-gradient(ellipse 90% 40% at 70% 10%, #e7e2de 0%, transparent 70%),
+      radial-gradient(ellipse 50% 70% at 25% 80%, #e7e2de 0%, transparent 65%);
+    background-size: 200% 200%;
+    background-attachment: fixed;
+    animation: lava-drift 60s ease-in-out infinite alternate;
+    overflow-x: hidden;
+    margin: 0;
+    min-height: 500vh;
+  }
+  @keyframes lava-drift {
+    0% { background-position: 0% 0%; }
+    25% { background-position: 30% 60%; }
+    50% { background-position: 70% 30%; }
+    75% { background-position: 40% 80%; }
+    100% { background-position: 100% 100%; }
+  }
+  canvas { display: block; background: transparent; }
   #hint {
     position: fixed; bottom: 16px; right: 20px;
     font-family: monospace; font-size: 11px; opacity: 0.4; user-select: none;
@@ -19,8 +42,8 @@
 </style>
 </head>
 <body>
-<div id="status">DRAWING</div>
-<p id="hint">hover to place · click to grow last shape · D to toggle drawing · space to clear · S to save</p>
+<div id="status" style="display:none;">DRAWING</div>
+<p id="hint" style="display:none;">hover to place · click to grow last shape · D to toggle drawing · space to clear · S to save</p>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.3/p5.min.js"></script>
 <script>
 // Raw inner SVG content per layer (no fill set yet)
@@ -54,13 +77,13 @@ new p5(function(p) {
   }
 
   p.setup = function() {
-    p.createCanvas(p.windowWidth, p.windowHeight);
+    p.createCanvas(p.windowWidth, document.body.scrollHeight);
     p.imageMode(p.CENTER);
     updateCursor();
   };
 
   p.draw = function() {
-    p.background(238, 235, 224);
+    p.clear();
     const now = p.millis();
 
     shapes = shapes.filter(s => now - s.born < LIFE + FADE_DUR);
@@ -125,25 +148,20 @@ new p5(function(p) {
       prevX = p.mouseX;
       prevY = p.mouseY;
     }
-    if (p.key === ' ')                  { shapes = []; lastShape = null; }
+    if (p.key === ' ') {
+      shapes = []; lastShape = null;
+      return false; // prevent scrolling
+    }
     if (p.key === 's' || p.key === 'S') p.saveCanvas('unesco_' + Date.now(), 'png');
   };
 
   p.windowResized = function() {
-    p.resizeCanvas(p.windowWidth, p.windowHeight);
+    p.resizeCanvas(p.windowWidth, document.body.scrollHeight);
   };
 });
 </script>
 
-<div id="hero-logo" style="
-  position: fixed;
-  bottom: 28px;
-  right: 28px;
-  width: 160px;
-  opacity: 0.95;
-  pointer-events: none;
-  user-select: none;
-">
+<div id="hero-logo" style="display:none;">
 <svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 720 720">
   <!-- Generator: Adobe Illustrator 30.2.1, SVG Export Plug-In . SVG Version: 2.1.1 Build 1)  -->
   <defs>
