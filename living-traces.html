@@ -218,7 +218,7 @@
       };
     })();
 
-    // ---- CONCENTRIC DOT CIRCLE ----
+    // ---- CONCENTRIC DOT CIRCLE (audio-reactive) ----
     (function() {
       var canvas = document.getElementById('poster-circle');
       var ctx = canvas.getContext('2d');
@@ -275,6 +275,154 @@
       var dispersing = false;
       var disperseTime = 0;
 
+      // ---- AUDIO ----
+      var audio = { volume: 0, bass: 0, mid: 0, treble: 0 };
+      var smoothAudio = { volume: 0, bass: 0, mid: 0, treble: 0 };
+      var analyser = null;
+      var freqData = null;
+      var audioReady = false;
+
+      function initAudio() {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return;
+
+        navigator.mediaDevices.getUserMedia({ audio: true }).then(function(stream) {
+          var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+          if (audioCtx.state === 'suspended') {
+            var resume = function() {
+              audioCtx.resume();
+              document.removeEventListener('click', resume);
+              document.removeEventListener('touchstart', resume);
+            };
+            document.addEventListener('click', resume);
+            document.addEventListener('touchstart', resume);
+            audioCtx.resume();
+          }
+
+          var source = audioCtx.createMediaStreamSource(stream);
+          analyser = audioCtx.createAnalyser();
+          analyser.fftSize = 256;
+          analyser.smoothingTimeConstant = 0.75;
+          source.connect(analyser);
+          freqData = new Uint8Array(analyser.frequencyBinCount);
+          audioReady = true;
+
+          document.getElementById('prompt').textContent = 'say hello';
+
+          initSpeechRecognition();
+        }).catch(function() {
+          // Mic denied — click fallback remains
+        });
+      }
+
+      function updateAudio() {
+        if (!audioReady) return;
+        analyser.getByteFrequencyData(freqData);
+        var len = freqData.length;
+        var bassN = Math.floor(len * 0.15);
+        var midN = Math.floor(len * 0.35);
+        var bassSum = 0, midSum = 0, trebSum = 0, total = 0;
+        for (var i = 0; i < len; i++) {
+          total += freqData[i];
+          if (i < bassN) bassSum += freqData[i];
+          else if (i < bassN + midN) midSum += freqData[i];
+          else trebSum += freqData[i];
+        }
+        audio.volume = total / len / 255;
+        audio.bass = bassSum / Math.max(1, bassN) / 255;
+        audio.mid = midSum / Math.max(1, midN) / 255;
+        audio.treble = trebSum / Math.max(1, len - bassN - midN) / 255;
+
+        // Smooth for organic movement
+        smoothAudio.volume += (audio.volume - smoothAudio.volume) * 0.25;
+        smoothAudio.bass += (audio.bass - smoothAudio.bass) * 0.25;
+        smoothAudio.mid += (audio.mid - smoothAudio.mid) * 0.2;
+        smoothAudio.treble += (audio.treble - smoothAudio.treble) * 0.3;
+      }
+
+      // ---- SPEECH RECOGNITION ----
+      var greetings = [
+        'hello', 'hi', 'hey', 'howdy', 'greetings',
+        'hola', 'buenos',
+        'bonjour', 'salut', 'bonsoir',
+        'hallo', 'guten',
+        'ciao', 'buongiorno', 'salve',
+        'ola',
+        'konnichiwa', 'konnichi', 'ohayo',
+        'nihao', 'ni hao', 'nee how',
+        'annyeong', 'anyong',
+        'namaste', 'namaskar',
+        'marhaba', 'salam', 'salaam', 'ahlan',
+        'shalom',
+        'jambo', 'habari',
+        'aloha',
+        'sawadee', 'sawasdee',
+        'privet',
+        'merhaba',
+        'yassou', 'yasu',
+        'sawubona',
+        'kia ora',
+        'helo', 'bore da'
+      ];
+
+      function initSpeechRecognition() {
+        var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SR) return;
+
+        var recognition = new SR();
+        recognition.continuous = true;
+        recognition.interimResults = true;
+
+        recognition.onresult = function(event) {
+          for (var r = event.resultIndex; r < event.results.length; r++) {
+            var transcript = event.results[r][0].transcript.toLowerCase().trim();
+            for (var g = 0; g < greetings.length; g++) {
+              if (transcript.indexOf(greetings[g]) !== -1) {
+                triggerDispersion();
+                recognition.stop();
+                return;
+              }
+            }
+          }
+        };
+
+        recognition.onend = function() {
+          if (!dispersing) {
+            try { recognition.start(); } catch(e) {}
+          }
+        };
+
+        recognition.onerror = function(event) {
+          if (event.error === 'no-speech' || event.error === 'aborted') return;
+        };
+
+        try { recognition.start(); } catch(e) {}
+      }
+
+      // ---- DISPERSION ----
+      function triggerDispersion() {
+        if (dispersing) return;
+        dispersing = true;
+        for (var j = 0; j < dots.length; j++) {
+          dots[j].disperseSpeed = 0.3 + Math.random() * 2.5;
+          dots[j].disperseDelay = Math.random() * 0.6;
+          dots[j].disperseDrift = (Math.random() - 0.5) * 0.4;
+        }
+        var logoEl = document.getElementById('intro-logo');
+        var promptEl = document.getElementById('prompt');
+        logoEl.style.transition = 'opacity 1.5s ease';
+        logoEl.style.opacity = '0';
+        promptEl.style.transition = 'opacity 1.5s ease';
+        promptEl.style.opacity = '0';
+        setTimeout(function() {
+          window.location.href = 'living-traces-home.html';
+        }, 2500);
+      }
+
+      // Request mic during chaos so it's ready when circle appears
+      initAudio();
+
+      // ---- ANIMATION LOOP ----
       function loop() {
         var size = canvas.width;
         var cx = size / 2;
@@ -282,6 +430,8 @@
 
         ctx.clearRect(0, 0, size, size);
         time += 0.02;
+
+        updateAudio();
 
         // Dispersion mode — dots fly outward and fade
         if (dispersing) {
@@ -291,7 +441,6 @@
             var d = dots[i];
             var t = Math.max(0, disperseTime - d.disperseDelay);
             if (t <= 0) {
-              // Not started yet — hold position
               var r = d.baseR * breathCurrent;
               var x = cx + Math.cos(d.baseAngle) * r;
               var y = cy + Math.sin(d.baseAngle) * r;
@@ -317,6 +466,7 @@
           return;
         }
 
+        // Breathing
         breathTimer++;
         if (breathTimer >= breathInterval) {
           breathTimer = 0;
@@ -324,6 +474,9 @@
           breathTarget = 0.96 + Math.random() * 0.1;
         }
         breathCurrent += (breathTarget - breathCurrent) * 0.012;
+
+        // Audio-reactive breathing boost
+        var audioBreath = 1 + smoothAudio.volume * 0.15;
 
         ctx.fillStyle = '#fff';
         ctx.globalAlpha = 1;
@@ -337,10 +490,20 @@
           var ringPhase = rFactor * Math.PI * 1.5;
           var pulse = Math.sin(pulseWave - ringPhase);
           var amplitude = 0.06 + rFactor * 0.08;
-          var r = d.baseR * breathCurrent * (1 + pulse * amplitude);
+          var r = d.baseR * breathCurrent * audioBreath * (1 + pulse * amplitude);
           var wobble = Math.sin(time * d.speed + d.phase) * 0.3;
           r += wobble;
+
+          // Audio-reactive displacement: bass → inner, treble → outer
+          var audioPush = smoothAudio.bass * (1 - rFactor) * 12
+                        + smoothAudio.treble * rFactor * 8;
+          r += audioPush;
+
           var angle = d.baseAngle;
+          // Mid frequencies → angular flow in middle rings
+          var midFactor = 1 - Math.abs(rFactor - 0.5) * 2;
+          angle += smoothAudio.mid * midFactor * 0.04 * Math.sin(time * 2 + d.phase);
+
           var x = cx + Math.cos(angle) * r;
           var y = cy + Math.sin(angle) * r;
 
@@ -353,7 +516,7 @@
       }
       loop();
 
-      // ---- CLICK INSIDE CENTER HOLE → disperse and navigate ----
+      // ---- CLICK FALLBACK — works if mic unavailable ----
       canvas.style.cursor = 'none';
       canvas.addEventListener('click', function(e) {
         var rect = canvas.getBoundingClientRect();
@@ -361,24 +524,7 @@
         var clickY = e.clientY - rect.top - rect.height / 2;
         var dist = Math.sqrt(clickX * clickX + clickY * clickY);
         if (dist <= 25 && !dispersing) {
-          dispersing = true;
-          // Give each dot a random outward velocity and staggered delay
-          for (var j = 0; j < dots.length; j++) {
-            dots[j].disperseSpeed = 0.3 + Math.random() * 2.5;
-            dots[j].disperseDelay = Math.random() * 0.6;
-            dots[j].disperseDrift = (Math.random() - 0.5) * 0.4;
-          }
-          // Fade out logo and prompt
-          var logoEl = document.getElementById('intro-logo');
-          var promptEl = document.getElementById('prompt');
-          logoEl.style.transition = 'opacity 1.5s ease';
-          logoEl.style.opacity = '0';
-          promptEl.style.transition = 'opacity 1.5s ease';
-          promptEl.style.opacity = '0';
-          // Navigate after dispersion completes
-          setTimeout(function() {
-            window.location.href = 'living-traces-home.html';
-          }, 2500);
+          triggerDispersion();
         }
       });
     })();
