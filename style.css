@@ -705,10 +705,20 @@ img { max-width: 100%; display: block; }
 }
 
 .footer-tagline span {
-  font-size: clamp(1.4rem, 2.5vw, 2rem);
+  font-size: clamp(2rem, 4vw, 3.5rem);
   font-weight: 900;
   line-height: 1.1;
-  color: var(--gray-300);
+}
+
+.ft-blue { color: #2490cf; }
+.ft-brown { color: #675d52; }
+.ft-green { color: #9dd3b2; }
+
+/* World block links (home page) */
+.world-block-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
 }
 
 .footer-bottom {
@@ -1493,14 +1503,23 @@ img { max-width: 100%; display: block; }
   .fw-world-reverse .fw-world-image { order: 0; }
   .fw-world-reverse .fw-world-content { order: 0; }
 
-  .fw-world-image { aspect-ratio: 16 / 10; position: relative; }
+  .fw-world-image { aspect-ratio: 16 / 9; position: relative; }
 
-  .fw-world-content { padding: 2.5rem 2rem; }
+  .fw-world-content { padding: 2rem 2rem; }
+
+  .fw-world {
+    margin-bottom: 3rem;
+    min-height: auto;
+  }
 
   .fw-title { padding: 8rem 2rem 3rem; }
   .fw-title-heading { font-size: clamp(3.5rem, 10vw, 8rem); }
 
   .fw-stack-info.expanded { max-height: 300px; }
+
+  .fw-icon { width: 48px; margin-bottom: 1rem; }
+  .fw-world-content h2 { font-size: 1.6rem; margin-bottom: 0.75rem; }
+  .fw-stat { margin-bottom: 1rem; }
 }
 
 @media (max-width: 600px) {
@@ -1572,11 +1591,33 @@ img { max-width: 100%; display: block; }
   .fw-title-heading { font-size: clamp(2.8rem, 14vw, 5rem); }
   .fw-title-sub { font-size: 0.95rem; }
 
-  .fw-world-content { padding: 2rem 1.5rem; }
+  .fw-world {
+    margin-bottom: 2rem;
+    padding: 0 1.5rem;
+  }
+
+  .fw-world-image { aspect-ratio: 16 / 8; }
+
+  .fw-world-content {
+    padding: 1.5rem 0;
+  }
+
+  .fw-world-content p {
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+
+  .fw-icon { width: 40px; margin-bottom: 0.75rem; }
+  .fw-world-content h2 { font-size: 1.4rem; margin-bottom: 0.5rem; }
+
+  .fw-stat { margin-bottom: 0.75rem; }
+  .fw-stat-number { font-size: 2rem; }
+
+  .fw-stack-info.expanded { max-height: 300px; padding-top: 1rem; margin-top: 1rem; }
+  .fw-info h3 { font-size: 1.05rem; }
+  .fw-info p { font-size: 0.85rem; line-height: 1.6; }
+  .fw-info-meta { font-size: 0.72rem; margin-bottom: 0.5rem; }
 
   .fw-closing { padding: 3rem 1.5rem 2rem; }
   .fw-closing p { font-size: clamp(1.2rem, 4vw, 1.8rem); }
-
-  .fw-stack-info.expanded { max-height: 340px; }
-  .fw-info h3 { font-size: 1.15rem; }
 }
