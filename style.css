@@ -1112,6 +1112,62 @@ img { max-width: 100%; display: block; }
   pointer-events: none;
 }
 
+/* Expandable image info panel */
+.fw-stack-info {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease 0.1s;
+  border-top: 1px solid rgba(0,0,0,0);
+  margin-top: 0;
+}
+
+.fw-stack-info.expanded {
+  max-height: 260px;
+  opacity: 1;
+  border-top: 1px solid rgba(0,0,0,0.08);
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+}
+
+.fw-info {
+  display: none;
+}
+
+.fw-info.active {
+  display: block;
+  animation: fw-info-in 0.4s ease forwards;
+}
+
+@keyframes fw-info-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fw-info h3 {
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+  color: var(--dark);
+}
+
+.fw-info-meta {
+  display: block;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  color: var(--gray-700);
+  opacity: 0.7;
+  margin-bottom: 0.75rem;
+}
+
+.fw-info p {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--gray-700);
+  margin-bottom: 0;
+}
+
 .fw-world {
   display: grid;
   grid-template-columns: 1.15fr 1fr;
@@ -1443,6 +1499,8 @@ img { max-width: 100%; display: block; }
 
   .fw-title { padding: 8rem 2rem 3rem; }
   .fw-title-heading { font-size: clamp(3.5rem, 10vw, 8rem); }
+
+  .fw-stack-info.expanded { max-height: 300px; }
 }
 
 @media (max-width: 600px) {
@@ -1518,4 +1576,7 @@ img { max-width: 100%; display: block; }
 
   .fw-closing { padding: 3rem 1.5rem 2rem; }
   .fw-closing p { font-size: clamp(1.2rem, 4vw, 1.8rem); }
+
+  .fw-stack-info.expanded { max-height: 340px; }
+  .fw-info h3 { font-size: 1.15rem; }
 }
