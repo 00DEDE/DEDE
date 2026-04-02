@@ -45,14 +45,11 @@
     }
     body * { cursor: none !important; }
 
-    /* Accent character fallback — for diacritics RuderPlakat can't render */
-    .ac { font-family: 'PPTelegraf', 'Helvetica Neue', Arial, sans-serif; }
-
-    /* ---- LOGO ---- */
-    .logo-img { transform: scale(2); transform-origin: left center; }
-    .footer-logo-link {
-      -webkit-mask-image: url('MICRO/MICRO_LOGO.svg');
-      mask-image: url('MICRO/MICRO_LOGO.svg');
+    /* Fallback for characters RuderPlakat can't render — Impact matches the heavy weight */
+    .ac {
+      font-family: Impact, 'Haettenschweiler', 'Arial Narrow Bold', sans-serif;
+      font-weight: normal;
+      letter-spacing: 0.05em;
     }
 
     /* ---- UNESCO CORNER LOGO ---- */
@@ -60,28 +57,32 @@
       position: fixed;
       top: 24px;
       right: 24px;
-      z-index: 100;
+      z-index: 10000;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 10px;
-      border-radius: 8px;
-      background: transparent;
-      border: none;
+      padding: 14px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255,255,255,0.08);
       transition: transform 0.15s ease, background 0.2s ease;
       text-decoration: none;
     }
     .unesco-corner:hover {
-      background: rgba(36, 144, 207, 0.08);
+      background: rgba(255,255,255,0.1);
     }
     .unesco-corner:active {
       transform: scale(0.9);
-      background: rgba(36, 144, 207, 0.15);
+      background: rgba(255,255,255,0.14);
     }
     .unesco-corner svg {
       width: 120px;
       height: auto;
       display: block;
+      position: relative;
+      z-index: 10001;
     }
 
     /* ---- HERO ---- */
@@ -95,18 +96,8 @@
       overflow: hidden;
       background: #000;
     }
-    .lt-hero-texture {
-      position: absolute;
-      top: 0; right: 0;
-      width: 50%;
-      height: 100%;
-      object-fit: cover;
-      opacity: 0.35;
-      mix-blend-mode: screen;
-      pointer-events: none;
-    }
     .lt-hero-title {
-      font-family: 'RuderPlakat', sans-serif;
+      font-family: 'RuderPlakat', Impact, sans-serif;
       font-size: clamp(80px, 14vw, 200px);
       line-height: 0.9;
       letter-spacing: 0.05em;
@@ -139,8 +130,6 @@
       text-transform: uppercase;
       color: rgba(255,255,255,0.3);
       z-index: 90;
-      display: flex;
-      gap: 28px;
     }
     .lt-hero-sidebar .sidebar-fact {
       position: absolute;
@@ -152,10 +141,6 @@
       white-space: nowrap;
     }
     .lt-hero-sidebar .sidebar-fact.active { opacity: 1; }
-    .lt-hero-sidebar .sidebar-static {
-      display: flex;
-      gap: 28px;
-    }
 
     /* ---- HERO BUTTONS ---- */
     .lt-hero-pills {
@@ -219,7 +204,7 @@
 
     /* ---- SECTION LABEL ---- */
     .section-label {
-      font-family: 'RuderPlakat', sans-serif;
+      font-family: 'RuderPlakat', Impact, sans-serif;
       font-size: clamp(60px, 10vw, 140px);
       line-height: 0.95;
       letter-spacing: 0.05em;
@@ -234,6 +219,7 @@
       color: #000;
       padding: 100px 48px 80px;
       position: relative;
+      overflow: hidden;
     }
     .lt-languages-head {
       display: flex;
@@ -258,6 +244,8 @@
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 48px 40px;
+      position: relative;
+      z-index: 2;
     }
     .culture-card img {
       width: 100%;
@@ -267,7 +255,7 @@
       display: block;
     }
     .culture-card h3 {
-      font-family: 'RuderPlakat', sans-serif;
+      font-family: 'RuderPlakat', Impact, sans-serif;
       font-size: clamp(24px, 3vw, 40px);
       letter-spacing: 0.05em;
       text-transform: uppercase;
@@ -294,10 +282,14 @@
     .lt-greetings {
       background: #000;
       padding: 120px 48px;
+      position: relative;
+      overflow: hidden;
     }
     .greeting {
       border-top: 1px solid rgba(255,255,255,0.15);
       padding: 48px 0 80px;
+      position: relative;
+      z-index: 2;
     }
     .greeting:last-child { padding-bottom: 0; }
     .greeting-label {
@@ -309,7 +301,7 @@
       margin-bottom: 32px;
     }
     .greeting-word {
-      font-family: 'RuderPlakat', sans-serif;
+      font-family: 'RuderPlakat', Impact, sans-serif;
       font-size: clamp(60px, 12vw, 180px);
       line-height: 1;
       letter-spacing: 0.05em;
@@ -330,14 +322,20 @@
       background: #e8e8e8;
       color: #000;
       padding: 100px 48px 80px;
+      position: relative;
+      overflow: hidden;
     }
     .lt-traditions .section-label {
       margin-bottom: 80px;
+      position: relative;
+      z-index: 2;
     }
     .tradition-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 48px 40px;
+      position: relative;
+      z-index: 2;
     }
     .tradition-card img {
       width: 100%;
@@ -347,7 +345,7 @@
       display: block;
     }
     .tradition-card h3 {
-      font-family: 'RuderPlakat', sans-serif;
+      font-family: 'RuderPlakat', Impact, sans-serif;
       font-size: clamp(22px, 2.8vw, 36px);
       letter-spacing: 0.05em;
       text-transform: uppercase;
@@ -379,7 +377,7 @@
       text-align: center;
     }
     .lt-ubuntu-text {
-      font-family: 'RuderPlakat', sans-serif;
+      font-family: 'RuderPlakat', Impact, sans-serif;
       font-size: clamp(48px, 9vw, 160px);
       line-height: 0.95;
       letter-spacing: 0.05em;
@@ -430,6 +428,8 @@
       color: rgba(255,255,255,0.25);
       text-align: center;
       margin-top: 80px;
+      position: relative;
+      z-index: 2;
     }
 
     /* ---- PHOTO COLLAGE ---- */
@@ -454,8 +454,7 @@
       width: 100%;
       height: 100%;
       pointer-events: none;
-      opacity: 0.18;
-      mix-blend-mode: screen;
+      z-index: 1;
     }
 
     /* ---- RESPONSIVE ---- */
@@ -477,7 +476,7 @@
 </head>
 <body data-page="living-traces">
 
-  <!-- UNESCO Logo — top right corner -->
+  <!-- UNESCO Logo — top right corner with frosted glass -->
   <a href="index.html" class="unesco-corner" aria-label="Back to UNESCO home">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="60 0 170 144">
       <style>path { fill: #2490cf; }</style>
@@ -500,12 +499,12 @@
       <path d="M142.59,104.07l.34-.4-.31-.42s-.03-.05-.05-.07c-.03-.04-.06-.09-.08-.12-.32-.45-.62-.91-.94-1.42-.04-.06-.07-.12-.11-.17-.04-.05-.07-.11-.11-.16-.36-.59-.7-1.21-1.02-1.84-.04-.08-.08-.17-.12-.25-.03-.07-.07-.15-.1-.22-.25-.52-.47-.99-.65-1.43-.08-.18-.15-.36-.22-.55l-.05-.12c-.17-.44-.34-.89-.48-1.32-.02-.07-.05-.13-.07-.2-.02-.06-.05-.12-.07-.19h0c-.17-.53-.88-.63-1.18-.16h0c-2.16,3.29-5.36,5.87-9,7.28,0,0-.1,0-.26.18-.08.09-.18.38-.18.38-.02.07-.05.15-.07.22-.05.16-.09.33-.13.5-.07.28-.13.55-.18.83v.06c-.04.14-.07.29-.09.43-.05.3-.08.6-.12.91l-.02.15c-.01.09-.02.18-.03.28-.04.48-.06.92-.06,1.34v4.74c0,.43.4.74.81.64,5.68-1.34,10.71-4.41,14.54-8.88Z"/>
       <path d="M194.55,103.55h-27.77c-2.15,0-4.24-.35-6.21-1.05l-.45-.16v-.03s-.29-.11-.29-.11c-4.79-1.9-8.5-5.55-10.45-10.28,0,0-.15-.29-.25-.36-.11-.06-.44-.05-.44-.05-.21.02-.42.04-.63.06l-.29.02c-.09,0-.18.02-.27.03-.11.01-.23.02-.34.03h-.15c-.63.05-1.23.07-1.83.07h-2.45c-.61,0-1.23-.02-1.9-.06l-.29-.02c-.45-.03-.8.38-.7.82.57,2.4,1.46,4.72,2.66,6.89.48.86,1.01,1.71,1.57,2.52.29.41.59.81.89,1.19,4.27,5.47,10.35,9.11,17.13,10.23,1.48.26,3.04.4,4.63.4h27.83c1.25,0,2.25-1.01,2.25-2.25v-5.64c0-1.25-1.01-2.25-2.25-2.25Z"/>
       <path d="M196.66,58.25c0-1.24-1.01-2.25-2.25-2.25h-18.96c-.37,0-.66.3-.66.66v5.46c0,.91-.06,1.9-.17,3.02-.04.39.27.73.66.73h19.13c1.24,0,2.25-1.01,2.25-2.25v-5.36Z"/>
-      <path d="M134.12,91.59h0c.48-.3.39-1.03-.15-1.19-.04-.01-.08-.03-.12-.04-.05-.02-.11-.04-.16-.06l-.19-.06c-.16-.05-.33-.11-.49-.16-.11-.04-.22-.08-.33-.12l-.31-.12c-.12-.04-.24-.09-.35-.13-.05-.02-.1-.04-.15-.06l-.12-.04c-.07-.03-.14-.06-.2-.09l-.17-.07c-.17-.07-.35-.15-.52-.23l-.08-.03c-.3-.13-.59-.27-.88-.41l-.29-.14c-.09-.05-.19-.1-.28-.15l-.15-.08c-.33-.17-.65-.35-.98-.53l-.2-.11c-.08-.04-.16-.09-.24-.14l-.18-.11c-.32-.19-.64-.4-.95-.6l-.2-.13c-.09-.06-.18-.11-.27-.17l-.29-.2s-.06-.04-.11-.07c0,0-.19-.15-.4-.15s-.4.19-.4.19c-4.97,4.17-8.31,9.97-9.41,16.32-.28,1.55-.42,3.16-.42,4.79v28.49c0,.88.71,1.59,1.59,1.59h6.95c.88,0,1.59-.71,1.59-1.59v-28.44c0-1.07.09-2.15.27-3.19.18-1.05.45-2.08.81-3.08.06-.16.13-.32.19-.48l.11-.26c1.47-3.67,4.14-6.86,7.49-8.96Z"/>
-      <path d="M162.95,86.4s-.28-.18-.42-.18c-.12,0-.39.15-.39.15-2.46,1.73-5.17,3.06-8.03,3.97-.54.17-.63.9-.15,1.2h0c1.29.79,2.45,1.71,3.46,2.71,1.76,1.76,3.18,3.9,4.11,6.2,0,0,.11.25.17.31.06.06.27.12.27.12.07.02.15.04.22.06l.12.03c.16.05.33.09.5.13.27.07.54.12.81.17h.07c.14.04.28.07.42.09.3.05.6.08.9.11l.14.02c.1.01.19.02.29.03.48.04.91.06,1.34.06h4.54c.43,0,.75-.4.64-.82-1.4-5.61-4.52-10.57-9.02-14.33Z"/>
-      <path d="M172.14,115.68h-5.42c-.69,0-1.4-.03-2.26-.1h-.12c-.11-.02-.23-.02-.34-.03-.06,0-.12,0-.18-.01-.06,0-.11,0-.17-.01-.39-.04-.73.26-.73.66v19.03c0,1.24,1.01,2.25,2.25,2.25h5.36c1.24,0,2.25-1.01,2.25-2.25v-18.86c0-.37-.3-.66-.66-.66Z"/>
+      <path d="M134.12,91.59h0c.48-.3.39-1.03-.15-1.19l-.12-.04-.16-.06-.19-.06c-.16-.05-.33-.11-.49-.16-.11-.04-.22-.08-.33-.12l-.31-.12-.35-.13-.15-.06-.12-.04-.2-.09-.17-.07c-.17-.07-.35-.15-.52-.23l-.08-.03c-.3-.13-.59-.27-.88-.41l-.29-.14-.28-.15-.15-.08c-.33-.17-.65-.35-.98-.53l-.2-.11-.24-.14-.18-.11c-.32-.19-.64-.4-.95-.6l-.2-.13-.27-.17-.29-.2s-.06-.04-.11-.07c0,0-.19-.15-.4-.15s-.4.19-.4.19c-4.97,4.17-8.31,9.97-9.41,16.32-.28,1.55-.42,3.16-.42,4.79v28.49c0,.88.71,1.59,1.59,1.59h6.95c.88,0,1.59-.71,1.59-1.59v-28.44c0-1.07.09-2.15.27-3.19.18-1.05.45-2.08.81-3.08l.19-.48.11-.26c1.47-3.67,4.14-6.86,7.49-8.96Z"/>
+      <path d="M162.95,86.4s-.28-.18-.42-.18c-.12,0-.39.15-.39.15-2.46,1.73-5.17,3.06-8.03,3.97-.54.17-.63.9-.15,1.2h0c1.29.79,2.45,1.71,3.46,2.71,1.76,1.76,3.18,3.9,4.11,6.2,0,0,.11.25.17.31.06.06.27.12.27.12l.22.06.12.03c.16.05.33.09.5.13.27.07.54.12.81.17h.07c.14.04.28.07.42.09.3.05.6.08.9.11l.14.02c.1.01.19.02.29.03.48.04.91.06,1.34.06h4.54c.43,0,.75-.4.64-.82-1.4-5.61-4.52-10.57-9.02-14.33Z"/>
+      <path d="M172.14,115.68h-5.42c-.69,0-1.4-.03-2.26-.1h-.12l-.34-.03-.18-.01-.17-.01c-.39-.04-.73.26-.73.66v19.03c0,1.24,1.01,2.25,2.25,2.25h5.36c1.24,0,2.25-1.01,2.25-2.25v-18.86c0-.37-.3-.66-.66-.66Z"/>
       <path d="M121.65,54.01c.84,0,1.72.04,2.68.13h0s.09,0,.14,0c.42.04.79-.29.79-.72v-19.79c0-.88-.71-1.59-1.59-1.59h-6.95c-.88,0-1.59.71-1.59,1.59v19.65c0,.4.32.72.72.72h5.81Z"/>
-      <path d="M172.36,66.97s.01-.06.02-.09c.02-.06.03-.13.04-.18.07-.37.11-.75.15-1.12l.03-.3c.14-1.19.2-2.2.2-3.16v-28.08c0-1.03-.83-1.86-1.86-1.86h-6.15c-1.03,0-1.86.83-1.86,1.86v28.03c0,1.1-.1,2.23-.3,3.35-.1.55-.23,1.11-.41,1.72l-.03.1c-.09.32-.18.63-.29.94-.05.15-.11.3-.18.44-.05.11-.1.22-.14.34-.94,2.43-2.38,4.66-4.17,6.44-1.02,1.02-2.18,1.93-3.45,2.71-.62.38-1.3.75-2.04,1.08-.09.04-.19.08-.28.12-.08.03-.16.06-.24.1-.14.06-.28.12-.42.17-.11.04-.22.09-.33.14,0,0-.01,0-.02,0l-.32.12c-.09.03-.24.09-.34.12l-.28.09c-.08.03-.17.06-.25.08l-.23.06-.08.02-.07.02c-.26.07-.51.13-.77.19-.2.05-.41.09-.62.13-2.29.44-4.65.44-6.94.05-.24-.04-.48-.08-.72-.13l-.07-.02c-.21-.05-.43-.11-.64-.17l-.31-.08s-.09-.02-.14-.04c-.04,0-.07-.02-.08-.02l-1.39-.49s-.01,0-.02,0l-.7-.29c-.18-.07-.35-.14-.52-.22-.76-.35-1.43-.71-2.03-1.09-3.44-2.15-6.13-5.4-7.59-9.16,0,0-.05-.14-.14-.23s-.27-.16-.27-.16c-.05-.01-.14-.06-.2-.07-.64-.17-1.29-.31-1.93-.4-.08-.01-.16-.02-.24-.03h-.11c-.76-.11-1.43-.15-2.05-.15h-5.05c-.43,0-.74.4-.64.82,1.38,5.7,4.52,10.73,9.08,14.56.1.08.19.16.28.24.22.19.44.38.67.55.07.05.14.1.2.15.04.03.09.06.13.09l.18.13c.3.22.6.44.9.65.1.07.2.13.31.19.06.04.13.08.21.13l.49.31c.15.1.3.19.46.28.12.07.25.14.38.21l.35.19c.18.1.36.2.54.29l.06.03s.08.04.14.08l.05.03c.14.07.28.13.42.2l.42.2c.24.11.48.23.72.33.11.05.23.09.34.14l.43.17c.1.04.19.08.28.11l.19.08c.12.05.24.1.36.14.16.06.33.11.49.16l.45.14c.24.08.47.16.69.22.03,0,.05.01.08.02.06.02.12.03.18.05l.11.03c.08.02.17.04.25.07l.26.07c.12.03.24.06.37.09l.16.04c.1.03.19.05.29.07.07.02.14.03.22.04.05,0,.1.02.15.03l.94.18s.09.02.13.02c.07.01.14.03.23.04l.34.04h.06s.1.02.14.03c.02,0,.04,0,.06,0,.17.02.33.04.49.05l.73.07c.09,0,.17.02.26.03l.15.02c.15.01.3.01.45.02.1,0,.19,0,.29,0h.26c.33.03.67.05,1.01.05h2.45c.59,0,1.18-.02,1.82-.06.11,0,.22-.02.33-.03l.47-.05c.25-.02.49-.05.74-.08.06,0,.12-.01.18-.02.1,0,.19-.02.27-.03.1-.01.18-.02.26-.04l.58-.09c.08-.01.17-.03.25-.05.06-.01.11-.02.17-.03.3-.06.61-.12.91-.18.28-.06.55-.13.83-.2,2.85-.72,5.57-1.9,8.06-3.5.53-.34,1.04-.69,1.52-1.05l.15-.11c.09-.06.17-.12.25-.18.22-.17.44-.36.65-.54.1-.09.21-.18.31-.27,4.54-3.81,7.68-8.85,9.06-14.56.16-.68.28-1.2.36-1.7Z"/>
-      <path d="M144.62,78.87c1.95,0,3.76-.26,4.45-.85.14-.08.31-.46.31-.46.16-.39.31-.77.48-1.12.33-.68.7-1.33,1.1-1.94,2.11-3.26,5.27-5.85,8.92-7.29,0,0,.16-.06.25-.16.09-.09.14-.27.14-.27.46-1.54.69-3.13.69-4.72v-4.6c0-.43-.4-.75-.82-.64-5.6,1.36-10.55,4.42-14.33,8.84-.09.1-.17.2-.26.3-.18.2-.36.41-.54.63l-.02.03c-.06.08-.12.16-.18.24-.04.05-.07.1-.11.15l-.05.07c-.24.31-.47.62-.69.94-.07.1-.13.19-.19.29-.04.06-.08.12-.12.18l-.16.25c-.06.09-.11.19-.17.28-.03.06-.07.12-.1.17-.31.49-.62,1-.9,1.54l-.03.06s-.04.08-.06.12c-.34.66-.68,1.39-1.02,2.22-.07.17-.14.33-.2.5-.31.81-.57,1.56-.78,2.29-.02.07-.04.14-.06.21l-.03.12c-.08.31-.17.61-.24.92v.02c-.02.06-.02.12-.01.18,0,0,0,.01,0,.02,0,.82,2.13,1.49,4.76,1.49Z"/>
+      <path d="M172.36,66.97l.02-.09.04-.18c.07-.37.11-.75.15-1.12l.03-.3c.14-1.19.2-2.2.2-3.16v-28.08c0-1.03-.83-1.86-1.86-1.86h-6.15c-1.03,0-1.86.83-1.86,1.86v28.03c0,1.1-.1,2.23-.3,3.35-.1.55-.23,1.11-.41,1.72l-.03.1c-.09.32-.18.63-.29.94-.05.15-.11.3-.18.44l-.14.34c-.94,2.43-2.38,4.66-4.17,6.44-1.02,1.02-2.18,1.93-3.45,2.71-.62.38-1.3.75-2.04,1.08l-.28.12-.24.1-.42.17-.33.14-.02,0-.32.12-.34.12-.28.09-.25.08-.23.06-.08.02-.07.02c-.26.07-.51.13-.77.19-.2.05-.41.09-.62.13-2.29.44-4.65.44-6.94.05l-.72-.13-.07-.02c-.21-.05-.43-.11-.64-.17l-.31-.08s-.09-.02-.14-.04l-.08-.02-1.39-.49-.02,0-.7-.29c-.18-.07-.35-.14-.52-.22-.76-.35-1.43-.71-2.03-1.09-3.44-2.15-6.13-5.4-7.59-9.16,0,0-.05-.14-.14-.23s-.27-.16-.27-.16l-.2-.07c-.64-.17-1.29-.31-1.93-.4l-.24-.03h-.11c-.76-.11-1.43-.15-2.05-.15h-5.05c-.43,0-.74.4-.64.82,1.38,5.7,4.52,10.73,9.08,14.56l.28.24c.22.19.44.38.67.55l.2.15.13.09.18.13c.3.22.6.44.9.65l.31.19.21.13.49.31c.15.1.3.19.46.28l.38.21.35.19c.18.1.36.2.54.29l.06.03s.08.04.14.08l.05.03c.14.07.28.13.42.2l.42.2c.24.11.48.23.72.33l.34.14.43.17.28.11.19.08c.12.05.24.1.36.14l.49.16.45.14c.24.08.47.16.69.22l.08.02.18.05.11.03.25.07.26.07c.12.03.24.06.37.09l.16.04.29.07.22.04.15.03.94.18s.09.02.13.02l.23.04.34.04h.06s.1.02.14.03l.06,0c.17.02.33.04.49.05l.73.07.26.03.15.02c.15.01.3.01.45.02l.29,0h.26c.33.03.67.05,1.01.05h2.45c.59,0,1.18-.02,1.82-.06l.33-.03.47-.05c.25-.02.49-.05.74-.08l.18-.02.27-.03.26-.04.58-.09.25-.05.17-.03c.3-.06.61-.12.91-.18.28-.06.55-.13.83-.2,2.85-.72,5.57-1.9,8.06-3.5.53-.34,1.04-.69,1.52-1.05l.15-.11.25-.18c.22-.17.44-.36.65-.54l.31-.27c4.54-3.81,7.68-8.85,9.06-14.56.16-.68.28-1.2.36-1.7Z"/>
+      <path d="M144.62,78.87c1.95,0,3.76-.26,4.45-.85.14-.08.31-.46.31-.46.16-.39.31-.77.48-1.12.33-.68.7-1.33,1.1-1.94,2.11-3.26,5.27-5.85,8.92-7.29,0,0,.16-.06.25-.16.09-.09.14-.27.14-.27.46-1.54.69-3.13.69-4.72v-4.6c0-.43-.4-.75-.82-.64-5.6,1.36-10.55,4.42-14.33,8.84l-.26.3c-.18.2-.36.41-.54.63l-.02.03-.18.24-.11.15-.05.07c-.24.31-.47.62-.69.94l-.19.29-.12.18-.16.25-.17.28-.1.17c-.31.49-.62,1-.9,1.54l-.03.06s-.04.08-.06.12c-.34.66-.68,1.39-1.02,2.22l-.2.5c-.31.81-.57,1.56-.78,2.29l-.06.21-.03.12c-.08.31-.17.61-.24.92v.02l-.01.18s0,.01,0,.02c0,.82,2.13,1.49,4.76,1.49Z"/>
     </svg>
   </a>
 
@@ -522,7 +521,7 @@
 
     <!-- ======== HERO ======== -->
     <section class="lt-hero">
-      <canvas class="texture-canvas" id="heroTexture"></canvas>
+      <canvas class="texture-canvas" data-theme="dark" id="texHero"></canvas>
       <h1 class="lt-hero-title">Living<br>Traces</h1>
       <p class="lt-hero-intro">
         Living Traces gathers languages and traditions that still breathe, even as many stand at the edge of disappearance. Across oceans, deserts, forests, mountains, and ice, communities continue to sing, weave, heal, dive, carve, remember, and speak words that cannot be replaced.
@@ -545,7 +544,8 @@
 
     <!-- ======== ENDANGERED LANGUAGES ======== -->
     <section class="lt-languages">
-      <div class="lt-languages-head">
+      <canvas class="texture-canvas" data-theme="light" id="texLang"></canvas>
+      <div class="lt-languages-head" style="position:relative;z-index:2;">
         <h2 class="section-label">Endangered<br>Languages</h2>
         <p class="lt-languages-intro">
           What you will see here are eight intangible heritages: four endangered languages and four fragile cultural practices, each carrying memory, knowledge, and identity across generations. We invite you to encounter heritage not as something finished or distant, but as something human, vulnerable, and still being kept alive.
@@ -553,7 +553,6 @@
       </div>
 
       <div class="culture-grid">
-        <!-- Ainu -->
         <div class="culture-card">
           <img src="MICRO/MICRO_IMAGES/AINU_2.png" alt="Ainu elder">
           <h3>Ainu</h3>
@@ -561,15 +560,13 @@
           <p>Once suppressed through assimilation policies, Ainu survives through song, ritual, and renewed teaching. Its vocabulary encodes relationships between people, animals, and spirits. Today, community-led schools and performances restore its presence, not as a relic, but as a living voice reclaiming identity, land, and continuity across generations.</p>
         </div>
 
-        <!-- Northern Sami -->
         <div class="culture-card">
           <img src="MICRO/MICRO_IMAGES/SAMI_1.png" alt="Sami woman with flag">
-          <h3>Northern S<span class="ac">&#225;</span>mi</h3>
+          <h3>Northern S&#225;mi</h3>
           <span class="location">Norway, Sweden, Finland</span>
           <p>S&#225;mi languages articulate a deep ecological knowledge shaped by Arctic life. Terms for snow, migration, and reindeer herding reflect centuries of adaptation. Colonial policies once suppressed its use. Today, revitalization through education, media, and governance reconnects language with land and Indigenous presence.</p>
         </div>
 
-        <!-- Rapa Nui -->
         <div class="culture-card">
           <img src="MICRO/MICRO_IMAGES/RAPA%20NUI_1.png" alt="Rapa Nui moai statues">
           <h3>Rapa Nui</h3>
@@ -577,10 +574,9 @@
           <p>Spoken on one of the most remote inhabited islands, Rapa Nui carries ancestral memory tied to land and ocean. Pressures from tourism and Spanish dominance have weakened transmission. Revival efforts center on schools and storytelling, ensuring the language continues to anchor identity within a rapidly changing culture.</p>
         </div>
 
-        <!-- Ju|'hoansi -->
         <div class="culture-card">
           <img src="MICRO/MICRO_IMAGES/Ju%C7%80%E2%80%99hoansi_1.png" alt="Ju|'hoansi people in the Kalahari">
-          <h3>Ju|'hoansi</h3>
+          <h3>Ju<span class="ac">|'</span>hoansi</h3>
           <span class="location">Namibia / Botswana</span>
           <p>Ju|'hoansi is rooted in one of the world's oldest continuous cultures. Its click-based phonetics carry knowledge of tracking, plants, and survival. As modernization shifts lifestyles, transmission weakens. Documentation and community storytelling sustain it, preserving a language inseparable from the rhythms of Kalahari human history.</p>
         </div>
@@ -589,6 +585,7 @@
 
     <!-- ======== GREETINGS — one at a time, full width ======== -->
     <section class="lt-greetings">
+      <canvas class="texture-canvas" data-theme="dark" id="texGreet"></canvas>
       <div class="greeting">
         <div class="greeting-label">Ainu Term</div>
         <div class="greeting-word">Irankarapte</div>
@@ -606,17 +603,17 @@
       </div>
       <div class="greeting">
         <div class="greeting-label">Ju|'hoansi Term</div>
-        <div class="greeting-word">!Kun!k<span class="ac">&#242;</span>g<span class="ac">&#249;</span></div>
+        <div class="greeting-word">!Kun!k&#242;g&#249;</div>
         <div class="greeting-translation">"Please speak to me."</div>
       </div>
     </section>
 
     <!-- ======== ENDANGERED TRADITIONS ======== -->
     <section class="lt-traditions">
+      <canvas class="texture-canvas" data-theme="light" id="texTrad"></canvas>
       <h2 class="section-label">Endangered<br>Traditions</h2>
 
       <div class="tradition-grid">
-        <!-- Bigwala -->
         <div class="tradition-card">
           <img src="MICRO/MICRO_IMAGES/BIGWALA_1.png" alt="Bigwala trumpet musicians">
           <h3>Bigwala</h3>
@@ -624,15 +621,13 @@
           <p>Bigwala is a royal music tradition performed with gourd trumpets during ceremonies of the Busoga Kingdom. Once central to cultural identity, it now faces decline due to reduced patronage and aging practitioners. Safeguarding efforts focus on transmission, ensuring that its powerful sound continues to resonate across generations.</p>
         </div>
 
-        <!-- Sanke Mon -->
         <div class="tradition-card">
           <img src="MICRO/MICRO_IMAGES/SANK%C3%89%20MON_1.png" alt="Sanke Mon fishing ritual">
-          <h3>Sank<span class="ac">&#233;</span> Mon</h3>
+          <h3>Sank&#233; Mon</h3>
           <span class="location">Mali</span>
           <p>Sank&#233; Mon is a communal fishing ritual marking seasonal cycles and social unity. Thousands gather in coordinated action, blending ecology, spirituality, and celebration. Environmental pressures and social change threaten its continuity, making safeguarding essential to preserving both the practice and its connection to identity.</p>
         </div>
 
-        <!-- Jeju Haenyeo -->
         <div class="tradition-card">
           <img src="MICRO/MICRO_IMAGES/JEJU%20HAENYEO_1.png" alt="Jeju Haenyeo women divers">
           <h3>Jeju Haenyeo</h3>
@@ -640,7 +635,6 @@
           <p>Haenyeo are women divers who harvest seafood without oxygen tanks, relying on breath, skill, and environmental knowledge. Aging practitioners and modernization threaten continuity. Their practice embodies resilience, community, and sustainable interaction with the ocean, making its preservation both cultural and ecological.</p>
         </div>
 
-        <!-- Noken Weaving -->
         <div class="tradition-card">
           <img src="MICRO/MICRO_IMAGES/NOKEN%20WEAVING_2.png" alt="Noken woven bags">
           <h3>Noken Weaving</h3>
@@ -658,15 +652,15 @@
     </div>
 
     <!-- ======== I AM BECAUSE WE ARE ======== -->
-    <section class="lt-ubuntu" style="position:relative;overflow:hidden;">
-      <canvas class="texture-canvas" id="ubuntuTexture"></canvas>
+    <section class="lt-ubuntu">
+      <canvas class="texture-canvas" data-theme="dark" id="texUbuntu"></canvas>
       <div class="lt-ubuntu-text">I am because<br>we are.</div>
       <div class="lt-ubuntu-source">Ubuntu Proverb</div>
     </section>
 
     <!-- ======== CLOSING ESSAY ======== -->
-    <section class="lt-closing" style="position:relative;overflow:hidden;">
-      <canvas class="texture-canvas" id="closingTexture"></canvas>
+    <section class="lt-closing">
+      <canvas class="texture-canvas" data-theme="dark" id="texClose"></canvas>
       <div class="lt-closing-content">
         <p>What remains when a language falls silent, or a tradition is no longer practiced? Not only words or gestures are lost, but entire ways of understanding the world. These living traces carry memory, identity, and knowledge shaped over centuries. They hold ways of seeing time, land, community, and spirit that cannot be replicated once gone.</p>
         <p>Yet this is not a narrative of disappearance alone. Across continents, communities are choosing to remember, to teach, to speak, to make, and to continue. Preservation is not passive. It is an act of will. It is the commitment to continuous support in the face of change.</p>
@@ -678,124 +672,66 @@
 
   </main>
 
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="footer-top">
-      <div class="footer-logo">
-        <a href="#" class="footer-logo-link" aria-label="Back to top"></a>
-      </div>
-
-      <div class="footer-columns">
-        <div class="footer-col">
-          <h4>About UNESCO</h4>
-          <ul>
-            <li><a href="#">Our Mission</a></li>
-            <li><a href="#">Who We Are</a></li>
-            <li><a href="#">Where We Work</a></li>
-            <li><a href="#">Partnerships</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>Our Work</h4>
-          <ul>
-            <li><a href="#">Monuments</a></li>
-            <li><a href="#">Natural Sciences</a></li>
-            <li><a href="#">Intangible Heritage</a></li>
-            <li><a href="#">Languages</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>Resources</h4>
-          <ul>
-            <li><a href="#">Publications</a></li>
-            <li><a href="#">Multimedia</a></li>
-            <li><a href="#">News &amp; Events</a></li>
-            <li><a href="index.html" class="footer-highlight">UNESCO</a></li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="footer-tagline">
-        <span>Safeguard<br>Humanity's<br>Inheritance</span>
-      </div>
-    </div>
-
-    <div class="footer-bottom">
-      <a href="#">Privacy Policy</a>
-      <a href="#">Terms of Use</a>
-      <a href="#">Contact Us</a>
-    </div>
-  </footer>
-
   <script src="script.js"></script>
   <script>
-    // ---- SIDEBAR FACT ROTATION on scroll ----
+    // ---- SIDEBAR FACT ROTATION ----
     (function() {
       var facts = document.querySelectorAll('#sidebarFacts .sidebar-fact');
       var currentFact = 0;
-      var lastSwitch = 0;
-      var INTERVAL = 4000;
-
-      function rotateFacts() {
+      var lastSwitch = Date.now();
+      function rotate() {
         var now = Date.now();
-        if (now - lastSwitch > INTERVAL) {
+        if (now - lastSwitch > 4000) {
           facts[currentFact].classList.remove('active');
           currentFact = (currentFact + 1) % facts.length;
           facts[currentFact].classList.add('active');
           lastSwitch = now;
         }
-        requestAnimationFrame(rotateFacts);
+        requestAnimationFrame(rotate);
       }
-      lastSwitch = Date.now();
-      rotateFacts();
-
-      // Hide sidebar when in footer
+      rotate();
       var sidebar = document.getElementById('sidebarFacts');
-      var footer = document.querySelector('.footer');
+      var lastSection = document.querySelector('.lt-closing');
       window.addEventListener('scroll', function() {
-        if (footer) {
-          var fRect = footer.getBoundingClientRect();
-          sidebar.style.opacity = fRect.top < window.innerHeight ? '0' : '1';
+        if (lastSection) {
+          var r = lastSection.getBoundingClientRect();
+          sidebar.style.opacity = r.top < window.innerHeight * 0.5 ? '0' : '1';
           sidebar.style.transition = 'opacity 0.4s ease';
         }
       });
     })();
 
-    // ---- ANIMATED TEXTURE — graceful audio waveform motion ----
+    // ---- ANIMATED TEXTURE — graceful waveform motion ----
     (function() {
       var texImg = new Image();
       texImg.src = 'MICRO/MICRO_IMAGES/TEXTURE_SM.png';
 
-      var canvases = [
-        { id: 'heroTexture', opacity: 0.2 },
-        { id: 'ubuntuTexture', opacity: 0.14 },
-        { id: 'closingTexture', opacity: 0.16 }
-      ];
-
-      var instances = [];
-      var time = 0;
-
       texImg.onload = function() {
-        canvases.forEach(function(cfg) {
-          var el = document.getElementById(cfg.id);
-          if (!el) return;
+        var allCanvases = document.querySelectorAll('.texture-canvas');
+        var instances = [];
+
+        allCanvases.forEach(function(el) {
           var ctx = el.getContext('2d');
-          instances.push({ canvas: el, ctx: ctx, opacity: cfg.opacity });
+          var isDark = el.getAttribute('data-theme') === 'dark';
+          instances.push({ canvas: el, ctx: ctx, isDark: isDark });
         });
 
         function resizeAll() {
           instances.forEach(function(inst) {
-            var parent = inst.canvas.parentElement;
-            if (!parent) return;
-            inst.canvas.width = parent.offsetWidth;
-            inst.canvas.height = parent.offsetHeight;
+            var p = inst.canvas.parentElement;
+            if (!p) return;
+            inst.canvas.width = p.offsetWidth;
+            inst.canvas.height = p.offsetHeight;
           });
         }
         resizeAll();
         window.addEventListener('resize', resizeAll);
 
-        function drawFrame() {
-          time += 0.008;
+        var time = 0;
+
+        function draw() {
+          time += 0.006;
+
           instances.forEach(function(inst) {
             var cw = inst.canvas.width;
             var ch = inst.canvas.height;
@@ -803,22 +739,27 @@
 
             var ctx = inst.ctx;
             ctx.clearRect(0, 0, cw, ch);
-            ctx.globalAlpha = inst.opacity;
 
-            // Tile the texture across the section, applying gentle wave displacement
+            // Scale texture to cover section
             var tw = texImg.width;
             var th = texImg.height;
-            var scale = Math.max(cw / tw, ch / th) * 0.6;
+            var scale = Math.max(cw / tw, ch / th) * 0.7;
             var drawW = tw * scale;
             var drawH = th * scale;
+            var strips = 32;
 
-            // Draw multiple columns to cover width
+            // Set opacity based on dark/light theme
+            ctx.globalAlpha = inst.isDark ? 0.12 : 0.08;
+
+            // For light sections, invert the texture
+            if (!inst.isDark) {
+              ctx.filter = 'invert(1)';
+            } else {
+              ctx.filter = 'none';
+            }
+
             for (var col = -1; col <= Math.ceil(cw / drawW) + 1; col++) {
               var baseX = col * drawW;
-
-              // Slice the texture into horizontal strips for wave displacement
-              var strips = 40;
-              var stripH = drawH / strips;
 
               for (var s = 0; s < strips; s++) {
                 var sy = (s / strips) * th;
@@ -826,23 +767,25 @@
                 var dy = (s / strips) * ch;
                 var dh = ch / strips + 1;
 
-                // Graceful sine wave displacement — like slow audio waveforms
-                var wave1 = Math.sin(time * 0.7 + s * 0.15) * 8;
-                var wave2 = Math.sin(time * 0.4 + s * 0.08 + 2.1) * 5;
-                var wave3 = Math.sin(time * 1.1 + s * 0.22 + 4.3) * 3;
+                // Graceful sine waves — slow, layered, organic
+                var wave1 = Math.sin(time * 0.5 + s * 0.12) * 10;
+                var wave2 = Math.sin(time * 0.3 + s * 0.07 + 1.8) * 6;
+                var wave3 = Math.sin(time * 0.8 + s * 0.2 + 3.5) * 3;
                 var dx = baseX + wave1 + wave2 + wave3;
 
-                // Gentle vertical breathing
-                var vWave = Math.sin(time * 0.3 + s * 0.12) * 2;
+                var vWave = Math.sin(time * 0.25 + s * 0.1) * 2.5;
 
                 ctx.drawImage(texImg, 0, sy, tw, sh, dx, dy + vWave, drawW, dh);
               }
             }
+
+            ctx.filter = 'none';
+            ctx.globalAlpha = 1;
           });
 
-          requestAnimationFrame(drawFrame);
+          requestAnimationFrame(draw);
         }
-        drawFrame();
+        draw();
       };
     })();
 
@@ -860,9 +803,7 @@
       resize();
       window.addEventListener('resize', resize);
 
-      var CURSOR_R = 25;
-      var CENTER_HOLE = 2;
-      var cursorDots = [];
+      var CURSOR_R = 25, CENTER_HOLE = 2, cursorDots = [];
       var ringSpacing = 2.5;
       var numRings = Math.floor((CURSOR_R - CENTER_HOLE) / ringSpacing);
       for (var ring = 0; ring < numRings; ring++) {
@@ -871,106 +812,67 @@
         var num = Math.floor(circ / 1.8);
         for (var d = 0; d < num; d++) {
           if (Math.random() < 0.2) continue;
-          var baseAngle = (d / num) * Math.PI * 2;
-          var rNoise = (Math.random() - 0.5) * 0.6;
-          var aNoise = (Math.random() - 0.5) * (0.3 / (ring + 3));
           cursorDots.push({
-            baseR: r + rNoise,
-            baseAngle: baseAngle + aNoise,
+            baseR: r + (Math.random() - 0.5) * 0.6,
+            baseAngle: (d / num) * Math.PI * 2 + (Math.random() - 0.5) * (0.3 / (ring + 3)),
             phase: Math.random() * Math.PI * 2,
             speed: 0.3 + Math.random() * 0.5
           });
         }
       }
 
-      var mouseX = -200, mouseY = -200;
-      var time = 0;
-      var breathTarget = 1;
-      var breathCurrent = 1;
-      var breathTimer = 0;
+      var mouseX = -200, mouseY = -200, time = 0;
+      var breathTarget = 1, breathCurrent = 1, breathTimer = 0;
       var breathInterval = 60 + Math.random() * 60;
       var cursorColor = '#fff';
 
       document.addEventListener('mousemove', function(e) {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-
+        mouseX = e.clientX; mouseY = e.clientY;
         canvas.style.display = 'none';
         var el = document.elementFromPoint(mouseX, mouseY);
         canvas.style.display = '';
         if (el) {
           var bg = getComputedStyle(el).backgroundColor;
-          var match = bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
-          if (match) {
-            var lum = (parseInt(match[1]) + parseInt(match[2]) + parseInt(match[3])) / 3;
-            cursorColor = lum > 180 ? '#000' : '#fff';
-          }
+          var m = bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+          if (m) cursorColor = (parseInt(m[1]) + parseInt(m[2]) + parseInt(m[3])) / 3 > 180 ? '#000' : '#fff';
         }
       });
 
       var clickMarker = null;
-      document.addEventListener('click', function(e) {
-        clickMarker = { x: e.clientX, y: e.clientY, life: 1 };
-      });
+      document.addEventListener('click', function(e) { clickMarker = { x: e.clientX, y: e.clientY, life: 1 }; });
 
       function loop() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         time += 0.025;
-
         breathTimer++;
         if (breathTimer >= breathInterval) {
-          breathTimer = 0;
-          breathInterval = 50 + Math.random() * 80;
+          breathTimer = 0; breathInterval = 50 + Math.random() * 80;
           breathTarget = 0.93 + Math.random() * 0.14;
         }
         breathCurrent += (breathTarget - breathCurrent) * 0.015;
-
-        ctx.fillStyle = cursorColor;
-        ctx.globalAlpha = 1;
-
-        var pulseWave = time * 0.5;
-
+        ctx.fillStyle = cursorColor; ctx.globalAlpha = 1;
+        var pw = time * 0.5;
         for (var i = 0; i < cursorDots.length; i++) {
-          var d = cursorDots[i];
-          var rFactor = d.baseR / CURSOR_R;
-          var ringPhase = rFactor * Math.PI * 1.4;
-          var pulse = Math.sin(pulseWave - ringPhase);
-          var amplitude = 0.04 + rFactor * 0.06;
-          var r = d.baseR * breathCurrent * (1 + pulse * amplitude);
-          var wobble = Math.sin(time * d.speed + d.phase) * 0.3;
-          r += wobble;
-          var angle = d.baseAngle;
-          var x = mouseX + Math.cos(angle) * r;
-          var y = mouseY + Math.sin(angle) * r;
-
+          var d = cursorDots[i], rf = d.baseR / CURSOR_R;
+          var pulse = Math.sin(pw - rf * Math.PI * 1.4);
+          var rr = d.baseR * breathCurrent * (1 + pulse * (0.04 + rf * 0.06));
+          rr += Math.sin(time * d.speed + d.phase) * 0.3;
           ctx.beginPath();
-          ctx.arc(x, y, 0.7, 0, Math.PI * 2);
+          ctx.arc(mouseX + Math.cos(d.baseAngle) * rr, mouseY + Math.sin(d.baseAngle) * rr, 0.7, 0, Math.PI * 2);
           ctx.fill();
         }
-
         if (clickMarker) {
           clickMarker.life -= 0.03;
-          if (clickMarker.life <= 0) {
-            clickMarker = null;
-          } else {
-            var cx = clickMarker.x, cy = clickMarker.y;
-            ctx.globalAlpha = clickMarker.life;
-            ctx.strokeStyle = cursorColor;
-            ctx.lineWidth = 1;
-            var arm = 14;
+          if (clickMarker.life <= 0) { clickMarker = null; }
+          else {
+            ctx.globalAlpha = clickMarker.life; ctx.strokeStyle = cursorColor; ctx.lineWidth = 1;
+            var cx = clickMarker.x, cy = clickMarker.y, a = 14;
             ctx.beginPath();
-            ctx.moveTo(cx - arm, cy);
-            ctx.lineTo(cx - 4, cy);
-            ctx.moveTo(cx + 4, cy);
-            ctx.lineTo(cx + arm, cy);
-            ctx.moveTo(cx, cy - arm);
-            ctx.lineTo(cx, cy - 4);
-            ctx.moveTo(cx, cy + 4);
-            ctx.lineTo(cx, cy + arm);
+            ctx.moveTo(cx-a,cy); ctx.lineTo(cx-4,cy); ctx.moveTo(cx+4,cy); ctx.lineTo(cx+a,cy);
+            ctx.moveTo(cx,cy-a); ctx.lineTo(cx,cy-4); ctx.moveTo(cx,cy+4); ctx.lineTo(cx,cy+a);
             ctx.stroke();
           }
         }
-
         ctx.globalAlpha = 1;
         requestAnimationFrame(loop);
       }
