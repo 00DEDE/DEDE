@@ -32,7 +32,7 @@ const observer = new IntersectionObserver((entries) => {
 }, observerOptions);
 
 // Apply fade-in to sections (home, about, four worlds)
-document.querySelectorAll('.stat-card, .world-block, .stats-heading, .worlds-heading, .about-block, .value-card, .timeline-item, .global-stats, .fw-world, .fw-intro').forEach(el => {
+document.querySelectorAll('.stat-card, .world-block, .stats-heading, .worlds-heading, .about-block, .value-card, .timeline-item, .journey-card, .global-stats, .fw-world, .fw-intro').forEach(el => {
   el.classList.add('fade-in');
   observer.observe(el);
 });
@@ -118,8 +118,8 @@ if (document.body.dataset.page !== 'living-traces') {
     });
   });
 
-  // Timeline stagger
-  document.querySelectorAll('.timeline-item').forEach(function(item, i) {
+  // Timeline / journey card stagger
+  document.querySelectorAll('.timeline-item, .journey-card').forEach(function(item, i) {
     item.style.transitionDelay = (i * 0.12) + 's';
   });
 
