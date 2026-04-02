@@ -54,9 +54,10 @@
     /* Circle container */
     .circle-wrap {
       position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       opacity: 0;
       transition: opacity 1.5s ease;
     }
@@ -224,23 +225,26 @@
       var ctx = canvas.getContext('2d');
 
       function sizeCanvas() {
-        var s = Math.min(window.innerWidth, window.innerHeight) * 0.65;
-        canvas.width = s * 2;
-        canvas.height = s * 2;
-        canvas.style.width = s + 'px';
-        canvas.style.height = s + 'px';
+        var w = window.innerWidth;
+        var h = window.innerHeight;
+        canvas.width = w * 2;
+        canvas.height = h * 2;
+        canvas.style.width = w + 'px';
+        canvas.style.height = h + 'px';
         generateDots();
       }
 
       var dots = [];
       var CENTER_HOLE_PX = 50;
+      var circleMaxR = 0;
 
       function generateDots() {
         dots = [];
-        var size = canvas.width;
-        var maxR = size / 2 * 0.85;
+        // Dot radius based on viewport, independent of canvas size
+        var viewMin = Math.min(canvas.width, canvas.height);
+        circleMaxR = viewMin / 2 * 0.55;
         var ringSpacing = 5;
-        var numRings = Math.floor((maxR - CENTER_HOLE_PX) / ringSpacing);
+        var numRings = Math.floor((circleMaxR - CENTER_HOLE_PX) / ringSpacing);
 
         for (var ring = 0; ring < numRings; ring++) {
           var r = CENTER_HOLE_PX + ring * ringSpacing;
@@ -485,8 +489,7 @@
 
         for (var i = 0; i < dots.length; i++) {
           var d = dots[i];
-          var maxR = size / 2;
-          var rFactor = d.baseR / maxR;
+          var rFactor = d.baseR / circleMaxR;
           var ringPhase = rFactor * Math.PI * 1.5;
           var pulse = Math.sin(pulseWave - ringPhase);
           var amplitude = 0.06 + rFactor * 0.08;
