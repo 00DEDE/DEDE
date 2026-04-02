@@ -1034,12 +1034,194 @@ img { max-width: 100%; display: block; }
 }
 
 /* ========================
+   ANIMATIONS & INTERACTIONS
+   ======================== */
+
+/* Hero content staggered entrance */
+@keyframes hero-reveal {
+  from { opacity: 0; transform: translateY(25px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hero-content h1,
+.page-hero-content h1 {
+  animation: hero-reveal 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both;
+}
+
+.hero-content p,
+.page-hero-content p {
+  animation: hero-reveal 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.4s both;
+}
+
+.hero-buttons {
+  animation: hero-reveal 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.6s both;
+}
+
+/* Nav link animated underline */
+.nav-links a:not(.btn-nav) {
+  position: relative;
+}
+
+.nav-links a:not(.btn-nav)::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 1.5px;
+  background: var(--blue);
+  transition: width 0.3s ease;
+}
+
+.nav-links a:not(.btn-nav):hover::after {
+  width: 100%;
+}
+
+/* Card hover lift */
+.stat-card {
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.1);
+}
+
+.value-card {
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease;
+}
+
+.value-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 28px rgba(0,0,0,0.08);
+}
+
+/* Image hover zoom */
+.world-image .placeholder-img,
+.fw-world-image .placeholder-img,
+.about-image .placeholder-img {
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.world-block:hover .world-image .placeholder-img,
+.fw-world:hover .fw-world-image .placeholder-img,
+.about-block:hover .about-image .placeholder-img {
+  transform: scale(1.04);
+}
+
+/* Image clip-path reveal on scroll */
+.world-block .world-image .placeholder-img,
+.fw-world .fw-world-image .placeholder-img {
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 1s cubic-bezier(0.65, 0, 0.35, 1) 0.15s, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.world-block-reverse .world-image .placeholder-img,
+.fw-world-reverse .fw-world-image .placeholder-img {
+  clip-path: inset(0 0 0 100%);
+}
+
+.world-block.visible .world-image .placeholder-img,
+.fw-world.visible .fw-world-image .placeholder-img {
+  clip-path: inset(0 0 0 0);
+}
+
+/* Button shimmer on hover */
+.btn-primary {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.2) 50%, transparent 70%);
+  transition: left 0.6s ease;
+  pointer-events: none;
+}
+
+.btn-primary:hover::after {
+  left: 100%;
+}
+
+/* Timeline dot breathing pulse */
+@keyframes dot-breathe {
+  0%, 100% { box-shadow: 0 0 0 2px var(--yellow); }
+  50% { box-shadow: 0 0 0 6px rgba(248, 225, 102, 0.2); }
+}
+
+@keyframes dot-breathe-blue {
+  0%, 100% { box-shadow: 0 0 0 2px var(--blue); }
+  50% { box-shadow: 0 0 0 6px rgba(36, 145, 208, 0.2); }
+}
+
+.timeline-item::before {
+  animation: dot-breathe 3s ease-in-out infinite;
+}
+
+.timeline-item:nth-child(even)::before {
+  animation: dot-breathe-blue 3s ease-in-out infinite;
+}
+
+/* Icon float on hover */
+@keyframes icon-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+.world-block:hover .world-icon,
+.fw-world:hover .fw-icon {
+  animation: icon-float 2s ease-in-out infinite;
+}
+
+/* Footer link slide */
+.footer-col a {
+  transition: color 0.2s ease, padding-left 0.25s ease !important;
+}
+
+.footer-col a:hover {
+  padding-left: 4px;
+}
+
+/* Gallery desaturation → color on hover */
+.fw-gallery-img {
+  transition: filter 0.5s ease;
+  filter: saturate(0.6);
+}
+
+.fw-gallery-img:hover {
+  filter: saturate(1);
+}
+
+/* Scroll progress bar */
+.scroll-progress {
+  position: fixed;
+  top: 70px;
+  left: 0;
+  height: 2px;
+  width: 0;
+  background: linear-gradient(90deg, var(--blue), var(--yellow));
+  z-index: 101;
+  pointer-events: none;
+  transition: width 0.05s linear;
+}
+
+/* Smooth header transitions */
+.header {
+  transition: box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+/* ========================
    SCROLL ANIMATIONS
    ======================== */
 .fade-in {
   opacity: 0;
   transform: translateY(30px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .fade-in.visible {

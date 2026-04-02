@@ -71,7 +71,7 @@ function sizeStatNumbers() {
     const style = getComputedStyle(card);
     const targetWidth = card.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
     const fontFamily = getComputedStyle(number).fontFamily;
-    const text = number.textContent;
+    const text = number.dataset.fullText || number.textContent;
 
     let lo = 10, hi = 600, best = 10;
     while (lo <= hi) {
@@ -106,6 +106,97 @@ window.addEventListener('scroll', () => {
     header.style.boxShadow = 'none';
   }
 });
+
+// ---- ANIMATIONS (UNESCO pages only) ----
+if (document.body.dataset.page !== 'living-traces') {
+
+  // Staggered grid reveals
+  document.querySelectorAll('.stats-grid, .values-grid').forEach(function(grid) {
+    Array.from(grid.children).forEach(function(child, i) {
+      child.style.transitionDelay = (i * 0.1) + 's';
+    });
+  });
+
+  // Timeline stagger
+  document.querySelectorAll('.timeline-item').forEach(function(item, i) {
+    item.style.transitionDelay = (i * 0.12) + 's';
+  });
+
+  // Store original text for stat number sizing (prevents resize conflicts during count-up)
+  document.querySelectorAll('.stat-number').forEach(function(el) {
+    el.dataset.fullText = el.textContent.trim();
+  });
+
+  // Number count-up on scroll
+  function countUp(el) {
+    var text = el.dataset.fullText || el.textContent.trim();
+    var suffix = '';
+    if (text.endsWith('+')) { suffix = '+'; text = text.slice(0, -1).trim(); }
+    if (text.endsWith('K')) { suffix = 'K'; text = text.slice(0, -1).trim(); }
+
+    var useCommas = text.includes(',');
+    var target = parseInt(text.replace(/[^0-9]/g, ''), 10);
+    if (isNaN(target) || target === 0) return;
+
+    var duration = 1800;
+    var start = performance.now();
+
+    function step(now) {
+      var elapsed = now - start;
+      var progress = Math.min(elapsed / duration, 1);
+      var eased = 1 - Math.pow(1 - progress, 3);
+      var current = Math.round(target * eased);
+      el.textContent = (useCommas ? current.toLocaleString() : current.toString()) + suffix;
+      if (progress < 1) requestAnimationFrame(step);
+    }
+
+    el.textContent = '0' + suffix;
+    requestAnimationFrame(step);
+  }
+
+  var countObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting && !entry.target.dataset.counted) {
+        entry.target.dataset.counted = '1';
+        countUp(entry.target);
+      }
+    });
+  }, { threshold: 0.3 });
+
+  document.querySelectorAll('.stat-number, .fw-stat-number, .global-stat-number').forEach(function(el) {
+    countObserver.observe(el);
+  });
+
+  // Subtle parallax on hero backgrounds
+  var heroSlideshow = document.querySelector('.hero-slideshow');
+  var pageHero = document.querySelector('.page-hero');
+  if (heroSlideshow || pageHero) {
+    window.addEventListener('scroll', function() {
+      var y = window.scrollY;
+      if (y > window.innerHeight) return;
+      if (heroSlideshow) heroSlideshow.style.transform = 'translateY(' + (y * 0.18) + 'px)';
+      if (pageHero) pageHero.style.backgroundPositionY = (y * 0.12) + 'px';
+    }, { passive: true });
+  }
+
+  // Scroll progress bar
+  var progressBar = document.createElement('div');
+  progressBar.className = 'scroll-progress';
+  document.body.appendChild(progressBar);
+  window.addEventListener('scroll', function() {
+    var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    progressBar.style.width = (docHeight > 0 ? (window.scrollY / docHeight) * 100 : 0) + '%';
+  }, { passive: true });
+
+  // Active nav link highlight
+  var currentPage = window.location.pathname.split('/').pop() || 'index.html';
+  document.querySelectorAll('.nav-links a:not(.btn-nav)').forEach(function(link) {
+    if (link.getAttribute('href') === currentPage) {
+      link.style.color = '#2491d0';
+      link.style.fontWeight = '700';
+    }
+  });
+}
 
 // Custom icon cursor — rotates icon + color every 5 seconds
 // Skip on Living Traces page
