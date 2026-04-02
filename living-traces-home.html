@@ -45,6 +45,9 @@
     }
     body * { cursor: none !important; }
 
+    /* Accent character fallback — for diacritics RuderPlakat can't render */
+    .ac { font-family: 'PPTelegraf', 'Helvetica Neue', Arial, sans-serif; }
+
     /* ---- LOGO ---- */
     .logo-img { transform: scale(2); transform-origin: left center; }
     .footer-logo-link {
@@ -76,27 +79,10 @@
       background: rgba(36, 144, 207, 0.15);
     }
     .unesco-corner svg {
-      width: 40px;
+      width: 120px;
       height: auto;
       display: block;
     }
-
-    /* ---- HORIZONTAL LINE BARS (booklet motif) ---- */
-    .line-bars {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      width: 120px;
-    }
-    .line-bars span {
-      display: block;
-      height: 2px;
-      background: currentColor;
-    }
-    .line-bars span:nth-child(odd) { width: 100%; }
-    .line-bars span:nth-child(even) { width: 60%; }
-
-    /* ---- RUDER PLAKAT GLOBAL: uppercase + 50/1000 tracking ---- */
 
     /* ---- HERO ---- */
     .lt-hero {
@@ -139,28 +125,34 @@
       position: relative;
       z-index: 2;
     }
-    .lt-hero-meta {
-      font-family: 'ABCMonumentGroteskMono', monospace;
-      font-size: 10px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.4);
-      margin-top: 32px;
-      position: relative;
-      z-index: 2;
-    }
+
+    /* ---- SIDEBAR WITH ROTATING FACTS ---- */
     .lt-hero-sidebar {
-      position: absolute;
+      position: fixed;
       right: 24px;
       top: 50%;
       transform: translateY(-50%);
       writing-mode: vertical-rl;
       font-family: 'ABCMonumentGroteskMono', monospace;
-      font-size: 10px;
+      font-size: 12.5px;
       letter-spacing: 0.15em;
       text-transform: uppercase;
       color: rgba(255,255,255,0.3);
-      z-index: 2;
+      z-index: 90;
+      display: flex;
+      gap: 28px;
+    }
+    .lt-hero-sidebar .sidebar-fact {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      transition: opacity 0.8s ease;
+      opacity: 0;
+      white-space: nowrap;
+    }
+    .lt-hero-sidebar .sidebar-fact.active { opacity: 1; }
+    .lt-hero-sidebar .sidebar-static {
       display: flex;
       gap: 28px;
     }
@@ -225,7 +217,7 @@
       transform: scale(0.97);
     }
 
-    /* ---- SECTION LABEL (vertical) ---- */
+    /* ---- SECTION LABEL ---- */
     .section-label {
       font-family: 'RuderPlakat', sans-serif;
       font-size: clamp(60px, 10vw, 140px);
@@ -267,7 +259,6 @@
       grid-template-columns: repeat(2, 1fr);
       gap: 48px 40px;
     }
-    .culture-card {}
     .culture-card img {
       width: 100%;
       aspect-ratio: 4/3;
@@ -275,16 +266,12 @@
       filter: grayscale(1);
       display: block;
     }
-    .culture-card-bars {
-      margin: 16px 0 12px;
-      color: rgba(0,0,0,0.25);
-    }
     .culture-card h3 {
       font-family: 'RuderPlakat', sans-serif;
       font-size: clamp(24px, 3vw, 40px);
       letter-spacing: 0.05em;
       text-transform: uppercase;
-      margin: 0 0 10px;
+      margin: 16px 0 10px;
       line-height: 1;
     }
     .culture-card p {
@@ -303,43 +290,37 @@
       display: block;
     }
 
-    /* ---- GREETINGS ---- */
+    /* ---- GREETINGS — full width, one at a time ---- */
     .lt-greetings {
       background: #000;
       padding: 120px 48px;
     }
-    .greeting-pair {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 40px;
-      margin-bottom: 80px;
-    }
-    .greeting-pair:last-child { margin-bottom: 0; }
     .greeting {
       border-top: 1px solid rgba(255,255,255,0.15);
-      padding-top: 24px;
+      padding: 48px 0 80px;
     }
+    .greeting:last-child { padding-bottom: 0; }
     .greeting-label {
       font-family: 'ABCMonumentGroteskMono', monospace;
       font-size: 10px;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       color: rgba(255,255,255,0.35);
-      margin-bottom: 24px;
+      margin-bottom: 32px;
     }
     .greeting-word {
       font-family: 'RuderPlakat', sans-serif;
-      font-size: clamp(40px, 7vw, 100px);
+      font-size: clamp(60px, 12vw, 180px);
       line-height: 1;
       letter-spacing: 0.05em;
       text-transform: uppercase;
       color: #fff;
-      margin-bottom: 16px;
+      margin-bottom: 24px;
       word-break: break-word;
     }
     .greeting-translation {
       font-family: 'PPTelegrafLight', sans-serif;
-      font-size: clamp(13px, 1.2vw, 17px);
+      font-size: clamp(15px, 1.5vw, 20px);
       color: rgba(255,255,255,0.45);
       font-style: italic;
     }
@@ -365,16 +346,12 @@
       filter: grayscale(1);
       display: block;
     }
-    .tradition-card-bars {
-      margin: 16px 0 12px;
-      color: rgba(0,0,0,0.2);
-    }
     .tradition-card h3 {
       font-family: 'RuderPlakat', sans-serif;
       font-size: clamp(22px, 2.8vw, 36px);
       letter-spacing: 0.05em;
       text-transform: uppercase;
-      margin: 0 0 10px;
+      margin: 16px 0 10px;
       line-height: 1;
     }
     .tradition-card .location {
@@ -400,16 +377,6 @@
       position: relative;
       overflow: hidden;
       text-align: center;
-    }
-    .lt-ubuntu-texture {
-      position: absolute;
-      bottom: 0; right: -10%;
-      width: 60%;
-      height: 100%;
-      object-fit: contain;
-      object-position: bottom right;
-      opacity: 0.12;
-      pointer-events: none;
     }
     .lt-ubuntu-text {
       font-family: 'RuderPlakat', sans-serif;
@@ -440,16 +407,6 @@
       padding: 120px 48px;
       position: relative;
       overflow: hidden;
-    }
-    .lt-closing-texture {
-      position: absolute;
-      top: 0; left: 0;
-      width: 40%;
-      height: 100%;
-      object-fit: cover;
-      opacity: 0.15;
-      mix-blend-mode: screen;
-      pointer-events: none;
     }
     .lt-closing-content {
       max-width: 600px;
@@ -489,19 +446,31 @@
       display: block;
     }
 
+    /* ---- TEXTURE CANVAS ---- */
+    .texture-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      opacity: 0.18;
+      mix-blend-mode: screen;
+    }
+
     /* ---- RESPONSIVE ---- */
     @media (max-width: 768px) {
       .lt-hero { padding: 40px 24px 60px; }
       .lt-hero-sidebar { display: none; }
       .lt-languages, .lt-traditions { padding: 60px 24px; }
       .lt-languages-head { flex-direction: column; gap: 24px; }
-      .culture-grid, .tradition-grid, .greeting-pair { grid-template-columns: 1fr; }
+      .culture-grid, .tradition-grid { grid-template-columns: 1fr; }
       .lt-greetings { padding: 80px 24px; }
       .lt-ubuntu { padding: 100px 24px; }
       .lt-closing { padding: 80px 24px; }
       .lt-collage { grid-template-columns: repeat(2, 1fr); }
       .unesco-corner { top: 16px; right: 16px; }
-      .unesco-corner svg { width: 32px; }
+      .unesco-corner svg { width: 80px; }
       .lt-hero-pills, .lt-hero-buttons { gap: 10px; }
     }
   </style>
@@ -540,15 +509,20 @@
     </svg>
   </a>
 
+  <!-- Sidebar — rotating facts -->
+  <div class="lt-hero-sidebar" id="sidebarFacts">
+    <span class="sidebar-fact active">Endangered Traditions</span>
+    <span class="sidebar-fact">Endangered Languages</span>
+    <span class="sidebar-fact">Every 14 days a language disappears</span>
+    <span class="sidebar-fact">3,045 languages are endangered</span>
+    <span class="sidebar-fact">600 initiatives by UNESCO to protect what makes us human</span>
+  </div>
+
   <main>
 
     <!-- ======== HERO ======== -->
     <section class="lt-hero">
-      <img src="MICRO/T5_WEEK 11_MICRO_BOOKLET/publication-web-resources/image/MICRO_BOOKLE_TEXTURE_1.png" alt="" class="lt-hero-texture">
-      <div class="lt-hero-sidebar">
-        <span>Traditions</span>
-        <span>Languages</span>
-      </div>
+      <canvas class="texture-canvas" id="heroTexture"></canvas>
       <h1 class="lt-hero-title">Living<br>Traces</h1>
       <p class="lt-hero-intro">
         Living Traces gathers languages and traditions that still breathe, even as many stand at the edge of disappearance. Across oceans, deserts, forests, mountains, and ice, communities continue to sing, weave, heal, dive, carve, remember, and speak words that cannot be replaced.
@@ -582,7 +556,6 @@
         <!-- Ainu -->
         <div class="culture-card">
           <img src="MICRO/MICRO_IMAGES/AINU_2.png" alt="Ainu elder">
-          <div class="line-bars culture-card-bars"><span></span><span></span><span></span><span></span><span></span></div>
           <h3>Ainu</h3>
           <span class="location">Hokkaido, Japan</span>
           <p>Once suppressed through assimilation policies, Ainu survives through song, ritual, and renewed teaching. Its vocabulary encodes relationships between people, animals, and spirits. Today, community-led schools and performances restore its presence, not as a relic, but as a living voice reclaiming identity, land, and continuity across generations.</p>
@@ -591,8 +564,7 @@
         <!-- Northern Sami -->
         <div class="culture-card">
           <img src="MICRO/MICRO_IMAGES/SAMI_1.png" alt="Sami woman with flag">
-          <div class="line-bars culture-card-bars"><span></span><span></span><span></span><span></span><span></span></div>
-          <h3>Northern S&#225;mi</h3>
+          <h3>Northern S<span class="ac">&#225;</span>mi</h3>
           <span class="location">Norway, Sweden, Finland</span>
           <p>S&#225;mi languages articulate a deep ecological knowledge shaped by Arctic life. Terms for snow, migration, and reindeer herding reflect centuries of adaptation. Colonial policies once suppressed its use. Today, revitalization through education, media, and governance reconnects language with land and Indigenous presence.</p>
         </div>
@@ -600,7 +572,6 @@
         <!-- Rapa Nui -->
         <div class="culture-card">
           <img src="MICRO/MICRO_IMAGES/RAPA%20NUI_1.png" alt="Rapa Nui moai statues">
-          <div class="line-bars culture-card-bars"><span></span><span></span><span></span><span></span><span></span></div>
           <h3>Rapa Nui</h3>
           <span class="location">Rapa Nui, Chile</span>
           <p>Spoken on one of the most remote inhabited islands, Rapa Nui carries ancestral memory tied to land and ocean. Pressures from tourism and Spanish dominance have weakened transmission. Revival efforts center on schools and storytelling, ensuring the language continues to anchor identity within a rapidly changing culture.</p>
@@ -609,7 +580,6 @@
         <!-- Ju|'hoansi -->
         <div class="culture-card">
           <img src="MICRO/MICRO_IMAGES/Ju%C7%80%E2%80%99hoansi_1.png" alt="Ju|'hoansi people in the Kalahari">
-          <div class="line-bars culture-card-bars"><span></span><span></span><span></span><span></span><span></span></div>
           <h3>Ju|'hoansi</h3>
           <span class="location">Namibia / Botswana</span>
           <p>Ju|'hoansi is rooted in one of the world's oldest continuous cultures. Its click-based phonetics carry knowledge of tracking, plants, and survival. As modernization shifts lifestyles, transmission weakens. Documentation and community storytelling sustain it, preserving a language inseparable from the rhythms of Kalahari human history.</p>
@@ -617,31 +587,27 @@
       </div>
     </section>
 
-    <!-- ======== GREETINGS ======== -->
+    <!-- ======== GREETINGS — one at a time, full width ======== -->
     <section class="lt-greetings">
-      <div class="greeting-pair">
-        <div class="greeting">
-          <div class="greeting-label">Ainu Term</div>
-          <div class="greeting-word">Irankarapte</div>
-          <div class="greeting-translation">"Hello, allow me to touch your heart."</div>
-        </div>
-        <div class="greeting">
-          <div class="greeting-label">Rapa Nui Term</div>
-          <div class="greeting-word">Becoy</div>
-          <div class="greeting-translation">"How are you?"</div>
-        </div>
+      <div class="greeting">
+        <div class="greeting-label">Ainu Term</div>
+        <div class="greeting-word">Irankarapte</div>
+        <div class="greeting-translation">"Hello, allow me to touch your heart."</div>
       </div>
-      <div class="greeting-pair">
-        <div class="greeting">
-          <div class="greeting-label">Northern S&#225;mi Term</div>
-          <div class="greeting-word">Ollu lihkku</div>
-          <div class="greeting-translation">"Congratulations!"</div>
-        </div>
-        <div class="greeting">
-          <div class="greeting-label">Ju|'hoansi Term</div>
-          <div class="greeting-word">!Kun!k&#242;g&#249;</div>
-          <div class="greeting-translation">"Please speak to me."</div>
-        </div>
+      <div class="greeting">
+        <div class="greeting-label">Rapa Nui Term</div>
+        <div class="greeting-word">Becoy</div>
+        <div class="greeting-translation">"How are you?"</div>
+      </div>
+      <div class="greeting">
+        <div class="greeting-label">Northern S&#225;mi Term</div>
+        <div class="greeting-word">Ollu lihkku</div>
+        <div class="greeting-translation">"Congratulations!"</div>
+      </div>
+      <div class="greeting">
+        <div class="greeting-label">Ju|'hoansi Term</div>
+        <div class="greeting-word">!Kun!k<span class="ac">&#242;</span>g<span class="ac">&#249;</span></div>
+        <div class="greeting-translation">"Please speak to me."</div>
       </div>
     </section>
 
@@ -653,7 +619,6 @@
         <!-- Bigwala -->
         <div class="tradition-card">
           <img src="MICRO/MICRO_IMAGES/BIGWALA_1.png" alt="Bigwala trumpet musicians">
-          <div class="line-bars tradition-card-bars"><span></span><span></span><span></span><span></span><span></span></div>
           <h3>Bigwala</h3>
           <span class="location">Uganda</span>
           <p>Bigwala is a royal music tradition performed with gourd trumpets during ceremonies of the Busoga Kingdom. Once central to cultural identity, it now faces decline due to reduced patronage and aging practitioners. Safeguarding efforts focus on transmission, ensuring that its powerful sound continues to resonate across generations.</p>
@@ -661,9 +626,8 @@
 
         <!-- Sanke Mon -->
         <div class="tradition-card">
-          <img src="MICRO/MICRO_IMAGES/SANKE%CC%81%20MON_1.png" alt="Sanke Mon fishing ritual">
-          <div class="line-bars tradition-card-bars"><span></span><span></span><span></span><span></span><span></span></div>
-          <h3>Sank&#233; Mon</h3>
+          <img src="MICRO/MICRO_IMAGES/SANK%C3%89%20MON_1.png" alt="Sanke Mon fishing ritual">
+          <h3>Sank<span class="ac">&#233;</span> Mon</h3>
           <span class="location">Mali</span>
           <p>Sank&#233; Mon is a communal fishing ritual marking seasonal cycles and social unity. Thousands gather in coordinated action, blending ecology, spirituality, and celebration. Environmental pressures and social change threaten its continuity, making safeguarding essential to preserving both the practice and its connection to identity.</p>
         </div>
@@ -671,7 +635,6 @@
         <!-- Jeju Haenyeo -->
         <div class="tradition-card">
           <img src="MICRO/MICRO_IMAGES/JEJU%20HAENYEO_1.png" alt="Jeju Haenyeo women divers">
-          <div class="line-bars tradition-card-bars"><span></span><span></span><span></span><span></span><span></span></div>
           <h3>Jeju Haenyeo</h3>
           <span class="location">South Korea</span>
           <p>Haenyeo are women divers who harvest seafood without oxygen tanks, relying on breath, skill, and environmental knowledge. Aging practitioners and modernization threaten continuity. Their practice embodies resilience, community, and sustainable interaction with the ocean, making its preservation both cultural and ecological.</p>
@@ -680,7 +643,6 @@
         <!-- Noken Weaving -->
         <div class="tradition-card">
           <img src="MICRO/MICRO_IMAGES/NOKEN%20WEAVING_2.png" alt="Noken woven bags">
-          <div class="line-bars tradition-card-bars"><span></span><span></span><span></span><span></span><span></span></div>
           <h3>Noken Weaving</h3>
           <span class="location">Papua, Indonesia</span>
           <p>Noken bags are hand-knotted from natural fibers and used for daily life, ceremony, and symbolic exchange. Their production embodies community identity and knowledge. Industrial alternatives and shifting lifestyles threaten their use, making revitalization essential to sustaining both craft and cultural meaning.</p>
@@ -696,15 +658,15 @@
     </div>
 
     <!-- ======== I AM BECAUSE WE ARE ======== -->
-    <section class="lt-ubuntu">
-      <img src="MICRO/T5_WEEK 11_MICRO_BOOKLET/publication-web-resources/image/MICRO_BOOKLET_TEXTURE_3.png" alt="" class="lt-ubuntu-texture">
+    <section class="lt-ubuntu" style="position:relative;overflow:hidden;">
+      <canvas class="texture-canvas" id="ubuntuTexture"></canvas>
       <div class="lt-ubuntu-text">I am because<br>we are.</div>
       <div class="lt-ubuntu-source">Ubuntu Proverb</div>
     </section>
 
     <!-- ======== CLOSING ESSAY ======== -->
-    <section class="lt-closing">
-      <img src="MICRO/T5_WEEK 11_MICRO_BOOKLET/publication-web-resources/image/MICRO_BOOKLE_TEXTURE_11.png" alt="" class="lt-closing-texture">
+    <section class="lt-closing" style="position:relative;overflow:hidden;">
+      <canvas class="texture-canvas" id="closingTexture"></canvas>
       <div class="lt-closing-content">
         <p>What remains when a language falls silent, or a tradition is no longer practiced? Not only words or gestures are lost, but entire ways of understanding the world. These living traces carry memory, identity, and knowledge shaped over centuries. They hold ways of seeing time, land, community, and spirit that cannot be replicated once gone.</p>
         <p>Yet this is not a narrative of disappearance alone. Across continents, communities are choosing to remember, to teach, to speak, to make, and to continue. Preservation is not passive. It is an act of will. It is the commitment to continuous support in the face of change.</p>
@@ -767,12 +729,129 @@
 
   <script src="script.js"></script>
   <script>
+    // ---- SIDEBAR FACT ROTATION on scroll ----
+    (function() {
+      var facts = document.querySelectorAll('#sidebarFacts .sidebar-fact');
+      var currentFact = 0;
+      var lastSwitch = 0;
+      var INTERVAL = 4000;
+
+      function rotateFacts() {
+        var now = Date.now();
+        if (now - lastSwitch > INTERVAL) {
+          facts[currentFact].classList.remove('active');
+          currentFact = (currentFact + 1) % facts.length;
+          facts[currentFact].classList.add('active');
+          lastSwitch = now;
+        }
+        requestAnimationFrame(rotateFacts);
+      }
+      lastSwitch = Date.now();
+      rotateFacts();
+
+      // Hide sidebar when in footer
+      var sidebar = document.getElementById('sidebarFacts');
+      var footer = document.querySelector('.footer');
+      window.addEventListener('scroll', function() {
+        if (footer) {
+          var fRect = footer.getBoundingClientRect();
+          sidebar.style.opacity = fRect.top < window.innerHeight ? '0' : '1';
+          sidebar.style.transition = 'opacity 0.4s ease';
+        }
+      });
+    })();
+
+    // ---- ANIMATED TEXTURE — graceful audio waveform motion ----
+    (function() {
+      var texImg = new Image();
+      texImg.src = 'MICRO/MICRO_IMAGES/TEXTURE_SM.png';
+
+      var canvases = [
+        { id: 'heroTexture', opacity: 0.2 },
+        { id: 'ubuntuTexture', opacity: 0.14 },
+        { id: 'closingTexture', opacity: 0.16 }
+      ];
+
+      var instances = [];
+      var time = 0;
+
+      texImg.onload = function() {
+        canvases.forEach(function(cfg) {
+          var el = document.getElementById(cfg.id);
+          if (!el) return;
+          var ctx = el.getContext('2d');
+          instances.push({ canvas: el, ctx: ctx, opacity: cfg.opacity });
+        });
+
+        function resizeAll() {
+          instances.forEach(function(inst) {
+            var parent = inst.canvas.parentElement;
+            if (!parent) return;
+            inst.canvas.width = parent.offsetWidth;
+            inst.canvas.height = parent.offsetHeight;
+          });
+        }
+        resizeAll();
+        window.addEventListener('resize', resizeAll);
+
+        function drawFrame() {
+          time += 0.008;
+          instances.forEach(function(inst) {
+            var cw = inst.canvas.width;
+            var ch = inst.canvas.height;
+            if (cw === 0 || ch === 0) return;
+
+            var ctx = inst.ctx;
+            ctx.clearRect(0, 0, cw, ch);
+            ctx.globalAlpha = inst.opacity;
+
+            // Tile the texture across the section, applying gentle wave displacement
+            var tw = texImg.width;
+            var th = texImg.height;
+            var scale = Math.max(cw / tw, ch / th) * 0.6;
+            var drawW = tw * scale;
+            var drawH = th * scale;
+
+            // Draw multiple columns to cover width
+            for (var col = -1; col <= Math.ceil(cw / drawW) + 1; col++) {
+              var baseX = col * drawW;
+
+              // Slice the texture into horizontal strips for wave displacement
+              var strips = 40;
+              var stripH = drawH / strips;
+
+              for (var s = 0; s < strips; s++) {
+                var sy = (s / strips) * th;
+                var sh = th / strips;
+                var dy = (s / strips) * ch;
+                var dh = ch / strips + 1;
+
+                // Graceful sine wave displacement — like slow audio waveforms
+                var wave1 = Math.sin(time * 0.7 + s * 0.15) * 8;
+                var wave2 = Math.sin(time * 0.4 + s * 0.08 + 2.1) * 5;
+                var wave3 = Math.sin(time * 1.1 + s * 0.22 + 4.3) * 3;
+                var dx = baseX + wave1 + wave2 + wave3;
+
+                // Gentle vertical breathing
+                var vWave = Math.sin(time * 0.3 + s * 0.12) * 2;
+
+                ctx.drawImage(texImg, 0, sy, tw, sh, dx, dy + vWave, drawW, dh);
+              }
+            }
+          });
+
+          requestAnimationFrame(drawFrame);
+        }
+        drawFrame();
+      };
+    })();
+
     // ---- CURSOR — mini concentric ring disc ----
     (function() {
-      const canvas = document.createElement('canvas');
+      var canvas = document.createElement('canvas');
       canvas.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;';
       document.body.appendChild(canvas);
-      const ctx = canvas.getContext('2d');
+      var ctx = canvas.getContext('2d');
 
       function resize() {
         canvas.width = window.innerWidth;
@@ -781,9 +860,9 @@
       resize();
       window.addEventListener('resize', resize);
 
-      const CURSOR_R = 25;
-      const CENTER_HOLE = 2;
-      const cursorDots = [];
+      var CURSOR_R = 25;
+      var CENTER_HOLE = 2;
+      var cursorDots = [];
       var ringSpacing = 2.5;
       var numRings = Math.floor((CURSOR_R - CENTER_HOLE) / ringSpacing);
       for (var ring = 0; ring < numRings; ring++) {
