@@ -57,12 +57,12 @@
       position: fixed;
       top: 24px;
       right: 24px;
-      z-index: 10000;
-      display: flex;
+      z-index: 9990;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      padding: 14px;
-      border-radius: 12px;
+      padding: 8px 10px;
+      border-radius: 10px;
       background: rgba(255,255,255,0.06);
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
@@ -81,8 +81,6 @@
       width: 120px;
       height: auto;
       display: block;
-      position: relative;
-      z-index: 10001;
     }
 
     /* ---- HERO ---- */
@@ -446,8 +444,8 @@
       display: block;
     }
 
-    /* ---- TEXTURE CANVAS ---- */
-    .texture-canvas {
+    /* ---- WAVEFORM ---- */
+    .waveform-canvas {
       position: absolute;
       top: 0;
       left: 0;
@@ -521,7 +519,7 @@
 
     <!-- ======== HERO ======== -->
     <section class="lt-hero">
-      <canvas class="texture-canvas" data-theme="dark" id="texHero"></canvas>
+      <canvas class="waveform-canvas" data-theme="dark" id="texHero"></canvas>
       <h1 class="lt-hero-title">Living<br>Traces</h1>
       <p class="lt-hero-intro">
         Living Traces gathers languages and traditions that still breathe, even as many stand at the edge of disappearance. Across oceans, deserts, forests, mountains, and ice, communities continue to sing, weave, heal, dive, carve, remember, and speak words that cannot be replaced.
@@ -544,7 +542,7 @@
 
     <!-- ======== ENDANGERED LANGUAGES ======== -->
     <section class="lt-languages">
-      <canvas class="texture-canvas" data-theme="light" id="texLang"></canvas>
+      <canvas class="waveform-canvas" data-theme="light" id="texLang"></canvas>
       <div class="lt-languages-head" style="position:relative;z-index:2;">
         <h2 class="section-label">Endangered<br>Languages</h2>
         <p class="lt-languages-intro">
@@ -585,7 +583,7 @@
 
     <!-- ======== GREETINGS — one at a time, full width ======== -->
     <section class="lt-greetings">
-      <canvas class="texture-canvas" data-theme="dark" id="texGreet"></canvas>
+      <canvas class="waveform-canvas" data-theme="dark" id="texGreet"></canvas>
       <div class="greeting">
         <div class="greeting-label">Ainu Term</div>
         <div class="greeting-word">Irankarapte</div>
@@ -610,7 +608,7 @@
 
     <!-- ======== ENDANGERED TRADITIONS ======== -->
     <section class="lt-traditions">
-      <canvas class="texture-canvas" data-theme="light" id="texTrad"></canvas>
+      <canvas class="waveform-canvas" data-theme="light" id="texTrad"></canvas>
       <h2 class="section-label">Endangered<br>Traditions</h2>
 
       <div class="tradition-grid">
@@ -653,14 +651,14 @@
 
     <!-- ======== I AM BECAUSE WE ARE ======== -->
     <section class="lt-ubuntu">
-      <canvas class="texture-canvas" data-theme="dark" id="texUbuntu"></canvas>
+      <canvas class="waveform-canvas" data-theme="dark" id="texUbuntu"></canvas>
       <div class="lt-ubuntu-text">I am because<br>we are.</div>
       <div class="lt-ubuntu-source">Ubuntu Proverb</div>
     </section>
 
     <!-- ======== CLOSING ESSAY ======== -->
     <section class="lt-closing">
-      <canvas class="texture-canvas" data-theme="dark" id="texClose"></canvas>
+      <canvas class="waveform-canvas" data-theme="dark" id="texClose"></canvas>
       <div class="lt-closing-content">
         <p>What remains when a language falls silent, or a tradition is no longer practiced? Not only words or gestures are lost, but entire ways of understanding the world. These living traces carry memory, identity, and knowledge shaped over centuries. They hold ways of seeing time, land, community, and spirit that cannot be replicated once gone.</p>
         <p>Yet this is not a narrative of disappearance alone. Across continents, communities are choosing to remember, to teach, to speak, to make, and to continue. Preservation is not passive. It is an act of will. It is the commitment to continuous support in the face of change.</p>
@@ -701,15 +699,56 @@
       });
     })();
 
-    // ---- ANIMATED TEXTURE — graceful waveform motion ----
+    // ---- WAVEFORM — jellyfish tentacle animation ----
     (function() {
-      var texImg = new Image();
-      texImg.src = 'MICRO/MICRO_IMAGES/TEXTURE_SM.png';
+      var waveImg = new Image();
+      waveImg.src = 'MICRO/MICRO_IMAGES/MICRO_WAVE%20FORM%201.png';
 
-      texImg.onload = function() {
-        var allCanvases = document.querySelectorAll('.texture-canvas');
+      // Pre-render rotated (vertical) version and color variants
+      var rotatedDark = null;  // dark grey for dark backgrounds
+      var rotatedLight = null; // light grey for light backgrounds
+
+      waveImg.onload = function() {
+        var sw = waveImg.width;
+        var sh = waveImg.height;
+
+        // Create rotated canvas (90deg CW: width becomes height, height becomes width)
+        function makeRotated(colorMode) {
+          var rc = document.createElement('canvas');
+          rc.width = sh; // rotated: old height is new width
+          rc.height = sw; // rotated: old width is new height
+          var rctx = rc.getContext('2d');
+          rctx.translate(sh, 0);
+          rctx.rotate(Math.PI / 2);
+          rctx.drawImage(waveImg, 0, 0);
+
+          // Recolor: the waveform is dark on white
+          var imgData = rctx.getImageData(0, 0, rc.width, rc.height);
+          var d = imgData.data;
+          for (var i = 0; i < d.length; i += 4) {
+            var lum = d[i] * 0.299 + d[i+1] * 0.587 + d[i+2] * 0.114;
+            if (colorMode === 'dark') {
+              // Dark grey waveform on transparent: dark pixels become dark grey, white becomes transparent
+              var alpha = Math.max(0, (255 - lum) / 255);
+              d[i] = 60; d[i+1] = 60; d[i+2] = 60;
+              d[i+3] = Math.floor(alpha * 200);
+            } else {
+              // Light grey waveform on transparent: dark pixels become light grey, white becomes transparent
+              var alpha = Math.max(0, (255 - lum) / 255);
+              d[i] = 180; d[i+1] = 180; d[i+2] = 180;
+              d[i+3] = Math.floor(alpha * 160);
+            }
+          }
+          rctx.putImageData(imgData, 0, 0);
+          return rc;
+        }
+
+        rotatedDark = makeRotated('dark');
+        rotatedLight = makeRotated('light');
+
+        // Gather all waveform canvases
+        var allCanvases = document.querySelectorAll('.waveform-canvas');
         var instances = [];
-
         allCanvases.forEach(function(el) {
           var ctx = el.getContext('2d');
           var isDark = el.getAttribute('data-theme') === 'dark';
@@ -730,7 +769,7 @@
         var time = 0;
 
         function draw() {
-          time += 0.006;
+          time += 0.004;
 
           instances.forEach(function(inst) {
             var cw = inst.canvas.width;
@@ -740,46 +779,55 @@
             var ctx = inst.ctx;
             ctx.clearRect(0, 0, cw, ch);
 
-            // Scale texture to cover section
-            var tw = texImg.width;
-            var th = texImg.height;
-            var scale = Math.max(cw / tw, ch / th) * 0.7;
+            var src = inst.isDark ? rotatedDark : rotatedLight;
+            var tw = src.width;
+            var th = src.height;
+
+            // Scale to cover section width, let height flow naturally
+            var scale = (cw / tw) * 1.2;
             var drawW = tw * scale;
             var drawH = th * scale;
-            var strips = 32;
 
-            // Set opacity based on dark/light theme
-            ctx.globalAlpha = inst.isDark ? 0.12 : 0.08;
+            // Vertical offset to center
+            var baseY = (ch - drawH) / 2;
 
-            // For light sections, invert the texture
-            if (!inst.isDark) {
-              ctx.filter = 'invert(1)';
-            } else {
-              ctx.filter = 'none';
+            // Slice into horizontal strips for jellyfish tentacle effect
+            var strips = 48;
+            ctx.globalAlpha = 0.7;
+
+            for (var s = 0; s < strips; s++) {
+              var t = s / strips; // 0 to 1 from top to bottom
+              var sy = t * th;
+              var sHeight = th / strips;
+              var dy = baseY + t * drawH;
+              var dHeight = drawH / strips + 1;
+
+              // Jellyfish tentacle: more movement toward the bottom
+              // Top is anchored, bottom waves freely
+              var tentacleFactor = t * t; // quadratic: grows faster toward bottom
+
+              // Multiple layered waves for organic motion
+              var wave1 = Math.sin(time * 0.4 + s * 0.08) * 12 * tentacleFactor;
+              var wave2 = Math.sin(time * 0.25 + s * 0.13 + 2.0) * 8 * tentacleFactor;
+              var wave3 = Math.sin(time * 0.6 + s * 0.05 + 4.2) * 5 * tentacleFactor;
+
+              // Vertical breathing: expand/contract like jellyfish pulse
+              var breathe = 1 + Math.sin(time * 0.3 + s * 0.06) * 0.08 * tentacleFactor;
+              var breatheY = dHeight * breathe;
+
+              // Horizontal drift (subtle)
+              var hDrift = Math.sin(time * 0.2 + s * 0.1 + 1.3) * 6 * tentacleFactor;
+
+              var finalY = dy + wave1 + wave2 + wave3;
+              var finalX = hDrift;
+
+              // Slight alpha fade toward edges
+              var edgeFade = 1 - Math.abs(t - 0.5) * 0.3;
+              ctx.globalAlpha = 0.7 * edgeFade;
+
+              ctx.drawImage(src, 0, sy, tw, sHeight, finalX, finalY, drawW, breatheY);
             }
 
-            for (var col = -1; col <= Math.ceil(cw / drawW) + 1; col++) {
-              var baseX = col * drawW;
-
-              for (var s = 0; s < strips; s++) {
-                var sy = (s / strips) * th;
-                var sh = th / strips;
-                var dy = (s / strips) * ch;
-                var dh = ch / strips + 1;
-
-                // Graceful sine waves — slow, layered, organic
-                var wave1 = Math.sin(time * 0.5 + s * 0.12) * 10;
-                var wave2 = Math.sin(time * 0.3 + s * 0.07 + 1.8) * 6;
-                var wave3 = Math.sin(time * 0.8 + s * 0.2 + 3.5) * 3;
-                var dx = baseX + wave1 + wave2 + wave3;
-
-                var vWave = Math.sin(time * 0.25 + s * 0.1) * 2.5;
-
-                ctx.drawImage(texImg, 0, sy, tw, sh, dx, dy + vWave, drawW, dh);
-              }
-            }
-
-            ctx.filter = 'none';
             ctx.globalAlpha = 1;
           });
 
