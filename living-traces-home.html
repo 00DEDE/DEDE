@@ -52,9 +52,33 @@
       mask-image: url('MICRO/MICRO_LOGO.svg');
     }
 
-    /* ---- IMAGE BASE PATH ---- */
-    :root {
-      --img: "MICRO/T5_WEEK 11_MICRO_BOOKLET/publication-web-resources/image/";
+    /* ---- UNESCO CORNER LOGO ---- */
+    .unesco-corner {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+      border-radius: 8px;
+      background: transparent;
+      border: none;
+      transition: transform 0.15s ease, background 0.2s ease;
+      text-decoration: none;
+    }
+    .unesco-corner:hover {
+      background: rgba(36, 144, 207, 0.08);
+    }
+    .unesco-corner:active {
+      transform: scale(0.9);
+      background: rgba(36, 144, 207, 0.15);
+    }
+    .unesco-corner svg {
+      width: 40px;
+      height: auto;
+      display: block;
     }
 
     /* ---- HORIZONTAL LINE BARS (booklet motif) ---- */
@@ -71,6 +95,8 @@
     }
     .line-bars span:nth-child(odd) { width: 100%; }
     .line-bars span:nth-child(even) { width: 60%; }
+
+    /* ---- RUDER PLAKAT GLOBAL: uppercase + 50/1000 tracking ---- */
 
     /* ---- HERO ---- */
     .lt-hero {
@@ -97,7 +123,8 @@
       font-family: 'RuderPlakat', sans-serif;
       font-size: clamp(80px, 14vw, 200px);
       line-height: 0.9;
-      letter-spacing: -0.02em;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
       color: #fff;
       position: relative;
       z-index: 2;
@@ -138,12 +165,73 @@
       gap: 28px;
     }
 
+    /* ---- HERO BUTTONS ---- */
+    .lt-hero-pills {
+      display: flex;
+      gap: 12px;
+      margin-top: 32px;
+      position: relative;
+      z-index: 2;
+      flex-wrap: wrap;
+    }
+    .lt-hero-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 22px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.85);
+      font-family: 'PPTelegraf', sans-serif;
+      font-size: clamp(13px, 1.1vw, 15px);
+      border: none;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .lt-hero-pill svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+      opacity: 0.7;
+    }
+    .lt-hero-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+      position: relative;
+      z-index: 2;
+      flex-wrap: wrap;
+    }
+    .lt-hero-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 32px;
+      border-radius: 14px;
+      background: #fff;
+      color: #000;
+      font-family: 'PPTelegraf', sans-serif;
+      font-size: clamp(14px, 1.2vw, 16px);
+      font-weight: 400;
+      border: none;
+      text-decoration: none;
+      transition: transform 0.15s ease, box-shadow 0.2s ease;
+    }
+    .lt-hero-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 20px rgba(255,255,255,0.15);
+    }
+    .lt-hero-btn:active {
+      transform: scale(0.97);
+    }
+
     /* ---- SECTION LABEL (vertical) ---- */
     .section-label {
       font-family: 'RuderPlakat', sans-serif;
       font-size: clamp(60px, 10vw, 140px);
       line-height: 0.95;
-      letter-spacing: -0.02em;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
       color: #000;
     }
     .section-label--white { color: #fff; }
@@ -194,7 +282,8 @@
     .culture-card h3 {
       font-family: 'RuderPlakat', sans-serif;
       font-size: clamp(24px, 3vw, 40px);
-      letter-spacing: -0.01em;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
       margin: 0 0 10px;
       line-height: 1;
     }
@@ -242,6 +331,8 @@
       font-family: 'RuderPlakat', sans-serif;
       font-size: clamp(40px, 7vw, 100px);
       line-height: 1;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
       color: #fff;
       margin-bottom: 16px;
       word-break: break-word;
@@ -281,7 +372,8 @@
     .tradition-card h3 {
       font-family: 'RuderPlakat', sans-serif;
       font-size: clamp(22px, 2.8vw, 36px);
-      letter-spacing: -0.01em;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
       margin: 0 0 10px;
       line-height: 1;
     }
@@ -323,6 +415,8 @@
       font-family: 'RuderPlakat', sans-serif;
       font-size: clamp(48px, 9vw, 160px);
       line-height: 0.95;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
       color: #fff;
       position: relative;
       z-index: 2;
@@ -406,37 +500,45 @@
       .lt-ubuntu { padding: 100px 24px; }
       .lt-closing { padding: 80px 24px; }
       .lt-collage { grid-template-columns: repeat(2, 1fr); }
+      .unesco-corner { top: 16px; right: 16px; }
+      .unesco-corner svg { width: 32px; }
+      .lt-hero-pills, .lt-hero-buttons { gap: 10px; }
     }
   </style>
 </head>
 <body data-page="living-traces">
 
-  <!-- Header -->
-  <header class="header">
-    <div class="header-inner">
-      <a href="living-traces-home.html" class="logo">
-        <img src="MICRO/MICRO_LOGO.svg" alt="Living Traces" class="logo-img">
-      </a>
-      <nav class="nav">
-        <button class="menu-toggle" aria-label="Toggle menu">
-          <span></span><span></span><span></span>
-        </button>
-        <ul class="nav-links">
-          <li><a href="index.html">Our Work</a></li>
-          <li><a href="index.html">Our Four Worlds</a></li>
-          <li><a href="index.html">UNESCO</a></li>
-          <li><a href="about.html">About Us</a></li>
-          <li><a href="uncover.html">Uncover</a></li>
-          <li>
-            <button class="nav-search" aria-label="Search">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            </button>
-          </li>
-          <li><a href="#" class="btn-nav">Become Involved</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
+  <!-- UNESCO Logo — top right corner -->
+  <a href="index.html" class="unesco-corner" aria-label="Back to UNESCO home">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="60 0 170 144">
+      <style>path { fill: #2490cf; }</style>
+      <path d="M99.11,25.5c4.28,0,7.91-2.62,7.91-7.46V7.93c0-.94-.51-1.44-1.44-1.44h-2.01c-.94,0-1.44.51-1.44,1.44v10.11c0,2.11-1.42,3.21-3.02,3.21s-2.99-1.1-2.99-3.21V7.93c0-.94-.51-1.44-1.44-1.44h-2.03c-.94,0-1.44.51-1.44,1.44v10.11c0,4.84,3.61,7.46,7.91,7.46Z"/>
+      <path d="M111.36,25.2h2.03c.91,0,1.44-.51,1.44-1.44v-8.66l6.58,9.2c.43.61.96.91,1.74.91h1.23c.94,0,1.44-.51,1.44-1.44V7.93c0-.94-.51-1.44-1.44-1.44h-2.03c-.94,0-1.44.51-1.44,1.44v8.53l-6.52-9.06c-.45-.61-.99-.91-1.76-.91h-1.26c-.94,0-1.44.51-1.44,1.44v15.83c0,.94.51,1.44,1.44,1.44Z"/>
+      <path d="M130.26,25.2h10.11c.94,0,1.44-.51,1.44-1.44v-1.31c0-.94-.51-1.44-1.44-1.44h-6.63v-3.21h5.56c.94,0,1.47-.51,1.47-1.44v-.88c0-.94-.53-1.44-1.47-1.44h-5.56v-3.34h6.63c.94,0,1.44-.51,1.44-1.44v-1.31c0-.94-.51-1.44-1.44-1.44h-10.11c-.94,0-1.44.51-1.44,1.44v15.83c0,.94.51,1.44,1.44,1.44Z"/>
+      <path d="M150.52,25.5c4.04,0,7.38-1.9,7.38-5.72-.05-2.49-1.42-4.36-5.32-5.69l-2.25-.8c-1.42-.51-1.76-1.12-1.76-1.71,0-1.02,1.02-1.55,2.14-1.55.94,0,1.6.35,2.01.94.56.7,1.04,1.02,1.87.78l1.26-.35c.91-.27,1.34-.96.86-1.84-1.12-2.11-3.15-3.34-6.07-3.34-3.88,0-6.87,2.25-6.87,5.75.05,3.42,3.66,4.87,5.24,5.37l2.27.83c1.39.45,1.84,1.12,1.84,1.82,0,1.1-1.04,1.71-2.59,1.71-1.44,0-2.49-.56-3.07-1.47-.48-.78-.94-1.12-1.76-.94l-1.34.32c-.91.21-1.39.86-1.04,1.76,1.04,2.59,3.64,4.14,7.22,4.14Z"/>
+      <path d="M169.46,25.5c2.49,0,4.33-.78,5.96-1.95.7-.51.7-1.2.11-1.92l-.86-1.02c-.59-.72-1.23-.72-2.03-.19-1.02.59-2.14.83-3.18.83-3.34,0-5.43-2.41-5.43-5.4s2.09-5.4,5.43-5.4c1.04,0,2.19.24,3.18.83.8.53,1.44.53,2.03-.19l.86-1.02c.59-.72.53-1.47-.24-2.01-1.58-1.15-3.4-1.87-5.83-1.87-6.31,0-10.35,4.44-10.35,9.65s4.04,9.65,10.35,9.65Z"/>
+      <path d="M186.29,25.5c6.1,0,10.03-4.41,10.03-9.65s-3.93-9.65-10.03-9.65-10,4.41-10,9.65,3.93,9.65,10,9.65ZM186.29,10.45c3.1,0,5.08,2.43,5.08,5.4s-1.98,5.4-5.08,5.4-5.08-2.43-5.08-5.4,2.01-5.4,5.08-5.4Z"/>
+      <path d="M148.91,52.54v-18.45c0-.88-.71-1.59-1.59-1.59h-6.71c-.88,0-1.59.71-1.59,1.59v18.39c0,.87.7,1.58,1.57,1.59l6.71.06c.88,0,1.6-.71,1.6-1.59Z"/>
+      <path d="M176.46,80.11c-.88,0-1.59.71-1.59,1.59v6.66c0,.88.71,1.59,1.59,1.59l18.47.04c.88,0,1.59-.71,1.59-1.59v-6.7c0-.88-.71-1.59-1.59-1.59h-18.47Z"/>
+      <path d="M147.11,115.99h-6.71c-.88,0-1.59.71-1.59,1.59v18.57c0,.87.7,1.58,1.57,1.59l6.71.06c.88,0,1.6-.71,1.6-1.59v-18.64c0-.88-.71-1.59-1.59-1.59Z"/>
+      <path d="M92.78,89.74l18.49.04c.88,0,1.59-.71,1.59-1.59v-6.7c0-.88-.71-1.59-1.59-1.59h-18.49c-.88,0-1.59.71-1.59,1.59v6.66c0,.88.71,1.59,1.59,1.59Z"/>
+      <path d="M92.77,42.13l5.4.03c.87,0,1.58.71,1.58,1.59v5.35c0,.88.71,1.59,1.58,1.59l6.71.03c.88,0,1.6-.71,1.6-1.59v-6.7c0-.88-.71-1.59-1.59-1.59h-5.38c-.88,0-1.59-.71-1.59-1.59v-5.38c0-.88-.71-1.59-1.59-1.59h-6.71c-.88,0-1.59.71-1.59,1.59v6.66c0,.87.71,1.59,1.58,1.59Z"/>
+      <path d="M186.15,50.72c.88,0,1.6-.71,1.6-1.59v-5.4c0-.88.72-1.59,1.6-1.59l5.37.03c.88,0,1.6-.71,1.6-1.59v-6.7c0-.88-.71-1.59-1.59-1.59h-6.71c-.88,0-1.59.71-1.59,1.59v5.38c0,.88-.71,1.59-1.59,1.59h-5.38c-.88,0-1.59.71-1.59,1.59v6.66c0,.88.71,1.59,1.58,1.59l6.71.03Z"/>
+      <path d="M108.05,119.18h-6.71c-.88,0-1.59.71-1.59,1.59v5.38c0,.88-.71,1.59-1.59,1.59h-5.17c-.88,0-1.59.71-1.59,1.59v6.66c0,.87.71,1.59,1.58,1.59l6.71.03c.88,0,1.6-.71,1.6-1.59v-5.4c0-.88.72-1.59,1.6-1.59l5.16.02c.88,0,1.6-.71,1.6-1.59v-6.7c0-.88-.71-1.59-1.59-1.59Z"/>
+      <path d="M194.72,127.73h-5.38c-.88,0-1.59-.71-1.59-1.59v-5.38c0-.88-.71-1.59-1.59-1.59h-6.71c-.88,0-1.59.71-1.59,1.59v6.66c0,.88.71,1.59,1.58,1.59l5.4.03c.87,0,1.58.71,1.58,1.59v5.35c0,.87.71,1.59,1.58,1.59l6.71.03c.88,0,1.6-.71,1.6-1.59v-6.7c0-.88-.71-1.59-1.59-1.59Z"/>
+      <path d="M93.96,55.99c-1.24,0-2.25,1.01-2.25,2.25v5.36c0,1.24,1.01,2.25,2.25,2.25h27.63c2.01,0,3.99.32,5.9.95l.78.29c3.73,1.41,6.99,4.03,9.15,7.38.3.47,1.01.38,1.18-.15h0c.02-.06.04-.11.06-.17.03-.07.05-.14.08-.21l.08-.23c.05-.14.1-.28.15-.43.06-.16.12-.31.18-.46l.15-.37c.06-.15.12-.3.18-.45l.07-.17c.03-.08.07-.16.1-.24.12-.27.25-.53.38-.8l.1-.2c.04-.07.07-.15.11-.22.04-.08.08-.16.11-.24l.09-.18c.14-.27.3-.54.45-.81l.22-.4c.07-.13.14-.25.22-.38l.07-.12s.04-.06.05-.08c.15-.25.31-.49.47-.73l.07-.1c.05-.07.1-.15.15-.23.06-.09.12-.18.17-.27.03-.04.06-.08.09-.12l.1-.13s.05-.08.08-.12c0,0,.16-.19.16-.44,0-.28-.16-.43-.16-.43-4.23-4.95-10.09-8.24-16.5-9.27-1.41-.24-2.91-.36-4.44-.36h-27.69Z"/>
+      <path d="M112.65,103.55h-19.48c-.88,0-1.59.71-1.59,1.59v6.97c0,.88.71,1.59,1.59,1.59h19.3c.37,0,.66-.3.66-.66v-5.52c0-.71.03-1.45.1-2.33v-.12c.02-.12.03-.24.04-.36,0-.07.01-.14.02-.2,0-.07.01-.14.02-.22.04-.39-.26-.73-.66-.73Z"/>
+      <path d="M142.59,104.07l.34-.4-.31-.42s-.03-.05-.05-.07c-.03-.04-.06-.09-.08-.12-.32-.45-.62-.91-.94-1.42-.04-.06-.07-.12-.11-.17-.04-.05-.07-.11-.11-.16-.36-.59-.7-1.21-1.02-1.84-.04-.08-.08-.17-.12-.25-.03-.07-.07-.15-.1-.22-.25-.52-.47-.99-.65-1.43-.08-.18-.15-.36-.22-.55l-.05-.12c-.17-.44-.34-.89-.48-1.32-.02-.07-.05-.13-.07-.2-.02-.06-.05-.12-.07-.19h0c-.17-.53-.88-.63-1.18-.16h0c-2.16,3.29-5.36,5.87-9,7.28,0,0-.1,0-.26.18-.08.09-.18.38-.18.38-.02.07-.05.15-.07.22-.05.16-.09.33-.13.5-.07.28-.13.55-.18.83v.06c-.04.14-.07.29-.09.43-.05.3-.08.6-.12.91l-.02.15c-.01.09-.02.18-.03.28-.04.48-.06.92-.06,1.34v4.74c0,.43.4.74.81.64,5.68-1.34,10.71-4.41,14.54-8.88Z"/>
+      <path d="M194.55,103.55h-27.77c-2.15,0-4.24-.35-6.21-1.05l-.45-.16v-.03s-.29-.11-.29-.11c-4.79-1.9-8.5-5.55-10.45-10.28,0,0-.15-.29-.25-.36-.11-.06-.44-.05-.44-.05-.21.02-.42.04-.63.06l-.29.02c-.09,0-.18.02-.27.03-.11.01-.23.02-.34.03h-.15c-.63.05-1.23.07-1.83.07h-2.45c-.61,0-1.23-.02-1.9-.06l-.29-.02c-.45-.03-.8.38-.7.82.57,2.4,1.46,4.72,2.66,6.89.48.86,1.01,1.71,1.57,2.52.29.41.59.81.89,1.19,4.27,5.47,10.35,9.11,17.13,10.23,1.48.26,3.04.4,4.63.4h27.83c1.25,0,2.25-1.01,2.25-2.25v-5.64c0-1.25-1.01-2.25-2.25-2.25Z"/>
+      <path d="M196.66,58.25c0-1.24-1.01-2.25-2.25-2.25h-18.96c-.37,0-.66.3-.66.66v5.46c0,.91-.06,1.9-.17,3.02-.04.39.27.73.66.73h19.13c1.24,0,2.25-1.01,2.25-2.25v-5.36Z"/>
+      <path d="M134.12,91.59h0c.48-.3.39-1.03-.15-1.19-.04-.01-.08-.03-.12-.04-.05-.02-.11-.04-.16-.06l-.19-.06c-.16-.05-.33-.11-.49-.16-.11-.04-.22-.08-.33-.12l-.31-.12c-.12-.04-.24-.09-.35-.13-.05-.02-.1-.04-.15-.06l-.12-.04c-.07-.03-.14-.06-.2-.09l-.17-.07c-.17-.07-.35-.15-.52-.23l-.08-.03c-.3-.13-.59-.27-.88-.41l-.29-.14c-.09-.05-.19-.1-.28-.15l-.15-.08c-.33-.17-.65-.35-.98-.53l-.2-.11c-.08-.04-.16-.09-.24-.14l-.18-.11c-.32-.19-.64-.4-.95-.6l-.2-.13c-.09-.06-.18-.11-.27-.17l-.29-.2s-.06-.04-.11-.07c0,0-.19-.15-.4-.15s-.4.19-.4.19c-4.97,4.17-8.31,9.97-9.41,16.32-.28,1.55-.42,3.16-.42,4.79v28.49c0,.88.71,1.59,1.59,1.59h6.95c.88,0,1.59-.71,1.59-1.59v-28.44c0-1.07.09-2.15.27-3.19.18-1.05.45-2.08.81-3.08.06-.16.13-.32.19-.48l.11-.26c1.47-3.67,4.14-6.86,7.49-8.96Z"/>
+      <path d="M162.95,86.4s-.28-.18-.42-.18c-.12,0-.39.15-.39.15-2.46,1.73-5.17,3.06-8.03,3.97-.54.17-.63.9-.15,1.2h0c1.29.79,2.45,1.71,3.46,2.71,1.76,1.76,3.18,3.9,4.11,6.2,0,0,.11.25.17.31.06.06.27.12.27.12.07.02.15.04.22.06l.12.03c.16.05.33.09.5.13.27.07.54.12.81.17h.07c.14.04.28.07.42.09.3.05.6.08.9.11l.14.02c.1.01.19.02.29.03.48.04.91.06,1.34.06h4.54c.43,0,.75-.4.64-.82-1.4-5.61-4.52-10.57-9.02-14.33Z"/>
+      <path d="M172.14,115.68h-5.42c-.69,0-1.4-.03-2.26-.1h-.12c-.11-.02-.23-.02-.34-.03-.06,0-.12,0-.18-.01-.06,0-.11,0-.17-.01-.39-.04-.73.26-.73.66v19.03c0,1.24,1.01,2.25,2.25,2.25h5.36c1.24,0,2.25-1.01,2.25-2.25v-18.86c0-.37-.3-.66-.66-.66Z"/>
+      <path d="M121.65,54.01c.84,0,1.72.04,2.68.13h0s.09,0,.14,0c.42.04.79-.29.79-.72v-19.79c0-.88-.71-1.59-1.59-1.59h-6.95c-.88,0-1.59.71-1.59,1.59v19.65c0,.4.32.72.72.72h5.81Z"/>
+      <path d="M172.36,66.97s.01-.06.02-.09c.02-.06.03-.13.04-.18.07-.37.11-.75.15-1.12l.03-.3c.14-1.19.2-2.2.2-3.16v-28.08c0-1.03-.83-1.86-1.86-1.86h-6.15c-1.03,0-1.86.83-1.86,1.86v28.03c0,1.1-.1,2.23-.3,3.35-.1.55-.23,1.11-.41,1.72l-.03.1c-.09.32-.18.63-.29.94-.05.15-.11.3-.18.44-.05.11-.1.22-.14.34-.94,2.43-2.38,4.66-4.17,6.44-1.02,1.02-2.18,1.93-3.45,2.71-.62.38-1.3.75-2.04,1.08-.09.04-.19.08-.28.12-.08.03-.16.06-.24.1-.14.06-.28.12-.42.17-.11.04-.22.09-.33.14,0,0-.01,0-.02,0l-.32.12c-.09.03-.24.09-.34.12l-.28.09c-.08.03-.17.06-.25.08l-.23.06-.08.02-.07.02c-.26.07-.51.13-.77.19-.2.05-.41.09-.62.13-2.29.44-4.65.44-6.94.05-.24-.04-.48-.08-.72-.13l-.07-.02c-.21-.05-.43-.11-.64-.17l-.31-.08s-.09-.02-.14-.04c-.04,0-.07-.02-.08-.02l-1.39-.49s-.01,0-.02,0l-.7-.29c-.18-.07-.35-.14-.52-.22-.76-.35-1.43-.71-2.03-1.09-3.44-2.15-6.13-5.4-7.59-9.16,0,0-.05-.14-.14-.23s-.27-.16-.27-.16c-.05-.01-.14-.06-.2-.07-.64-.17-1.29-.31-1.93-.4-.08-.01-.16-.02-.24-.03h-.11c-.76-.11-1.43-.15-2.05-.15h-5.05c-.43,0-.74.4-.64.82,1.38,5.7,4.52,10.73,9.08,14.56.1.08.19.16.28.24.22.19.44.38.67.55.07.05.14.1.2.15.04.03.09.06.13.09l.18.13c.3.22.6.44.9.65.1.07.2.13.31.19.06.04.13.08.21.13l.49.31c.15.1.3.19.46.28.12.07.25.14.38.21l.35.19c.18.1.36.2.54.29l.06.03s.08.04.14.08l.05.03c.14.07.28.13.42.2l.42.2c.24.11.48.23.72.33.11.05.23.09.34.14l.43.17c.1.04.19.08.28.11l.19.08c.12.05.24.1.36.14.16.06.33.11.49.16l.45.14c.24.08.47.16.69.22.03,0,.05.01.08.02.06.02.12.03.18.05l.11.03c.08.02.17.04.25.07l.26.07c.12.03.24.06.37.09l.16.04c.1.03.19.05.29.07.07.02.14.03.22.04.05,0,.1.02.15.03l.94.18s.09.02.13.02c.07.01.14.03.23.04l.34.04h.06s.1.02.14.03c.02,0,.04,0,.06,0,.17.02.33.04.49.05l.73.07c.09,0,.17.02.26.03l.15.02c.15.01.3.01.45.02.1,0,.19,0,.29,0h.26c.33.03.67.05,1.01.05h2.45c.59,0,1.18-.02,1.82-.06.11,0,.22-.02.33-.03l.47-.05c.25-.02.49-.05.74-.08.06,0,.12-.01.18-.02.1,0,.19-.02.27-.03.1-.01.18-.02.26-.04l.58-.09c.08-.01.17-.03.25-.05.06-.01.11-.02.17-.03.3-.06.61-.12.91-.18.28-.06.55-.13.83-.2,2.85-.72,5.57-1.9,8.06-3.5.53-.34,1.04-.69,1.52-1.05l.15-.11c.09-.06.17-.12.25-.18.22-.17.44-.36.65-.54.1-.09.21-.18.31-.27,4.54-3.81,7.68-8.85,9.06-14.56.16-.68.28-1.2.36-1.7Z"/>
+      <path d="M144.62,78.87c1.95,0,3.76-.26,4.45-.85.14-.08.31-.46.31-.46.16-.39.31-.77.48-1.12.33-.68.7-1.33,1.1-1.94,2.11-3.26,5.27-5.85,8.92-7.29,0,0,.16-.06.25-.16.09-.09.14-.27.14-.27.46-1.54.69-3.13.69-4.72v-4.6c0-.43-.4-.75-.82-.64-5.6,1.36-10.55,4.42-14.33,8.84-.09.1-.17.2-.26.3-.18.2-.36.41-.54.63l-.02.03c-.06.08-.12.16-.18.24-.04.05-.07.1-.11.15l-.05.07c-.24.31-.47.62-.69.94-.07.1-.13.19-.19.29-.04.06-.08.12-.12.18l-.16.25c-.06.09-.11.19-.17.28-.03.06-.07.12-.1.17-.31.49-.62,1-.9,1.54l-.03.06s-.04.08-.06.12c-.34.66-.68,1.39-1.02,2.22-.07.17-.14.33-.2.5-.31.81-.57,1.56-.78,2.29-.02.07-.04.14-.06.21l-.03.12c-.08.31-.17.61-.24.92v.02c-.02.06-.02.12-.01.18,0,0,0,.01,0,.02,0,.82,2.13,1.49,4.76,1.49Z"/>
+    </svg>
+  </a>
 
   <main>
 
@@ -451,7 +553,20 @@
       <p class="lt-hero-intro">
         Living Traces gathers languages and traditions that still breathe, even as many stand at the edge of disappearance. Across oceans, deserts, forests, mountains, and ice, communities continue to sing, weave, heal, dive, carve, remember, and speak words that cannot be replaced.
       </p>
-      <p class="lt-hero-meta">The Met &mdash; March 16 to June 3, 2027</p>
+      <div class="lt-hero-pills">
+        <span class="lt-hero-pill">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          March 16 - June 3, 2027
+        </span>
+        <span class="lt-hero-pill">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+          The Met Museum, NYC
+        </span>
+      </div>
+      <div class="lt-hero-buttons">
+        <a href="#" class="lt-hero-btn">Reserve Tickets</a>
+        <a href="#" class="lt-hero-btn">Exhibition Preview</a>
+      </div>
     </section>
 
     <!-- ======== ENDANGERED LANGUAGES ======== -->
@@ -466,7 +581,7 @@
       <div class="culture-grid">
         <!-- Ainu -->
         <div class="culture-card">
-          <img src="MICRO/T5_WEEK 11_MICRO_BOOKLET/publication-web-resources/image/AINU_2.png" alt="Ainu elder">
+          <img src="MICRO/MICRO_IMAGES/AINU_2.png" alt="Ainu elder">
           <div class="line-bars culture-card-bars"><span></span><span></span><span></span><span></span><span></span></div>
           <h3>Ainu</h3>
           <span class="location">Hokkaido, Japan</span>
@@ -475,7 +590,7 @@
 
         <!-- Northern Sami -->
         <div class="culture-card">
-          <img src="MICRO/T5_WEEK 11_MICRO_BOOKLET/publication-web-resources/image/SAMI_1.png" alt="Sami woman with flag">
+          <img src="MICRO/MICRO_IMAGES/SAMI_1.png" alt="Sami woman with flag">
           <div class="line-bars culture-card-bars"><span></span><span></span><span></span><span></span><span></span></div>
           <h3>Northern S&#225;mi</h3>
           <span class="location">Norway, Sweden, Finland</span>
@@ -484,7 +599,7 @@
 
         <!-- Rapa Nui -->
         <div class="culture-card">
-          <img src="MICRO/T5_WEEK 11_MICRO_BOOKLET/publication-web-resources/image/RAPA_NUI_1.png" alt="Rapa Nui moai statues">
+          <img src="MICRO/MICRO_IMAGES/RAPA%20NUI_1.png" alt="Rapa Nui moai statues">
           <div class="line-bars culture-card-bars"><span></span><span></span><span></span><span></span><span></span></div>
           <h3>Rapa Nui</h3>
           <span class="location">Rapa Nui, Chile</span>
@@ -493,7 +608,7 @@
 
         <!-- Ju|'hoansi -->
         <div class="culture-card">
-          <img src="MICRO/T5_WEEK 11_MICRO_BOOKLET/publication-web-resources/image/Ju_'hoansi_1.png" alt="Ju|'hoansi people in the Kalahari">
+          <img src="MICRO/MICRO_IMAGES/Ju%C7%80%E2%80%99hoansi_1.png" alt="Ju|'hoansi people in the Kalahari">
           <div class="line-bars culture-card-bars"><span></span><span></span><span></span><span></span><span></span></div>
           <h3>Ju|'hoansi</h3>
           <span class="location">Namibia / Botswana</span>
@@ -537,7 +652,7 @@
       <div class="tradition-grid">
         <!-- Bigwala -->
         <div class="tradition-card">
-          <img src="MICRO/T5_WEEK 11_MICRO_BOOKLET/publication-web-resources/image/BIGWALA_1.png" alt="Bigwala trumpet musicians">
+          <img src="MICRO/MICRO_IMAGES/BIGWALA_1.png" alt="Bigwala trumpet musicians">
           <div class="line-bars tradition-card-bars"><span></span><span></span><span></span><span></span><span></span></div>
           <h3>Bigwala</h3>
           <span class="location">Uganda</span>
@@ -546,7 +661,7 @@
 
         <!-- Sanke Mon -->
         <div class="tradition-card">
-          <img src="MICRO/T5_WEEK 11_MICRO_BOOKLET/publication-web-resources/image/SANK%C3%89_MON_1.png" alt="Sanke Mon fishing ritual">
+          <img src="MICRO/MICRO_IMAGES/SANKE%CC%81%20MON_1.png" alt="Sanke Mon fishing ritual">
           <div class="line-bars tradition-card-bars"><span></span><span></span><span></span><span></span><span></span></div>
           <h3>Sank&#233; Mon</h3>
           <span class="location">Mali</span>
@@ -555,7 +670,7 @@
 
         <!-- Jeju Haenyeo -->
         <div class="tradition-card">
-          <img src="MICRO/T5_WEEK 11_MICRO_BOOKLET/publication-web-resources/image/JEJU_HAENYEO_1.png" alt="Jeju Haenyeo women divers">
+          <img src="MICRO/MICRO_IMAGES/JEJU%20HAENYEO_1.png" alt="Jeju Haenyeo women divers">
           <div class="line-bars tradition-card-bars"><span></span><span></span><span></span><span></span><span></span></div>
           <h3>Jeju Haenyeo</h3>
           <span class="location">South Korea</span>
@@ -564,7 +679,7 @@
 
         <!-- Noken Weaving -->
         <div class="tradition-card">
-          <img src="MICRO/T5_WEEK 11_MICRO_BOOKLET/publication-web-resources/image/NOKEN_WEAVING_2.png" alt="Noken woven bags">
+          <img src="MICRO/MICRO_IMAGES/NOKEN%20WEAVING_2.png" alt="Noken woven bags">
           <div class="line-bars tradition-card-bars"><span></span><span></span><span></span><span></span><span></span></div>
           <h3>Noken Weaving</h3>
           <span class="location">Papua, Indonesia</span>
@@ -575,9 +690,9 @@
 
     <!-- ======== PHOTO COLLAGE ======== -->
     <div class="lt-collage">
-      <img src="MICRO/T5_WEEK 11_MICRO_BOOKLET/publication-web-resources/image/BIGWALA_2.png" alt="">
-      <img src="MICRO/T5_WEEK 11_MICRO_BOOKLET/publication-web-resources/image/JEJU_HAENYEO_1.png" alt="">
-      <img src="MICRO/T5_WEEK 11_MICRO_BOOKLET/publication-web-resources/image/SANK%C3%89_MON_2.png" alt="">
+      <img src="MICRO/MICRO_IMAGES/BIGWALA_2.png" alt="">
+      <img src="MICRO/MICRO_IMAGES/JEJU%20HAENYEO_2.png" alt="">
+      <img src="MICRO/MICRO_IMAGES/RAPA%20NUI_1.png" alt="">
     </div>
 
     <!-- ======== I AM BECAUSE WE ARE ======== -->
