@@ -96,7 +96,7 @@
     }
     .lt-hero-title {
       font-family: 'RuderPlakat', Impact, sans-serif;
-      font-size: clamp(80px, 14vw, 200px);
+      font-size: clamp(96px, 16.8vw, 240px);
       line-height: 0.9;
       letter-spacing: 0.05em;
       text-transform: uppercase;
@@ -719,26 +719,31 @@
         var pixels = imgData.data;
 
         // Sample brightness at a given normalized position (0-1)
+        // Uses hard threshold + power curve to preserve waveform contour shape
         function sampleDensity(nx, ny) {
           var px = Math.floor(nx * (ow - 1));
           var py = Math.floor(ny * (oh - 1));
           var idx = (py * ow + px) * 4;
           var lum = pixels[idx] * 0.299 + pixels[idx+1] * 0.587 + pixels[idx+2] * 0.114;
-          return Math.max(0, (255 - lum) / 255); // 1 = dark (particle), 0 = white (empty)
+          var d = Math.max(0, (255 - lum) / 255);
+          // Hard threshold: cut off light areas so contour stays sharp
+          if (d < 0.28) return 0;
+          // Power curve: sharpen edges, concentrate particles in dark bands
+          return d * d;
         }
 
         // Generate particles for a section via rejection sampling
         function generateParticles(count) {
           var particles = [];
           var attempts = 0;
-          var maxAttempts = count * 12;
+          var maxAttempts = count * 20;
           while (particles.length < count && attempts < maxAttempts) {
             attempts++;
             var nx = Math.random();
             var ny = Math.random();
             var density = sampleDensity(nx, ny);
-            // Accept with probability proportional to darkness
-            if (Math.random() < density * 0.85) {
+            // Accept with probability proportional to squared darkness
+            if (Math.random() < density) {
               particles.push({
                 nx: nx,           // normalized x (0-1)
                 ny: ny,           // normalized y (0-1)
@@ -797,7 +802,7 @@
         var breathInterval = 80 + Math.random() * 60;
 
         function draw() {
-          time += 0.012;
+          time += 0.0138; // 15% faster
 
           // Breathing pulse (matches transition circle rhythm)
           breathTimer++;
@@ -808,7 +813,7 @@
           }
           breathCurrent += (breathTarget - breathCurrent) * 0.01;
 
-          var pulseWave = time * 0.5;
+          var pulseWave = time * 0.575; // 15% faster pulse
 
           instances.forEach(function(inst) {
             var cw = inst.canvas.width;
@@ -818,8 +823,8 @@
             var ctx = inst.ctx;
             ctx.clearRect(0, 0, cw, ch);
 
-            // Color: dark grey on dark bg, light grey on light bg
-            ctx.fillStyle = inst.isDark ? '#333' : '#bbb';
+            // Color: 15% more contrast — lighter on dark, darker on light
+            ctx.fillStyle = inst.isDark ? '#444' : '#a0a0a0';
 
             var particles = inst.particles;
             for (var i = 0; i < particles.length; i++) {
@@ -846,21 +851,22 @@
               var x = cw * 0.5 + bx * cw;
               var y = ch * 0.5 + by * ch;
 
-              // Jellyfish vertical waves — layered, organic
-              var wave1 = Math.sin(time * 0.35 + pt.ny * 6 + pt.phase) * 10 * yFactor;
-              var wave2 = Math.sin(time * 0.22 + pt.ny * 4 + 2.1) * 6 * yFactor;
-              var wave3 = Math.sin(time * 0.5 + pt.nx * 3 + 4.0) * 4 * yFactor;
+              // Jellyfish vertical waves — layered, organic (15% faster)
+              var wave1 = Math.sin(time * 0.4025 + pt.ny * 6 + pt.phase) * 10 * yFactor;
+              var wave2 = Math.sin(time * 0.253 + pt.ny * 4 + 2.1) * 6 * yFactor;
+              var wave3 = Math.sin(time * 0.575 + pt.nx * 3 + 4.0) * 4 * yFactor;
               y += wave1 + wave2 + wave3;
 
-              // Subtle horizontal drift
-              var hDrift = Math.sin(time * 0.18 + pt.phase + pt.ny * 3) * 4 * yFactor;
+              // Subtle horizontal drift (15% faster)
+              var hDrift = Math.sin(time * 0.207 + pt.phase + pt.ny * 3) * 4 * yFactor;
               x += hDrift;
 
               // Individual dot wobble (like transition circle)
               var wobble = Math.sin(time * pt.speed + pt.phase) * 0.4;
               x += wobble * pt.drift;
 
-              ctx.globalAlpha = 0.75 - distFromCenter * 0.25;
+              // 15% higher alpha for more contrast
+              ctx.globalAlpha = Math.min(1, (0.86 - distFromCenter * 0.29));
               ctx.beginPath();
               ctx.arc(x, y, pt.size, 0, Math.PI * 2);
               ctx.fill();
