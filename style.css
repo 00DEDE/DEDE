@@ -1034,17 +1034,82 @@ img { max-width: 100%; display: block; }
 /* ========================
    FOUR WORLDS PAGE
    ======================== */
-.fw-intro {
-  max-width: 680px;
+/* Large title section */
+.fw-title {
+  max-width: var(--max-width);
   margin: 0 auto;
-  padding: 5rem 2rem;
-  text-align: center;
+  padding: 10rem 2rem 5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
-.fw-intro p {
+.fw-title-heading {
+  font-family: var(--font-heading);
+  font-size: clamp(5rem, 12vw, 12rem);
+  font-weight: 900;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  color: var(--dark);
+  margin-bottom: 2rem;
+}
+
+.fw-title-sub {
   font-size: 1.05rem;
   line-height: 1.85;
   color: var(--gray-700);
+  max-width: 600px;
+}
+
+/* Closing statement (replaces gallery) */
+.fw-closing {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 5rem 2rem 3rem;
+  text-align: center;
+}
+
+.fw-closing p {
+  font-family: var(--font-heading);
+  font-size: clamp(1.5rem, 3vw, 2.4rem);
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--gray-700);
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* Image stack */
+.fw-stack {
+  position: relative;
+  cursor: pointer;
+}
+
+.fw-stack-img {
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.fw-stack-img.active {
+  opacity: 1;
+}
+
+.fw-stack-counter {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  background: rgba(0,0,0,0.5);
+  color: #fff;
+  font-size: 0.7rem;
+  font-family: var(--font-body);
+  letter-spacing: 0.06em;
+  padding: 4px 10px;
+  border-radius: 20px;
+  z-index: 2;
+  pointer-events: none;
 }
 
 .fw-world {
@@ -1137,21 +1202,7 @@ img { max-width: 100%; display: block; }
 .fw-world-brown .fw-stat-number { color: var(--brown); }
 .fw-world-yellow .fw-stat-number { color: var(--yellow-dark); }
 
-/* Gallery strip */
-.fw-gallery {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: 0 2rem 3rem;
-}
-
-.fw-gallery-img {
-  aspect-ratio: 16 / 9;
-  border-radius: 12px;
-  overflow: hidden;
-}
+/* (gallery strip removed — replaced by fw-closing) */
 
 /* ========================
    ANIMATIONS & INTERACTIONS
@@ -1218,31 +1269,31 @@ img { max-width: 100%; display: block; }
 
 /* Image hover zoom */
 .world-image .placeholder-img,
-.fw-world-image .placeholder-img,
+.fw-stack-img,
 .about-image .placeholder-img {
   transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .world-block:hover .world-image .placeholder-img,
-.fw-world:hover .fw-world-image .placeholder-img,
+.fw-world:hover .fw-stack-img.active,
 .about-block:hover .about-image .placeholder-img {
   transform: scale(1.04);
 }
 
 /* Image clip-path reveal on scroll */
 .world-block .world-image .placeholder-img,
-.fw-world .fw-world-image .placeholder-img {
+.fw-world .fw-stack {
   clip-path: inset(0 100% 0 0);
-  transition: clip-path 1s cubic-bezier(0.65, 0, 0.35, 1) 0.15s, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: clip-path 1s cubic-bezier(0.65, 0, 0.35, 1) 0.15s;
 }
 
 .world-block-reverse .world-image .placeholder-img,
-.fw-world-reverse .fw-world-image .placeholder-img {
+.fw-world-reverse .fw-stack {
   clip-path: inset(0 0 0 100%);
 }
 
 .world-block.visible .world-image .placeholder-img,
-.fw-world.visible .fw-world-image .placeholder-img {
+.fw-world.visible .fw-stack {
   clip-path: inset(0 0 0 0);
 }
 
@@ -1290,15 +1341,6 @@ img { max-width: 100%; display: block; }
   padding-left: 4px;
 }
 
-/* Gallery desaturation → color on hover */
-.fw-gallery-img {
-  transition: filter 0.5s ease;
-  filter: saturate(0.6);
-}
-
-.fw-gallery-img:hover {
-  filter: saturate(1);
-}
 
 /* Scroll progress bar */
 .scroll-progress {
@@ -1398,14 +1440,20 @@ img { max-width: 100%; display: block; }
   .fw-world-image { aspect-ratio: 16 / 10; position: relative; }
 
   .fw-world-content { padding: 2.5rem 2rem; }
+
+  .fw-title { padding: 8rem 2rem 3rem; }
+  .fw-title-heading { font-size: clamp(3.5rem, 10vw, 8rem); }
 }
 
 @media (max-width: 600px) {
-  .hero { min-height: 70vh; }
-
-  .hero-content { transform: none; }
-
-  .hero h1 { font-size: 2.4rem; }
+  .hero-overlay {
+    background: linear-gradient(
+      to bottom,
+      rgba(0,0,0,0.5) 0%,
+      rgba(0,0,0,0.4) 60%,
+      rgba(0,0,0,0.2) 100%
+    );
+  }
 
   .stats-grid {
     grid-template-columns: 1fr;
@@ -1431,7 +1479,43 @@ img { max-width: 100%; display: block; }
     gap: 1rem;
   }
 
-  .fw-gallery {
-    grid-template-columns: 1fr;
+  .hero {
+    min-height: 80vh;
+    padding: 0 1.5rem;
   }
+
+  .hero-content {
+    transform: none;
+    padding-top: 2rem;
+  }
+
+  .hero h1 {
+    font-size: 2.2rem;
+    line-height: 1.1;
+  }
+
+  .hero p {
+    font-size: 0.88rem;
+    max-width: 100%;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+  }
+
+  .hero-buttons .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .fw-title { padding: 7rem 1.5rem 2rem; }
+  .fw-title-heading { font-size: clamp(2.8rem, 14vw, 5rem); }
+  .fw-title-sub { font-size: 0.95rem; }
+
+  .fw-world-content { padding: 2rem 1.5rem; }
+
+  .fw-closing { padding: 3rem 1.5rem 2rem; }
+  .fw-closing p { font-size: clamp(1.2rem, 4vw, 1.8rem); }
 }

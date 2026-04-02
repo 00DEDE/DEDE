@@ -205,6 +205,33 @@
       opacity: 1;
       pointer-events: all;
     }
+
+    /* Mobile splash adjustments */
+    @media (max-width: 768px) {
+      .icon-80 {
+        width: 240px;
+        height: 240px;
+      }
+      .splash-year {
+        font-size: 48px;
+      }
+      .splash-year-left { padding-left: 4vw; }
+      .splash-year-right { padding-right: 4vw; }
+    }
+
+    @media (max-width: 480px) {
+      .icon-80 {
+        width: 180px;
+        height: 180px;
+      }
+      .splash-year {
+        font-size: 36px;
+      }
+      .brand-icon {
+        width: 36px !important;
+        height: 36px !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -260,8 +287,8 @@
       var ring = document.getElementById('brandRing');
       var cx = window.innerWidth / 2;
       var cy = window.innerHeight / 2;
-      // Radius for perfect circle — based on the 80-year icon being 660px, orbit just outside
-      var radius = 300;
+      // Responsive radius — shrink on smaller screens
+      var radius = Math.min(300, Math.min(window.innerWidth, window.innerHeight) * 0.32);
 
       // Playful animation variants
       var animations = [
