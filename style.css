@@ -238,6 +238,7 @@ img { max-width: 100%; display: block; }
   background-position: center;
   opacity: 0;
   transition: opacity 1.5s ease;
+  border-radius: 12px;
 }
 
 .hero-slide.active {
@@ -495,7 +496,7 @@ img { max-width: 100%; display: block; }
 
 .world-image {
   aspect-ratio: 16 / 10;
-  border-radius: 8px;
+  border-radius: 12px;
   overflow: hidden;
 }
 
@@ -747,7 +748,7 @@ img { max-width: 100%; display: block; }
 
 .about-image {
   aspect-ratio: 4 / 3;
-  border-radius: 8px;
+  border-radius: 12px;
   overflow: hidden;
 }
 
@@ -942,6 +943,10 @@ img { max-width: 100%; display: block; }
   display: grid;
   grid-template-columns: 1.15fr 1fr;
   min-height: 75vh;
+  max-width: var(--max-width);
+  margin: 0 auto 5rem;
+  padding: 0 2rem;
+  gap: 3rem;
 }
 
 .fw-world-reverse {
@@ -959,6 +964,7 @@ img { max-width: 100%; display: block; }
 .fw-world-image {
   position: relative;
   overflow: hidden;
+  border-radius: 12px;
 }
 
 .fw-world-image .placeholder-img {
@@ -967,7 +973,7 @@ img { max-width: 100%; display: block; }
 }
 
 .fw-world-content {
-  padding: 4rem 3.5rem;
+  padding: 2rem 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -1027,10 +1033,16 @@ img { max-width: 100%; display: block; }
 .fw-gallery {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 2rem 3rem;
 }
 
 .fw-gallery-img {
   aspect-ratio: 16 / 9;
+  border-radius: 12px;
+  overflow: hidden;
 }
 
 /* ========================

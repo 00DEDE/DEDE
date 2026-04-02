@@ -127,44 +127,23 @@ if (document.body.dataset.page !== 'living-traces') {
     el.dataset.fullText = el.textContent.trim();
   });
 
-  // Number count-up on scroll
-  function countUp(el) {
-    var text = el.dataset.fullText || el.textContent.trim();
-    var suffix = '';
-    if (text.endsWith('+')) { suffix = '+'; text = text.slice(0, -1).trim(); }
-    if (text.endsWith('K')) { suffix = 'K'; text = text.slice(0, -1).trim(); }
+  // Number slow fade-in on scroll
+  document.querySelectorAll('.stat-number, .fw-stat-number, .global-stat-number').forEach(function(el) {
+    el.style.opacity = '0';
+    el.style.transition = 'opacity 2s ease';
+  });
 
-    var useCommas = text.includes(',');
-    var target = parseInt(text.replace(/[^0-9]/g, ''), 10);
-    if (isNaN(target) || target === 0) return;
-
-    var duration = 1800;
-    var start = performance.now();
-
-    function step(now) {
-      var elapsed = now - start;
-      var progress = Math.min(elapsed / duration, 1);
-      var eased = 1 - Math.pow(1 - progress, 3);
-      var current = Math.round(target * eased);
-      el.textContent = (useCommas ? current.toLocaleString() : current.toString()) + suffix;
-      if (progress < 1) requestAnimationFrame(step);
-    }
-
-    el.textContent = '0' + suffix;
-    requestAnimationFrame(step);
-  }
-
-  var countObserver = new IntersectionObserver(function(entries) {
+  var numberFadeObserver = new IntersectionObserver(function(entries) {
     entries.forEach(function(entry) {
-      if (entry.isIntersecting && !entry.target.dataset.counted) {
-        entry.target.dataset.counted = '1';
-        countUp(entry.target);
+      if (entry.isIntersecting && !entry.target.dataset.faded) {
+        entry.target.dataset.faded = '1';
+        entry.target.style.opacity = '1';
       }
     });
   }, { threshold: 0.3 });
 
   document.querySelectorAll('.stat-number, .fw-stat-number, .global-stat-number').forEach(function(el) {
-    countObserver.observe(el);
+    numberFadeObserver.observe(el);
   });
 
   // Subtle parallax on hero backgrounds
