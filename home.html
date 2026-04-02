@@ -7,6 +7,12 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <script>
+    if (!sessionStorage.getItem('splash-seen')) {
+      window.location.replace('index.html');
+    }
+    sessionStorage.removeItem('splash-seen');
+  </script>
 
   <!-- Header -->
   <header class="header">

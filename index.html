@@ -346,6 +346,7 @@
 
     // Transition to home after 7 seconds
     function goHome() {
+      sessionStorage.setItem('splash-seen', '1');
       var overlay = document.getElementById('fadeOverlay');
       overlay.classList.add('active');
       setTimeout(function() {

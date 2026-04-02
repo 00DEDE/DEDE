@@ -67,6 +67,7 @@ function sizeStatNumbers() {
   document.querySelectorAll('.stat-card').forEach(card => {
     const number = card.querySelector('.stat-number');
     if (!number) return;
+    if (number.hasAttribute('data-fixed')) return;
 
     const style = getComputedStyle(card);
     const targetWidth = card.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
