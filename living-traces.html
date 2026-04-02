@@ -54,10 +54,9 @@
     /* Circle container */
     .circle-wrap {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
       opacity: 0;
       transition: opacity 1.5s ease;
     }
@@ -225,12 +224,12 @@
       var ctx = canvas.getContext('2d');
 
       function sizeCanvas() {
-        var w = window.innerWidth;
-        var h = window.innerHeight;
-        canvas.width = w * 2;
-        canvas.height = h * 2;
-        canvas.style.width = w + 'px';
-        canvas.style.height = h + 'px';
+        // 2x original circle — extra room for audio expansion without clipping
+        var s = Math.min(window.innerWidth, window.innerHeight) * 1.3;
+        canvas.width = s * 2;
+        canvas.height = s * 2;
+        canvas.style.width = s + 'px';
+        canvas.style.height = s + 'px';
         generateDots();
       }
 
@@ -240,9 +239,8 @@
 
       function generateDots() {
         dots = [];
-        // Dot radius based on viewport, independent of canvas size
-        var viewMin = Math.min(canvas.width, canvas.height);
-        circleMaxR = viewMin / 2 * 0.55;
+        // Same visual circle size as original — canvas is larger for headroom
+        circleMaxR = canvas.width / 2 * 0.425;
         var ringSpacing = 5;
         var numRings = Math.floor((circleMaxR - CENTER_HOLE_PX) / ringSpacing);
 
