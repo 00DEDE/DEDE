@@ -183,36 +183,52 @@
 
   <script src="script.js"></script>
   <script>
-    // Pinch-to-zoom on four-worlds images via trackpad
+    // Zoom + pan on four-worlds images
     document.querySelectorAll('.fw-world-image').forEach(function(container) {
       var img = container.querySelector('.placeholder-img');
       if (!img) return;
 
       var scale = 1;
-      var originX = 50, originY = 50;
+      var panX = 50, panY = 50;
 
+      function applyTransform() {
+        if (scale <= 1) {
+          img.style.transformOrigin = '50% 50%';
+          img.style.transform = 'scale(1)';
+        } else {
+          img.style.transformOrigin = panX + '% ' + panY + '%';
+          img.style.transform = 'scale(' + scale + ')';
+        }
+      }
+
+      // Trackpad pinch-to-zoom
       container.addEventListener('wheel', function(e) {
-        // Trackpad pinch fires wheel with ctrlKey
         if (!e.ctrlKey) return;
         e.preventDefault();
-
-        // Mouse position relative to container
         var rect = container.getBoundingClientRect();
-        originX = ((e.clientX - rect.left) / rect.width) * 100;
-        originY = ((e.clientY - rect.top) / rect.height) * 100;
-
+        panX = ((e.clientX - rect.left) / rect.width) * 100;
+        panY = ((e.clientY - rect.top) / rect.height) * 100;
         scale -= e.deltaY * 0.008;
         scale = Math.max(1, Math.min(4, scale));
-
-        img.style.transformOrigin = originX + '% ' + originY + '%';
-        img.style.transform = 'scale(' + scale + ')';
+        img.style.transition = '';
+        applyTransform();
       }, { passive: false });
+
+      // Mouse-move pan when zoomed
+      container.addEventListener('mousemove', function(e) {
+        if (scale <= 1) return;
+        var rect = container.getBoundingClientRect();
+        panX = ((e.clientX - rect.left) / rect.width) * 100;
+        panY = ((e.clientY - rect.top) / rect.height) * 100;
+        img.style.transition = 'transform-origin 0.15s ease';
+        applyTransform();
+      });
 
       // Reset on mouse leave
       container.addEventListener('mouseleave', function() {
         scale = 1;
-        img.style.transition = 'transform 0.4s ease';
-        img.style.transform = 'scale(1)';
+        img.style.transition = 'transform 0.4s ease, transform-origin 0.4s ease';
+        applyTransform();
         setTimeout(function() { img.style.transition = ''; }, 400);
       });
     });
