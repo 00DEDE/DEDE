@@ -31,8 +31,8 @@ const observer = new IntersectionObserver((entries) => {
   });
 }, observerOptions);
 
-// Apply fade-in to sections
-document.querySelectorAll('.stat-card, .world-block, .stats-heading, .worlds-heading').forEach(el => {
+// Apply fade-in to sections (home, about, four worlds)
+document.querySelectorAll('.stat-card, .world-block, .stats-heading, .worlds-heading, .about-block, .value-card, .timeline-item, .global-stats, .fw-world, .fw-intro').forEach(el => {
   el.classList.add('fade-in');
   observer.observe(el);
 });

@@ -667,23 +667,27 @@ img { max-width: 100%; display: block; }
    ABOUT PAGE
    ======================== */
 
-/* Page Hero (shorter than home hero) */
+/* Page Hero */
 .page-hero {
   position: relative;
-  height: 50vh;
-  min-height: 360px;
+  height: 60vh;
+  min-height: 400px;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  background: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1600&h=600&fit=crop') center/cover no-repeat;
+  background: var(--dark) center/cover no-repeat;
   margin-top: 70px;
 }
 
 .page-hero-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0,0,0,0.5);
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.35) 0%,
+    rgba(0,0,0,0.55) 100%
+  );
 }
 
 .page-hero-content {
@@ -919,6 +923,117 @@ img { max-width: 100%; display: block; }
 }
 
 /* ========================
+   FOUR WORLDS PAGE
+   ======================== */
+.fw-intro {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 5rem 2rem;
+  text-align: center;
+}
+
+.fw-intro p {
+  font-size: 1.05rem;
+  line-height: 1.85;
+  color: var(--gray-700);
+}
+
+.fw-world {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  min-height: 75vh;
+}
+
+.fw-world-reverse {
+  grid-template-columns: 1fr 1.15fr;
+}
+
+.fw-world-reverse .fw-world-image {
+  order: 2;
+}
+
+.fw-world-reverse .fw-world-content {
+  order: 1;
+}
+
+.fw-world-image {
+  position: relative;
+  overflow: hidden;
+}
+
+.fw-world-image .placeholder-img {
+  position: absolute;
+  inset: 0;
+}
+
+.fw-world-content {
+  padding: 4rem 3.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.fw-icon {
+  width: 72px;
+  height: auto;
+  margin-bottom: 1.5rem;
+}
+
+.fw-world-content h2 {
+  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+  font-weight: 900;
+  margin-bottom: 1.5rem;
+  line-height: 1.1;
+}
+
+.fw-world-content p {
+  font-size: 0.92rem;
+  line-height: 1.8;
+  color: var(--gray-700);
+  margin-bottom: 1rem;
+}
+
+.fw-stat {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+
+.fw-stat-number {
+  font-family: var(--font-heading);
+  font-weight: 900;
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1;
+}
+
+.fw-stat-label {
+  font-size: 0.8rem;
+  color: var(--gray-500);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+}
+
+/* Color accents */
+.fw-world-blue .fw-stat-number { color: var(--blue); }
+.fw-world-green .fw-stat-number { color: #5aab76; }
+.fw-world-brown .fw-stat-number { color: var(--brown); }
+.fw-world-yellow .fw-stat-number { color: var(--yellow-dark); }
+
+/* Gallery strip */
+.fw-gallery {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.fw-gallery-img {
+  aspect-ratio: 16 / 9;
+}
+
+/* ========================
    SCROLL ANIMATIONS
    ======================== */
 .fade-in {
@@ -985,6 +1100,19 @@ img { max-width: 100%; display: block; }
   .values-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  .fw-world,
+  .fw-world-reverse {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  .fw-world-reverse .fw-world-image { order: 0; }
+  .fw-world-reverse .fw-world-content { order: 0; }
+
+  .fw-world-image { aspect-ratio: 16 / 10; position: relative; }
+
+  .fw-world-content { padding: 2.5rem 2rem; }
 }
 
 @media (max-width: 600px) {
@@ -1016,5 +1144,9 @@ img { max-width: 100%; display: block; }
   .global-stats {
     flex-direction: column;
     gap: 1rem;
+  }
+
+  .fw-gallery {
+    grid-template-columns: 1fr;
   }
 }
