@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>UNESCO — 80 Years</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@700&display=swap" rel="stylesheet">
   <style>
     @font-face {
       font-family: 'ABC Diatype';
@@ -20,18 +23,18 @@
       font-family: 'ABC Diatype', sans-serif;
     }
 
-    /* Lava lamp gradient — monotone blue */
+    /* Lava lamp gradient — monotone blue, more apparent */
     .splash-bg {
       position: fixed;
       inset: 0;
       background-color: #2490cf;
       background-image:
-        radial-gradient(ellipse 80% 60% at 20% 25%, #3daae0 0%, transparent 65%),
-        radial-gradient(ellipse 70% 50% at 80% 70%, #1b7ab8 0%, transparent 60%),
-        radial-gradient(ellipse 50% 45% at 35% 70%, #57b8e8 0%, transparent 55%),
-        radial-gradient(ellipse 60% 40% at 70% 25%, #1a6da0 0%, transparent 50%),
-        radial-gradient(ellipse 55% 75% at 50% 50%, #2da0d8 0%, transparent 60%),
-        radial-gradient(ellipse 90% 45% at 65% 15%, #2490cf 0%, transparent 65%);
+        radial-gradient(ellipse 80% 60% at 20% 25%, #4ab8e8 0%, transparent 65%),
+        radial-gradient(ellipse 70% 50% at 80% 70%, #1668a0 0%, transparent 60%),
+        radial-gradient(ellipse 50% 45% at 35% 70%, #6ac4ed 0%, transparent 55%),
+        radial-gradient(ellipse 60% 40% at 70% 25%, #155d8a 0%, transparent 50%),
+        radial-gradient(ellipse 55% 75% at 50% 50%, #3daee0 0%, transparent 60%),
+        radial-gradient(ellipse 90% 45% at 65% 15%, #1b7ab8 0%, transparent 65%);
       background-size: 200% 200%;
       animation: lava-drift 30s ease-in-out infinite alternate;
       z-index: 0;
@@ -57,10 +60,10 @@
       justify-content: center;
     }
 
-    /* 80 year icon */
+    /* 80 year icon — tripled from 220px to 660px */
     .icon-80 {
-      width: 220px;
-      height: 220px;
+      width: 660px;
+      height: 660px;
       opacity: 0;
       animation: icon80-in 1.8s cubic-bezier(0.22, 1, 0.36, 1) 0.3s forwards;
     }
@@ -131,6 +134,35 @@
       75% { transform: translateY(2px) rotate(-1deg); }
     }
 
+    /* Year labels */
+    .splash-year {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 15;
+      font-family: 'Inter Tight', sans-serif;
+      font-weight: 700;
+      font-size: 100px;
+      color: rgba(255, 255, 255, 0.9);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .splash-year-left {
+      left: 0;
+      padding-left: 5vw;
+    }
+
+    .splash-year-right {
+      right: 0;
+      padding-right: 5vw;
+    }
+
+    @keyframes year-in {
+      from { opacity: 0; transform: translateY(-50%) translateX(0) scale(0.92); }
+      to { opacity: 1; transform: translateY(-50%) translateX(0) scale(1); }
+    }
+
     /* Skip link */
     .splash-skip {
       position: fixed;
@@ -180,11 +212,14 @@
   <div class="splash-bg"></div>
 
   <div class="splash-center">
-    <!-- 80 year icon — loaded inline for color control -->
     <div class="icon-80" id="icon80"></div>
   </div>
 
-  <!-- Brand icons container — populated by JS -->
+  <!-- Year labels -->
+  <div class="splash-year splash-year-left" id="yearLeft">1946</div>
+  <div class="splash-year splash-year-right" id="yearRight">2026</div>
+
+  <!-- Brand icons container -->
   <div id="brandRing"></div>
 
   <a class="splash-skip" id="skipLink" href="home.html">Go to Home</a>
@@ -192,8 +227,8 @@
   <div class="splash-fadeout" id="fadeOverlay"></div>
 
   <script>
-    // Brand hex colors
-    var brandColors = ['#2490cf', '#f8e166', '#9dd3b2', '#e7e2de', '#675d52', '#1a1413'];
+    // Brand hex colors — exclude blue (#2490cf) since it matches the background
+    var brandColors = ['#f8e166', '#9dd3b2', '#e7e2de', '#675d52', '#1a1413'];
 
     // Icon files (the 4 world icons)
     var iconFiles = [
@@ -207,15 +242,13 @@
     fetch('UNESCO_80 YEAR ICON.svg')
       .then(function(r) { return r.text(); })
       .then(function(svg) {
-        // Make paths white
         var colored = svg.replace(/<svg/, '<svg style="width:100%;height:100%"');
         colored = colored.replace(/fill:\s*#[0-9a-fA-F]{3,6}/g, 'fill: rgba(255,255,255,0.9)');
-        // Also handle fill attributes
         colored = colored.replace(/fill="#[0-9a-fA-F]{3,6}"/g, 'fill="rgba(255,255,255,0.9)"');
         document.getElementById('icon80').innerHTML = colored;
       });
 
-    // Load all 4 icon SVGs, then place multiples in a ring
+    // Load all 4 icon SVGs, then place in a perfect circle
     var loadedSVGs = [];
     var iconFetches = iconFiles.map(function(file, idx) {
       return fetch(file)
@@ -227,7 +260,8 @@
       var ring = document.getElementById('brandRing');
       var cx = window.innerWidth / 2;
       var cy = window.innerHeight / 2;
-      var radius = Math.min(cx, cy) * 0.58;
+      // Radius for perfect circle — based on the 80-year icon being 660px, orbit just outside
+      var radius = 380;
 
       // Playful animation variants
       var animations = [
@@ -239,23 +273,24 @@
         'icon-flip-in'
       ];
 
-      // Random durations for variety
       var durations = [0.7, 0.8, 0.9, 1.0, 1.1];
 
-      // Place 16 icons in a rough circle
+      // Place 16 icons in a perfect circle
       var totalIcons = 16;
+
+      // Generate random, non-sequential delays
+      var delays = [];
+      for (var d = 0; d < totalIcons; d++) {
+        delays.push(1.2 + Math.random() * 3.8);
+      }
 
       for (var i = 0; i < totalIcons; i++) {
         var angle = (i / totalIcons) * Math.PI * 2 - Math.PI / 2;
-        // Add randomness to radius and angle for "rough circle"
-        var r = radius + (Math.random() - 0.5) * radius * 0.3;
-        var a = angle + (Math.random() - 0.5) * 0.35;
 
-        var x = cx + Math.cos(a) * r - 28;
-        var y = cy + Math.sin(a) * r - 28;
+        var x = cx + Math.cos(angle) * radius - 28;
+        var y = cy + Math.sin(angle) * radius - 28;
 
-        // Random size variation
-        var size = 44 + Math.random() * 24;
+        var size = 48 + Math.random() * 16;
 
         var el = document.createElement('div');
         el.className = 'brand-icon';
@@ -264,7 +299,6 @@
         el.style.width = size + 'px';
         el.style.height = size + 'px';
 
-        // Random rotation at rest for organic feel
         var restRotation = (Math.random() - 0.5) * 16;
         el.dataset.restRotation = restRotation;
 
@@ -272,7 +306,7 @@
         var svgIdx = Math.floor(Math.random() * 4);
         var svg = loadedSVGs[svgIdx];
 
-        // Pick a random brand color
+        // Pick a random brand color (blue excluded)
         var color = brandColors[Math.floor(Math.random() * brandColors.length)];
 
         // Recolor svg
@@ -281,26 +315,33 @@
         colored = colored.replace(/path\s*\{[^}]*\}/g, 'path { fill: ' + color + '; }');
         el.innerHTML = colored;
 
-        // Random entrance animation
+        // Random entrance animation with random delay (not sequential)
         var anim = animations[Math.floor(Math.random() * animations.length)];
         var dur = durations[Math.floor(Math.random() * durations.length)];
-        var delay = 1.2 + Math.random() * 3.8;
+        var delay = delays[i];
 
         el.style.animation = anim + ' ' + dur + 's cubic-bezier(0.22, 1, 0.36, 1) ' + delay.toFixed(2) + 's forwards';
 
         // After entrance, add idle wobble
-        (function(element, d, rot) {
+        (function(element, d, durVal, rot) {
           setTimeout(function() {
             var wobbleDelay = (Math.random() * 2).toFixed(1);
             var wobbleDur = (3 + Math.random() * 3).toFixed(1);
             element.style.animation = 'icon-idle ' + wobbleDur + 's ease-in-out ' + wobbleDelay + 's infinite';
             element.style.opacity = '1';
             element.style.transform = 'rotate(' + rot + 'deg)';
-          }, (d + dur) * 1000 + 50);
-        })(el, delay, restRotation);
+          }, (d + durVal) * 1000 + 50);
+        })(el, delay, dur, restRotation);
 
         ring.appendChild(el);
       }
+
+      // Show year labels at a fixed moment — both appear together
+      var yearDelay = 1.8; // seconds
+      var yearLeft = document.getElementById('yearLeft');
+      var yearRight = document.getElementById('yearRight');
+      yearLeft.style.animation = 'year-in 1.2s cubic-bezier(0.22, 1, 0.36, 1) ' + yearDelay + 's forwards';
+      yearRight.style.animation = 'year-in 1.2s cubic-bezier(0.22, 1, 0.36, 1) ' + yearDelay + 's forwards';
     });
 
     // Transition to home after 7 seconds
@@ -312,10 +353,8 @@
       }, 800);
     }
 
-    // Auto transition at 7s
     var autoTimer = setTimeout(goHome, 7000);
 
-    // Skip link
     document.getElementById('skipLink').addEventListener('click', function(e) {
       e.preventDefault();
       clearTimeout(autoTimer);
