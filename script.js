@@ -168,7 +168,7 @@ if (document.body.dataset.page !== 'living-traces') {
   }, { passive: true });
 
   // Active nav link highlight
-  var currentPage = window.location.pathname.split('/').pop() || 'index.html';
+  var currentPage = window.location.pathname.split('/').pop() || 'home.html';
   document.querySelectorAll('.nav-links a:not(.btn-nav)').forEach(function(link) {
     if (link.getAttribute('href') === currentPage) {
       link.style.color = '#2491d0';

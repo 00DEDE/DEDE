@@ -3,199 +3,324 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>UNESCO — Safeguard Humanity's Inheritance</title>
-  <link rel="stylesheet" href="style.css">
+  <title>UNESCO — 80 Years</title>
+  <style>
+    @font-face {
+      font-family: 'ABC Diatype';
+      src: url('DIATYPE/ABCDiatype-Regular-Trial.otf') format('opentype');
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      overflow: hidden;
+      background: #2490cf;
+      font-family: 'ABC Diatype', sans-serif;
+    }
+
+    /* Lava lamp gradient — monotone blue */
+    .splash-bg {
+      position: fixed;
+      inset: 0;
+      background-color: #2490cf;
+      background-image:
+        radial-gradient(ellipse 80% 60% at 20% 25%, #3daae0 0%, transparent 65%),
+        radial-gradient(ellipse 70% 50% at 80% 70%, #1b7ab8 0%, transparent 60%),
+        radial-gradient(ellipse 50% 45% at 35% 70%, #57b8e8 0%, transparent 55%),
+        radial-gradient(ellipse 60% 40% at 70% 25%, #1a6da0 0%, transparent 50%),
+        radial-gradient(ellipse 55% 75% at 50% 50%, #2da0d8 0%, transparent 60%),
+        radial-gradient(ellipse 90% 45% at 65% 15%, #2490cf 0%, transparent 65%);
+      background-size: 200% 200%;
+      animation: lava-drift 30s ease-in-out infinite alternate;
+      z-index: 0;
+    }
+
+    @keyframes lava-drift {
+      0% { background-position: 0% 0%; }
+      25% { background-position: 35% 55%; }
+      50% { background-position: 65% 35%; }
+      75% { background-position: 40% 75%; }
+      100% { background-position: 100% 100%; }
+    }
+
+    /* Center icon container */
+    .splash-center {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* 80 year icon */
+    .icon-80 {
+      width: 220px;
+      height: 220px;
+      opacity: 0;
+      animation: icon80-in 1.8s cubic-bezier(0.22, 1, 0.36, 1) 0.3s forwards;
+    }
+
+    @keyframes icon80-in {
+      from { opacity: 0; transform: scale(0.85); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* Ring of brand icons */
+    .brand-icon {
+      position: absolute;
+      width: 56px;
+      height: 56px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Playful entrance variants */
+    @keyframes icon-bounce-in {
+      0% { opacity: 0; transform: scale(0) translateY(-80px); }
+      40% { opacity: 1; transform: scale(1.25) translateY(10px); }
+      60% { transform: scale(0.9) translateY(-6px); }
+      80% { transform: scale(1.05) translateY(2px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    @keyframes icon-tumble-in {
+      0% { opacity: 0; transform: rotate(-280deg) scale(0.2); }
+      50% { opacity: 1; transform: rotate(25deg) scale(1.1); }
+      70% { transform: rotate(-8deg) scale(0.95); }
+      100% { opacity: 1; transform: rotate(0deg) scale(1); }
+    }
+
+    @keyframes icon-drop-bounce {
+      0% { opacity: 0; transform: translateY(-200px) rotate(40deg); }
+      45% { opacity: 1; transform: translateY(12px) rotate(-5deg); }
+      65% { transform: translateY(-8px) rotate(3deg); }
+      80% { transform: translateY(4px) rotate(-1deg); }
+      100% { opacity: 1; transform: translateY(0) rotate(0deg); }
+    }
+
+    @keyframes icon-spring-left {
+      0% { opacity: 0; transform: translateX(-160px) scale(0.4) rotate(-20deg); }
+      50% { opacity: 1; transform: translateX(14px) scale(1.15) rotate(8deg); }
+      70% { transform: translateX(-6px) scale(0.95) rotate(-3deg); }
+      100% { opacity: 1; transform: translateX(0) scale(1) rotate(0deg); }
+    }
+
+    @keyframes icon-spring-right {
+      0% { opacity: 0; transform: translateX(160px) scale(0.4) rotate(20deg); }
+      50% { opacity: 1; transform: translateX(-14px) scale(1.15) rotate(-8deg); }
+      70% { transform: translateX(6px) scale(0.95) rotate(3deg); }
+      100% { opacity: 1; transform: translateX(0) scale(1) rotate(0deg); }
+    }
+
+    @keyframes icon-flip-in {
+      0% { opacity: 0; transform: perspective(400px) rotateY(-180deg) scale(0.5); }
+      55% { opacity: 1; transform: perspective(400px) rotateY(20deg) scale(1.08); }
+      75% { transform: perspective(400px) rotateY(-8deg) scale(0.98); }
+      100% { opacity: 1; transform: perspective(400px) rotateY(0deg) scale(1); }
+    }
+
+    /* Gentle idle wobble after landing */
+    @keyframes icon-idle {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      25% { transform: translateY(-3px) rotate(1.5deg); }
+      75% { transform: translateY(2px) rotate(-1deg); }
+    }
+
+    /* Skip link */
+    .splash-skip {
+      position: fixed;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 20;
+      color: rgba(255,255,255,0.6);
+      font-size: 0.82rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: color 0.2s;
+      cursor: pointer;
+      opacity: 0;
+      animation: skip-in 0.6s ease 1.5s forwards;
+    }
+
+    .splash-skip:hover {
+      color: #fff;
+    }
+
+    @keyframes skip-in {
+      from { opacity: 0; transform: translateX(-50%) translateY(8px); }
+      to { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+
+    /* Fade out overlay */
+    .splash-fadeout {
+      position: fixed;
+      inset: 0;
+      background: #fff;
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.8s ease;
+    }
+
+    .splash-fadeout.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+  </style>
 </head>
 <body>
 
-  <!-- Header -->
-  <header class="header">
-    <div class="header-inner">
-      <a href="index.html" class="logo">
-        <img src="UNESCO_BRAND LOGO.svg" alt="UNESCO" class="logo-img">
-      </a>
-      <nav class="nav">
-        <button class="menu-toggle" aria-label="Toggle menu">
-          <span></span><span></span><span></span>
-        </button>
-        <ul class="nav-links">
-          <li><a href="#">Our Work</a></li>
-          <li><a href="four-worlds.html">Our Four Worlds</a></li>
-          <li><a href="living-traces.html">Living Traces</a></li>
-          <li><a href="about.html">About Us</a></li>
-          <li><a href="uncover.html">Uncover</a></li>
-          <li>
-            <button class="nav-search" aria-label="Search">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            </button>
-          </li>
-          <li><a href="#" class="btn-nav">Become Involved</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
+  <div class="splash-bg"></div>
 
-  <!-- Hero -->
-  <section class="hero">
-    <div class="hero-slideshow">
-      <div class="hero-slide hero-slide-1 active" style="background-image: url('HERO IMAGES/MACRO WEBSITE_1.png');"></div>
-      <div class="hero-slide" style="background-image: url('HERO IMAGES/MACRO WEBSITE_2.png');"></div>
-      <div class="hero-slide hero-slide-3" style="background-image: url('HERO IMAGES/MACRO WEBSITE_3.png');"></div>
-      <div class="hero-slide" style="background-image: url('HERO IMAGES/MACRO WEBSITE_4.png');"></div>
-      <div class="hero-slide hero-slide-5" style="background-image: url('HERO IMAGES/MACRO WEBSITE_5.png');"></div>
-    </div>
-    <div class="hero-overlay"></div>
-    <div class="hero-content">
-      <h1>Safeguard<br>Humanity's<br>Inheritance</h1>
-      <p>UNESCO works to create the conditions for dialogue among civilizations, cultures and peoples, based upon respect for<br>commonly shared values.</p>
-      <div class="hero-buttons">
-        <a href="#" class="btn btn-primary">Explore Our Mission <span>&rarr;</span></a>
-        <a href="#" class="btn btn-outline">World Heritage Sites</a>
-      </div>
-    </div>
-  </section>
+  <div class="splash-center">
+    <!-- 80 year icon — loaded inline for color control -->
+    <div class="icon-80" id="icon80"></div>
+  </div>
 
-  <!-- Stats Intro -->
-  <section class="stats-section">
-    <h2 class="stats-heading">
-      <span class="rotating-text">
-        <span class="rotating-text-item active">80 years of Preserving, Preparing and Protecting.</span>
-        <span class="rotating-text-item">We began in 1946. We continue together in 2026.</span>
-        <span class="rotating-text-item">Forward, Together.</span>
-        <span class="rotating-text-item">The World Needs U.</span>
-      </span>
-    </h2>
+  <!-- Brand icons container — populated by JS -->
+  <div id="brandRing"></div>
 
-    <div class="stats-grid">
-      <div class="stat-card stat-bg-blue">
-        <div class="stat-number">972</div>
-        <div class="stat-card-text">
-          <p>UNESCO has protected 972 cultural sites of great value, preserving monuments and landscapes that reflect human history, identity, and creativity for the present and the future.</p>
-          <p class="stat-detail">These sites foster global understanding, dialogue, and shared responsibility toward safeguarding humanity's most meaningful and enduring cultural expressions.</p>
-        </div>
-      </div>
-      <div class="stat-card stat-bg-green">
-        <div class="stat-number">235</div>
-        <div class="stat-card-text">
-          <p>UNESCO has preserved 235 natural sites, preserving ecosystems, biodiversity, and landscapes of global significance, ensuring their resilience, scientific value, and ecological integrity for future generations.</p>
-          <p class="stat-detail">These protected landscapes serve as living laboratories, offering insight the delicate balance between human activity and the natural world we all depend on.</p>
-        </div>
-      </div>
-      <div class="stat-card stat-bg-yellow">
-        <div class="stat-number">849</div>
-        <div class="stat-card-text">
-          <p>UNESCO has helped safeguard 849 living traditions, from languages and rituals to crafts and knowledge, carried by communities across multiple generations.</p>
-          <p class="stat-detail">These practices are lifelines of identity, memory, and belonging, reminding us that culture endures when it is shared, practiced, and protected together.</p>
-        </div>
-      </div>
-      <div class="stat-card stat-bg-brown">
-        <div class="stat-number">25K</div>
-        <div class="stat-card-text">
-          <p>UNESCO has brought global attention over 2500 endangered languages, each carrying unique knowledge, memory, and identity.</p>
-          <p class="stat-detail">In recognizing their fragility, this work affirms that every one of humanity's languages matter, and that protecting them is an act of safeguarding humanity's collective voice.</p>
-        </div>
-      </div>
-    </div>
-  </section>
+  <a class="splash-skip" id="skipLink" href="home.html">Go to Home</a>
 
-  <!-- Four Worlds -->
-  <section class="worlds-section">
-    <h2 class="worlds-heading"><span class="worlds-rotating-word"><span class="worlds-word active">Preserve</span><span class="worlds-word">Prepare</span><span class="worlds-word">Protect</span></span><br>What Makes<br>Us Human</h2>
+  <div class="splash-fadeout" id="fadeOverlay"></div>
 
-    <div id="world-built" class="world-block">
-      <div class="world-image">
-        <div class="placeholder-img" style="background: url('4 WORLDS IMAGES/4 IMAGES_WORLD 3.png') center/cover;"></div>
-      </div>
-      <div class="world-text">
-        <img src="UNESCO_MONUMENT.svg" alt="Monument icon" class="world-icon">
-        <h3>The World Built Through Us</h3>
-        <p>Throughout continents and centuries, humanity has shaped material into memory. Rising from mountains, deserts, and oceans, these structures reveal how cultures transform landscape into meaning and leave lasting forms woven into the shared story of humanity.</p>
-      </div>
-    </div>
+  <script>
+    // Brand hex colors
+    var brandColors = ['#2490cf', '#f8e166', '#9dd3b2', '#e7e2de', '#675d52', '#1a1413'];
 
-    <div class="world-block world-block-reverse">
-      <div class="world-image">
-        <div class="placeholder-img" style="background: url('4 WORLDS IMAGES/4 IMAGES_WORLD 6.png') 85% 25%/cover;"></div>
-      </div>
-      <div class="world-text">
-        <img src="UNESCO_NATURE.svg" alt="Nature icon" class="world-icon">
-        <h3>The World That Sustains Us</h3>
-        <p>Before monuments, our planet Earth composed its own masterpieces. Coral reefs, savannas, forests, and canyons sustain life while also reminding us that humanity should and will always exists within nature's vast living design.</p>
-      </div>
-    </div>
+    // Icon files (the 4 world icons)
+    var iconFiles = [
+      'UNESCO_MONUMENT.svg',
+      'UNESCO_NATURE.svg',
+      'UNESCO_INTANGIBLE.svg',
+      'UNESCO_LANGUAGE.svg'
+    ];
 
-    <div class="world-block">
-      <div class="world-image">
-        <div class="placeholder-img" style="background: url('4 WORLDS IMAGES/4 IMAGES_WORLD 5.png') center/cover;"></div>
-      </div>
-      <div class="world-text">
-        <img src="UNESCO_INTANGIBLE.svg" alt="Intangible heritage icon" class="world-icon">
-        <h3>The World That Moves Within Us</h3>
-        <p>Not all heritage stands in stone. Much of it lives within movement, rhythm, and craft. These living traditions travel across generations, reminding us that culture survives wherever humanity gathers to create, perform, and share collective memory.</p>
-      </div>
-    </div>
+    // Load 80-year icon, recolor white
+    fetch('UNESCO_80 YEAR ICON.svg')
+      .then(function(r) { return r.text(); })
+      .then(function(svg) {
+        // Make paths white
+        var colored = svg.replace(/<svg/, '<svg style="width:100%;height:100%"');
+        colored = colored.replace(/fill:\s*#[0-9a-fA-F]{3,6}/g, 'fill: rgba(255,255,255,0.9)');
+        // Also handle fill attributes
+        colored = colored.replace(/fill="#[0-9a-fA-F]{3,6}"/g, 'fill="rgba(255,255,255,0.9)"');
+        document.getElementById('icon80').innerHTML = colored;
+      });
 
-    <div class="world-block world-block-reverse">
-      <div class="world-image">
-        <div class="placeholder-img" style="background: url('4 WORLDS IMAGES/4 IMAGES_WORLD 4.png') center 30%/cover;"></div>
-      </div>
-      <div class="world-text">
-        <img src="UNESCO_LANGUAGE.svg" alt="Language icon" class="world-icon">
-        <h3>The World That Remembers Us</h3>
-        <p>Language is humanity's most delicate inheritance. Through voices and symbols, cultures preserve identity and humanity's experience. Each word spoken becomes an act of continuity, ensuring that the voices of communities endure across time and generations.</p>
-      </div>
-    </div>
-  </section>
+    // Load all 4 icon SVGs, then place multiples in a ring
+    var loadedSVGs = [];
+    var iconFetches = iconFiles.map(function(file, idx) {
+      return fetch(file)
+        .then(function(r) { return r.text(); })
+        .then(function(svg) { loadedSVGs[idx] = svg; });
+    });
 
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="footer-top">
-      <div class="footer-logo">
-        <a href="#" class="footer-logo-link" aria-label="Back to top"></a>
-      </div>
+    Promise.all(iconFetches).then(function() {
+      var ring = document.getElementById('brandRing');
+      var cx = window.innerWidth / 2;
+      var cy = window.innerHeight / 2;
+      var radius = Math.min(cx, cy) * 0.58;
 
-      <div class="footer-columns">
-        <div class="footer-col">
-          <h4>About UNESCO</h4>
-          <ul>
-            <li><a href="#">Our Mission</a></li>
-            <li><a href="#">Who We Are</a></li>
-            <li><a href="#">Where We Work</a></li>
-            <li><a href="#">Partnerships</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>Our Work</h4>
-          <ul>
-            <li><a href="#">Monuments</a></li>
-            <li><a href="#">Natural Sciences</a></li>
-            <li><a href="#">Intangible Heritage</a></li>
-            <li><a href="#">Languages</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>Resources</h4>
-          <ul>
-            <li><a href="#">Publications</a></li>
-            <li><a href="#">Multimedia</a></li>
-            <li><a href="#">News &amp; Events</a></li>
-            <li><a href="living-traces.html" class="footer-highlight">LIVING THREADS</a></li>
-          </ul>
-        </div>
-      </div>
+      // Playful animation variants
+      var animations = [
+        'icon-bounce-in',
+        'icon-tumble-in',
+        'icon-drop-bounce',
+        'icon-spring-left',
+        'icon-spring-right',
+        'icon-flip-in'
+      ];
 
-      <div class="footer-tagline">
-        <span>Safeguard<br>Humanity's<br>Inheritance</span>
-      </div>
-    </div>
+      // Random durations for variety
+      var durations = [0.7, 0.8, 0.9, 1.0, 1.1];
 
-    <div class="footer-bottom">
-      <a href="#">Privacy Policy</a>
-      <a href="#">Terms of Use</a>
-      <a href="#">Contact Us</a>
-    </div>
-  </footer>
+      // Place 16 icons in a rough circle
+      var totalIcons = 16;
 
-  <script src="script.js"></script>
+      for (var i = 0; i < totalIcons; i++) {
+        var angle = (i / totalIcons) * Math.PI * 2 - Math.PI / 2;
+        // Add randomness to radius and angle for "rough circle"
+        var r = radius + (Math.random() - 0.5) * radius * 0.3;
+        var a = angle + (Math.random() - 0.5) * 0.35;
+
+        var x = cx + Math.cos(a) * r - 28;
+        var y = cy + Math.sin(a) * r - 28;
+
+        // Random size variation
+        var size = 44 + Math.random() * 24;
+
+        var el = document.createElement('div');
+        el.className = 'brand-icon';
+        el.style.left = x + 'px';
+        el.style.top = y + 'px';
+        el.style.width = size + 'px';
+        el.style.height = size + 'px';
+
+        // Random rotation at rest for organic feel
+        var restRotation = (Math.random() - 0.5) * 16;
+        el.dataset.restRotation = restRotation;
+
+        // Pick a random icon from the 4
+        var svgIdx = Math.floor(Math.random() * 4);
+        var svg = loadedSVGs[svgIdx];
+
+        // Pick a random brand color
+        var color = brandColors[Math.floor(Math.random() * brandColors.length)];
+
+        // Recolor svg
+        var colored = svg.replace(/<svg/, '<svg style="width:100%;height:100%"');
+        colored = colored.replace(/fill:\s*#[0-9a-fA-F]{3,6}/g, 'fill: ' + color);
+        colored = colored.replace(/path\s*\{[^}]*\}/g, 'path { fill: ' + color + '; }');
+        el.innerHTML = colored;
+
+        // Random entrance animation
+        var anim = animations[Math.floor(Math.random() * animations.length)];
+        var dur = durations[Math.floor(Math.random() * durations.length)];
+        var delay = 1.2 + Math.random() * 3.8;
+
+        el.style.animation = anim + ' ' + dur + 's cubic-bezier(0.22, 1, 0.36, 1) ' + delay.toFixed(2) + 's forwards';
+
+        // After entrance, add idle wobble
+        (function(element, d, rot) {
+          setTimeout(function() {
+            var wobbleDelay = (Math.random() * 2).toFixed(1);
+            var wobbleDur = (3 + Math.random() * 3).toFixed(1);
+            element.style.animation = 'icon-idle ' + wobbleDur + 's ease-in-out ' + wobbleDelay + 's infinite';
+            element.style.opacity = '1';
+            element.style.transform = 'rotate(' + rot + 'deg)';
+          }, (d + dur) * 1000 + 50);
+        })(el, delay, restRotation);
+
+        ring.appendChild(el);
+      }
+    });
+
+    // Transition to home after 7 seconds
+    function goHome() {
+      var overlay = document.getElementById('fadeOverlay');
+      overlay.classList.add('active');
+      setTimeout(function() {
+        window.location.href = 'home.html';
+      }, 800);
+    }
+
+    // Auto transition at 7s
+    var autoTimer = setTimeout(goHome, 7000);
+
+    // Skip link
+    document.getElementById('skipLink').addEventListener('click', function(e) {
+      e.preventDefault();
+      clearTimeout(autoTimer);
+      goHome();
+    });
+  </script>
 </body>
 </html>

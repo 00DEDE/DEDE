@@ -238,7 +238,6 @@ img { max-width: 100%; display: block; }
   background-position: center;
   opacity: 0;
   transition: opacity 1.5s ease;
-  border-radius: 12px;
 }
 
 .hero-slide.active {
