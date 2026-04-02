@@ -699,133 +699,171 @@
       });
     })();
 
-    // ---- WAVEFORM — jellyfish tentacle animation ----
+    // ---- WAVEFORM PARTICLES — dot-based like transition circle, jellyfish motion ----
     (function() {
       var waveImg = new Image();
       waveImg.src = 'MICRO/MICRO_IMAGES/MICRO_WAVE%20FORM%201.png';
 
-      // Pre-render rotated (vertical) version and color variants
-      var rotatedDark = null;  // dark grey for dark backgrounds
-      var rotatedLight = null; // light grey for light backgrounds
-
       waveImg.onload = function() {
-        var sw = waveImg.width;
-        var sh = waveImg.height;
+        // Draw rotated waveform to offscreen canvas to sample density
+        var ow = waveImg.height; // rotated: old height = new width
+        var oh = waveImg.width;  // rotated: old width = new height
+        var offscreen = document.createElement('canvas');
+        offscreen.width = ow;
+        offscreen.height = oh;
+        var octx = offscreen.getContext('2d');
+        octx.translate(ow, 0);
+        octx.rotate(Math.PI / 2);
+        octx.drawImage(waveImg, 0, 0);
+        var imgData = octx.getImageData(0, 0, ow, oh);
+        var pixels = imgData.data;
 
-        // Create rotated canvas (90deg CW: width becomes height, height becomes width)
-        function makeRotated(colorMode) {
-          var rc = document.createElement('canvas');
-          rc.width = sh; // rotated: old height is new width
-          rc.height = sw; // rotated: old width is new height
-          var rctx = rc.getContext('2d');
-          rctx.translate(sh, 0);
-          rctx.rotate(Math.PI / 2);
-          rctx.drawImage(waveImg, 0, 0);
-
-          // Recolor: the waveform is dark on white
-          var imgData = rctx.getImageData(0, 0, rc.width, rc.height);
-          var d = imgData.data;
-          for (var i = 0; i < d.length; i += 4) {
-            var lum = d[i] * 0.299 + d[i+1] * 0.587 + d[i+2] * 0.114;
-            if (colorMode === 'dark') {
-              // Dark grey waveform on transparent: dark pixels become dark grey, white becomes transparent
-              var alpha = Math.max(0, (255 - lum) / 255);
-              d[i] = 60; d[i+1] = 60; d[i+2] = 60;
-              d[i+3] = Math.floor(alpha * 200);
-            } else {
-              // Light grey waveform on transparent: dark pixels become light grey, white becomes transparent
-              var alpha = Math.max(0, (255 - lum) / 255);
-              d[i] = 180; d[i+1] = 180; d[i+2] = 180;
-              d[i+3] = Math.floor(alpha * 160);
-            }
-          }
-          rctx.putImageData(imgData, 0, 0);
-          return rc;
+        // Sample brightness at a given normalized position (0-1)
+        function sampleDensity(nx, ny) {
+          var px = Math.floor(nx * (ow - 1));
+          var py = Math.floor(ny * (oh - 1));
+          var idx = (py * ow + px) * 4;
+          var lum = pixels[idx] * 0.299 + pixels[idx+1] * 0.587 + pixels[idx+2] * 0.114;
+          return Math.max(0, (255 - lum) / 255); // 1 = dark (particle), 0 = white (empty)
         }
 
-        rotatedDark = makeRotated('dark');
-        rotatedLight = makeRotated('light');
+        // Generate particles for a section via rejection sampling
+        function generateParticles(count) {
+          var particles = [];
+          var attempts = 0;
+          var maxAttempts = count * 12;
+          while (particles.length < count && attempts < maxAttempts) {
+            attempts++;
+            var nx = Math.random();
+            var ny = Math.random();
+            var density = sampleDensity(nx, ny);
+            // Accept with probability proportional to darkness
+            if (Math.random() < density * 0.85) {
+              particles.push({
+                nx: nx,           // normalized x (0-1)
+                ny: ny,           // normalized y (0-1)
+                phase: Math.random() * Math.PI * 2,
+                speed: 0.15 + Math.random() * 0.5,
+                size: 0.6 + Math.random() * 0.5,  // dot radius like transition circle
+                drift: (Math.random() - 0.5) * 2
+              });
+            }
+          }
+          return particles;
+        }
 
-        // Gather all waveform canvases
+        // Setup all waveform canvases
         var allCanvases = document.querySelectorAll('.waveform-canvas');
         var instances = [];
         allCanvases.forEach(function(el) {
           var ctx = el.getContext('2d');
           var isDark = el.getAttribute('data-theme') === 'dark';
-          instances.push({ canvas: el, ctx: ctx, isDark: isDark });
+          instances.push({
+            canvas: el,
+            ctx: ctx,
+            isDark: isDark,
+            particles: null,
+            lastW: 0,
+            lastH: 0
+          });
         });
 
-        function resizeAll() {
+        function resizeAndRegenerate() {
           instances.forEach(function(inst) {
             var p = inst.canvas.parentElement;
             if (!p) return;
-            inst.canvas.width = p.offsetWidth;
-            inst.canvas.height = p.offsetHeight;
+            var w = p.offsetWidth;
+            var h = p.offsetHeight;
+            inst.canvas.width = w;
+            inst.canvas.height = h;
+            // Regenerate particles when size changes significantly
+            if (!inst.particles || Math.abs(w - inst.lastW) > 50 || Math.abs(h - inst.lastH) > 50) {
+              var area = w * h;
+              var count = Math.min(12000, Math.floor(area / 120));
+              inst.particles = generateParticles(count);
+              inst.lastW = w;
+              inst.lastH = h;
+            }
           });
         }
-        resizeAll();
-        window.addEventListener('resize', resizeAll);
+        resizeAndRegenerate();
+        window.addEventListener('resize', resizeAndRegenerate);
 
         var time = 0;
+        // Breathing state (like the transition circle)
+        var breathTarget = 1;
+        var breathCurrent = 1;
+        var breathTimer = 0;
+        var breathInterval = 80 + Math.random() * 60;
 
         function draw() {
-          time += 0.004;
+          time += 0.012;
+
+          // Breathing pulse (matches transition circle rhythm)
+          breathTimer++;
+          if (breathTimer >= breathInterval) {
+            breathTimer = 0;
+            breathInterval = 60 + Math.random() * 80;
+            breathTarget = 0.94 + Math.random() * 0.12;
+          }
+          breathCurrent += (breathTarget - breathCurrent) * 0.01;
+
+          var pulseWave = time * 0.5;
 
           instances.forEach(function(inst) {
             var cw = inst.canvas.width;
             var ch = inst.canvas.height;
-            if (cw === 0 || ch === 0) return;
+            if (cw === 0 || ch === 0 || !inst.particles) return;
 
             var ctx = inst.ctx;
             ctx.clearRect(0, 0, cw, ch);
 
-            var src = inst.isDark ? rotatedDark : rotatedLight;
-            var tw = src.width;
-            var th = src.height;
+            // Color: dark grey on dark bg, light grey on light bg
+            ctx.fillStyle = inst.isDark ? '#333' : '#bbb';
 
-            // Scale to cover section width, let height flow naturally
-            var scale = (cw / tw) * 1.2;
-            var drawW = tw * scale;
-            var drawH = th * scale;
+            var particles = inst.particles;
+            for (var i = 0; i < particles.length; i++) {
+              var pt = particles[i];
 
-            // Vertical offset to center
-            var baseY = (ch - drawH) / 2;
+              // Base position mapped to canvas
+              var baseX = pt.nx * cw;
+              var baseY = pt.ny * ch;
 
-            // Slice into horizontal strips for jellyfish tentacle effect
-            var strips = 48;
-            ctx.globalAlpha = 0.7;
+              // Jellyfish tentacle: more movement further from center-top
+              var yFactor = pt.ny * pt.ny; // quadratic — bottom moves more
 
-            for (var s = 0; s < strips; s++) {
-              var t = s / strips; // 0 to 1 from top to bottom
-              var sy = t * th;
-              var sHeight = th / strips;
-              var dy = baseY + t * drawH;
-              var dHeight = drawH / strips + 1;
+              // Concentric ring-like pulse (like transition circle)
+              var distFromCenter = Math.sqrt(
+                Math.pow(pt.nx - 0.5, 2) + Math.pow(pt.ny - 0.5, 2)
+              );
+              var ringPhase = distFromCenter * Math.PI * 3;
+              var pulse = Math.sin(pulseWave - ringPhase);
+              var amplitude = 0.03 + distFromCenter * 0.06;
 
-              // Jellyfish tentacle: more movement toward the bottom
-              // Top is anchored, bottom waves freely
-              var tentacleFactor = t * t; // quadratic: grows faster toward bottom
+              // Breathing scale from center
+              var bx = (pt.nx - 0.5) * breathCurrent * (1 + pulse * amplitude);
+              var by = (pt.ny - 0.5) * breathCurrent * (1 + pulse * amplitude);
+              var x = cw * 0.5 + bx * cw;
+              var y = ch * 0.5 + by * ch;
 
-              // Multiple layered waves for organic motion
-              var wave1 = Math.sin(time * 0.4 + s * 0.08) * 12 * tentacleFactor;
-              var wave2 = Math.sin(time * 0.25 + s * 0.13 + 2.0) * 8 * tentacleFactor;
-              var wave3 = Math.sin(time * 0.6 + s * 0.05 + 4.2) * 5 * tentacleFactor;
+              // Jellyfish vertical waves — layered, organic
+              var wave1 = Math.sin(time * 0.35 + pt.ny * 6 + pt.phase) * 10 * yFactor;
+              var wave2 = Math.sin(time * 0.22 + pt.ny * 4 + 2.1) * 6 * yFactor;
+              var wave3 = Math.sin(time * 0.5 + pt.nx * 3 + 4.0) * 4 * yFactor;
+              y += wave1 + wave2 + wave3;
 
-              // Vertical breathing: expand/contract like jellyfish pulse
-              var breathe = 1 + Math.sin(time * 0.3 + s * 0.06) * 0.08 * tentacleFactor;
-              var breatheY = dHeight * breathe;
+              // Subtle horizontal drift
+              var hDrift = Math.sin(time * 0.18 + pt.phase + pt.ny * 3) * 4 * yFactor;
+              x += hDrift;
 
-              // Horizontal drift (subtle)
-              var hDrift = Math.sin(time * 0.2 + s * 0.1 + 1.3) * 6 * tentacleFactor;
+              // Individual dot wobble (like transition circle)
+              var wobble = Math.sin(time * pt.speed + pt.phase) * 0.4;
+              x += wobble * pt.drift;
 
-              var finalY = dy + wave1 + wave2 + wave3;
-              var finalX = hDrift;
-
-              // Slight alpha fade toward edges
-              var edgeFade = 1 - Math.abs(t - 0.5) * 0.3;
-              ctx.globalAlpha = 0.7 * edgeFade;
-
-              ctx.drawImage(src, 0, sy, tw, sHeight, finalX, finalY, drawW, breatheY);
+              ctx.globalAlpha = 0.75 - distFromCenter * 0.25;
+              ctx.beginPath();
+              ctx.arc(x, y, pt.size, 0, Math.PI * 2);
+              ctx.fill();
             }
 
             ctx.globalAlpha = 1;
