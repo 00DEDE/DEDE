@@ -514,6 +514,9 @@
       filter: grayscale(1);
       object-fit: cover;
     }
+    .video-modal-inner video.video-zoom {
+      transform: scale(1.15);
+    }
     .video-modal-inner video::cue {
       background: rgba(0,0,0,0.7);
       color: #fff;
@@ -722,7 +725,7 @@
         </div>
 
         <div class="tradition-card">
-          <div class="video-trigger" data-video="vMAoxH2f9Xc">
+          <div class="video-trigger" data-video-local="MICRO/MICRO_VIDEOS/sanke mon_video 1.mp4" data-video-subs="MICRO/MICRO_VIDEOS/sanke mon_video 1.vtt" data-video-zoom="1">
             <img src="MICRO/MICRO_IMAGES/SANK%C3%89%20MON_1.png" alt="Sanke Mon fishing ritual">
           </div>
           <h3>Sank&#233; Mon</h3>
@@ -927,7 +930,7 @@
           if (localSrc) {
             frame.style.display = 'none';
             localVideo.style.display = 'block';
-            localVideo.className = '';
+            localVideo.className = trigger.getAttribute('data-video-zoom') ? 'video-zoom' : '';
             localVideo.style.opacity = '1';
             localVideo.innerHTML = '';
             var source = document.createElement('source');
