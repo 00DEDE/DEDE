@@ -520,6 +520,10 @@
       font-family: 'PPTelegraf', sans-serif;
       font-size: 14px;
     }
+    .video-modal-inner video.fading {
+      transition: opacity 2.5s ease-out;
+      opacity: 0;
+    }
     .video-modal-close {
       position: absolute;
       top: -44px;
@@ -655,7 +659,7 @@
         </div>
 
         <div class="culture-card">
-          <div class="video-trigger" data-video="7j08gxUcBgc">
+          <div class="video-trigger" data-video-local="MICRO/MICRO_VIDEOS/rapa nui_video 1.mp4" data-video-subs="MICRO/MICRO_VIDEOS/rapa nui_video 1.vtt" data-video-end="60">
             <img src="MICRO/MICRO_IMAGES/RAPA%20NUI_1.png" alt="Rapa Nui moai statues" class="img-crop-upper">
           </div>
           <h3>Rapa Nui</h3>
@@ -920,6 +924,8 @@
           if (localSrc) {
             frame.style.display = 'none';
             localVideo.style.display = 'block';
+            localVideo.className = '';
+            localVideo.style.opacity = '1';
             localVideo.innerHTML = '';
             var source = document.createElement('source');
             source.src = localSrc;
@@ -943,6 +949,23 @@
               }
               localVideo.removeEventListener('loadedmetadata', handler);
             });
+            // End time + fade out
+            var endTime = trigger.getAttribute('data-video-end');
+            if (endTime) {
+              var endSec = parseFloat(endTime);
+              var fadeStarted = false;
+              localVideo.addEventListener('timeupdate', function fadeHandler() {
+                if (!fadeStarted && localVideo.currentTime >= endSec - 2.5) {
+                  fadeStarted = true;
+                  localVideo.classList.add('fading');
+                }
+                if (localVideo.currentTime >= endSec) {
+                  localVideo.pause();
+                  localVideo.removeEventListener('timeupdate', fadeHandler);
+                  setTimeout(closeModal, 600);
+                }
+              });
+            }
           } else if (ytId) {
             localVideo.style.display = 'none';
             frame.style.display = 'block';
