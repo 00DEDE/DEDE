@@ -445,15 +445,89 @@
       display: block;
     }
 
-    /* ---- WAVEFORM ---- */
-    .waveform-canvas {
+    /* ---- VIDEO PLAY OVERLAY ---- */
+    .culture-card, .tradition-card { position: relative; }
+    .culture-card .video-trigger,
+    .tradition-card .video-trigger {
+      position: relative;
+      display: block;
+      cursor: none !important;
+    }
+    .video-trigger::after {
+      content: '';
       position: absolute;
-      top: 0;
-      left: 0;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1.5px solid rgba(255,255,255,0.25);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpolygon points='9,6 18,12 9,18'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 22px;
+      opacity: 0;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      pointer-events: none;
+      z-index: 3;
+    }
+    .video-trigger:hover::after {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1.05);
+    }
+
+    /* ---- VIDEO MODAL ---- */
+    .video-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.92);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.35s ease, visibility 0.35s ease;
+    }
+    .video-modal.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    .video-modal-inner {
+      position: relative;
+      width: 90vw;
+      max-width: 960px;
+      aspect-ratio: 16/9;
+    }
+    .video-modal-inner iframe {
       width: 100%;
       height: 100%;
-      pointer-events: none;
-      z-index: 1;
+      border: none;
+      filter: grayscale(1);
+    }
+    .video-modal-close {
+      position: absolute;
+      top: -44px;
+      right: 0;
+      width: 36px;
+      height: 36px;
+      background: none;
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 50%;
+      color: #fff;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: none !important;
+      transition: background 0.2s ease;
+    }
+    .video-modal-close:hover {
+      background: rgba(255,255,255,0.12);
     }
 
     /* ---- RESPONSIVE ---- */
@@ -519,7 +593,7 @@
 
     <!-- ======== HERO ======== -->
     <section class="lt-hero">
-      <canvas class="waveform-canvas" data-theme="dark" id="texHero"></canvas>
+
       <h1 class="lt-hero-title">Living<br>Traces</h1>
       <p class="lt-hero-intro">
         Living Traces gathers languages and traditions that still breathe, even as many stand at the edge of disappearance. Across oceans, deserts, forests, mountains, and ice, communities continue to sing, weave, heal, dive, carve, remember, and speak words that cannot be&nbsp;replaced.
@@ -542,7 +616,7 @@
 
     <!-- ======== ENDANGERED LANGUAGES ======== -->
     <section class="lt-languages">
-      <canvas class="waveform-canvas" data-theme="light" id="texLang"></canvas>
+
       <div class="lt-languages-head" style="position:relative;z-index:2;">
         <h2 class="section-label">Endangered<br>Languages</h2>
         <p class="lt-languages-intro">
@@ -552,28 +626,36 @@
 
       <div class="culture-grid">
         <div class="culture-card">
-          <img src="MICRO/MICRO_IMAGES/AINU_2.png" alt="Ainu elder">
+          <div class="video-trigger" data-video="QQPqHGG5NGc">
+            <img src="MICRO/MICRO_IMAGES/AINU_2.png" alt="Ainu elder">
+          </div>
           <h3>Ainu</h3>
           <span class="location">Hokkaido, Japan</span>
           <p>Once suppressed through assimilation policies, Ainu survives through song, ritual, and renewed teaching. Its vocabulary encodes relationships between people, animals, and spirits. Today, community-led schools and performances restore its presence, not as a relic, but as a living voice reclaiming identity, land, and continuity across&nbsp;generations.</p>
         </div>
 
         <div class="culture-card">
-          <img src="MICRO/MICRO_IMAGES/SAMI_1.png" alt="Sami woman with flag">
+          <div class="video-trigger" data-video="Ae4o06KE_T4">
+            <img src="MICRO/MICRO_IMAGES/SAMI_1.png" alt="Sami woman with flag">
+          </div>
           <h3>Northern S&#225;mi</h3>
           <span class="location">Norway, Sweden, Finland</span>
           <p>S&#225;mi languages articulate a deep ecological knowledge shaped by Arctic life. Terms for snow, migration, and reindeer herding reflect centuries of adaptation. Colonial policies once suppressed its use. Today, revitalization through education, media, and governance reconnects language with land and Indigenous&nbsp;presence.</p>
         </div>
 
         <div class="culture-card">
-          <img src="MICRO/MICRO_IMAGES/RAPA%20NUI_1.png" alt="Rapa Nui moai statues" class="img-crop-upper">
+          <div class="video-trigger" data-video="7j08gxUcBgc">
+            <img src="MICRO/MICRO_IMAGES/RAPA%20NUI_1.png" alt="Rapa Nui moai statues" class="img-crop-upper">
+          </div>
           <h3>Rapa Nui</h3>
           <span class="location">Rapa Nui, Chile</span>
           <p>Spoken on one of the most remote inhabited islands, Rapa Nui carries ancestral memory tied to land and ocean. Pressures from tourism and Spanish dominance have weakened transmission. Revival efforts center on schools and storytelling, ensuring the language continues to anchor identity within a rapidly changing&nbsp;culture.</p>
         </div>
 
         <div class="culture-card">
-          <img src="MICRO/MICRO_IMAGES/Ju%C7%80%E2%80%99hoansi_1.png" alt="Ju|'hoansi people in the Kalahari">
+          <div class="video-trigger" data-video="2PszDsPtuFc">
+            <img src="MICRO/MICRO_IMAGES/Ju%C7%80%E2%80%99hoansi_1.png" alt="Ju|'hoansi people in the Kalahari">
+          </div>
           <h3>Ju<span class="ac">|'</span>hoansi</h3>
           <span class="location">Namibia / Botswana</span>
           <p>Ju|'hoansi is rooted in one of the world's oldest continuous cultures. Its click-based phonetics carry knowledge of tracking, plants, and survival. As modernization shifts lifestyles, transmission weakens. Documentation and community storytelling sustain it, preserving a language inseparable from the rhythms of Kalahari human&nbsp;history.</p>
@@ -583,7 +665,7 @@
 
     <!-- ======== GREETINGS — one at a time, full width ======== -->
     <section class="lt-greetings">
-      <canvas class="waveform-canvas" data-theme="dark" id="texGreet"></canvas>
+
       <div class="greeting">
         <div class="greeting-label">Ainu Term</div>
         <div class="greeting-word">Irankarapte</div>
@@ -608,33 +690,41 @@
 
     <!-- ======== ENDANGERED TRADITIONS ======== -->
     <section class="lt-traditions">
-      <canvas class="waveform-canvas" data-theme="light" id="texTrad"></canvas>
+
       <h2 class="section-label">Endangered<br>Traditions</h2>
 
       <div class="tradition-grid">
         <div class="tradition-card">
-          <img src="MICRO/MICRO_IMAGES/BIGWALA_1.png" alt="Bigwala trumpet musicians">
+          <div class="video-trigger" data-video="ymWBjb1VzBc">
+            <img src="MICRO/MICRO_IMAGES/BIGWALA_1.png" alt="Bigwala trumpet musicians">
+          </div>
           <h3>Bigwala</h3>
           <span class="location">Uganda</span>
           <p>Bigwala is a royal music tradition performed with gourd trumpets during ceremonies of the Busoga Kingdom. Once central to cultural identity, it now faces decline due to reduced patronage and aging practitioners. Safeguarding efforts focus on transmission, ensuring that its powerful sound continues to resonate across&nbsp;generations.</p>
         </div>
 
         <div class="tradition-card">
-          <img src="MICRO/MICRO_IMAGES/SANK%C3%89%20MON_1.png" alt="Sanke Mon fishing ritual">
+          <div class="video-trigger" data-video="vMAoxH2f9Xc">
+            <img src="MICRO/MICRO_IMAGES/SANK%C3%89%20MON_1.png" alt="Sanke Mon fishing ritual">
+          </div>
           <h3>Sank&#233; Mon</h3>
           <span class="location">Mali</span>
           <p>Sank&#233; Mon is a communal fishing ritual marking seasonal cycles and social unity. Thousands gather in coordinated action, blending ecology, spirituality, and celebration. Environmental pressures and social change threaten its continuity, making safeguarding essential to preserving both the practice and its connection to&nbsp;identity.</p>
         </div>
 
         <div class="tradition-card">
-          <img src="MICRO/MICRO_IMAGES/JEJU%20HAENYEO_1.png" alt="Jeju Haenyeo women divers">
+          <div class="video-trigger" data-video="lk7DQLMKBTE">
+            <img src="MICRO/MICRO_IMAGES/JEJU%20HAENYEO_1.png" alt="Jeju Haenyeo women divers">
+          </div>
           <h3>Jeju Haenyeo</h3>
           <span class="location">South Korea</span>
           <p>Haenyeo are women divers who harvest seafood without oxygen tanks, relying on breath, skill, and environmental knowledge. Aging practitioners and modernization threaten continuity. Their practice embodies resilience, community, and sustainable interaction with the ocean, making its preservation both cultural and&nbsp;ecological.</p>
         </div>
 
         <div class="tradition-card">
-          <img src="MICRO/MICRO_IMAGES/NOKEN%20WEAVING_2.png" alt="Noken woven bags">
+          <div class="video-trigger" data-video="R_-wyEK2NVQ">
+            <img src="MICRO/MICRO_IMAGES/NOKEN%20WEAVING_2.png" alt="Noken woven bags">
+          </div>
           <h3>Noken Weaving</h3>
           <span class="location">Papua, Indonesia</span>
           <p>Noken bags are hand-knotted from natural fibers and used for daily life, ceremony, and symbolic exchange. Their production embodies community identity and knowledge. Industrial alternatives and shifting lifestyles threaten their use, making revitalization essential to sustaining both craft and cultural&nbsp;meaning.</p>
@@ -652,14 +742,14 @@
 
     <!-- ======== I AM BECAUSE WE ARE ======== -->
     <section class="lt-ubuntu">
-      <canvas class="waveform-canvas" data-theme="dark" id="texUbuntu"></canvas>
+
       <div class="lt-ubuntu-text">I am because<br>we are.</div>
       <div class="lt-ubuntu-source">Ubuntu Proverb</div>
     </section>
 
     <!-- ======== CLOSING ESSAY ======== -->
     <section class="lt-closing">
-      <canvas class="waveform-canvas" data-theme="dark" id="texClose"></canvas>
+
       <div class="lt-closing-content">
         <p>What remains when a language falls silent, or a tradition is no longer practiced? Not only words or gestures are lost, but entire ways of understanding the world. These living traces carry memory, identity, and knowledge shaped over centuries. They hold ways of seeing time, land, community, and spirit that cannot be replicated once&nbsp;gone.</p>
         <p>Yet this is not a narrative of disappearance alone. Across continents, communities are choosing to remember, to teach, to speak, to make, and to continue. Preservation is not passive. It is an act of will. It is the commitment to continuous support in the face of&nbsp;change.</p>
@@ -670,6 +760,14 @@
     </section>
 
   </main>
+
+  <!-- ======== VIDEO MODAL ======== -->
+  <div class="video-modal" id="videoModal">
+    <div class="video-modal-inner">
+      <button class="video-modal-close" id="videoModalClose">&times;</button>
+      <iframe id="videoModalFrame" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    </div>
+  </div>
 
   <script src="script.js"></script>
   <script>
@@ -698,131 +796,6 @@
           sidebar.style.transition = 'opacity 0.4s ease';
         }
       });
-    })();
-
-    // ---- WAVEFORM GRAIN — vertical stippled columns matching waveform shape ----
-    (function() {
-      var waveImg = new Image();
-      waveImg.src = 'MICRO/MICRO_IMAGES/MICRO_WAVE%20FORM%201.png';
-
-      waveImg.onload = function() {
-        // Rotate waveform 90° so horizontal bands become vertical columns
-        var ow = waveImg.height;
-        var oh = waveImg.width;
-        var offscreen = document.createElement('canvas');
-        offscreen.width = ow;
-        offscreen.height = oh;
-        var octx = offscreen.getContext('2d');
-        octx.translate(ow, 0);
-        octx.rotate(Math.PI / 2);
-        octx.drawImage(waveImg, 0, 0);
-        var imgData = octx.getImageData(0, 0, ow, oh);
-        var pixels = imgData.data;
-
-        function sampleDensity(nx, ny) {
-          var px = Math.floor(nx * (ow - 1));
-          var py = Math.floor(ny * (oh - 1));
-          var idx = (py * ow + px) * 4;
-          var lum = pixels[idx] * 0.299 + pixels[idx+1] * 0.587 + pixels[idx+2] * 0.114;
-          var d = Math.max(0, (255 - lum) / 255);
-          if (d < 0.18) return 0;
-          return d * d * d;
-        }
-
-        function generateParticles(count) {
-          var particles = [];
-          var attempts = 0;
-          var maxAttempts = count * 25;
-          while (particles.length < count && attempts < maxAttempts) {
-            attempts++;
-            var nx = Math.random();
-            var ny = Math.random();
-            var density = sampleDensity(nx, ny);
-            if (Math.random() < density) {
-              particles.push({
-                nx: nx,
-                ny: ny,
-                phase: Math.random() * Math.PI * 2,
-                size: 0.4 + Math.random() * 0.8,
-                alpha: 0.3 + Math.random() * 0.7
-              });
-            }
-          }
-          return particles;
-        }
-
-        var allCanvases = document.querySelectorAll('.waveform-canvas');
-        var instances = [];
-        allCanvases.forEach(function(el) {
-          instances.push({
-            canvas: el,
-            ctx: el.getContext('2d'),
-            isDark: el.getAttribute('data-theme') === 'dark',
-            particles: null,
-            lastW: 0,
-            lastH: 0
-          });
-        });
-
-        function resizeAndRegenerate() {
-          instances.forEach(function(inst) {
-            var p = inst.canvas.parentElement;
-            if (!p) return;
-            var w = p.offsetWidth;
-            var h = p.offsetHeight;
-            inst.canvas.width = w;
-            inst.canvas.height = h;
-            if (!inst.particles || Math.abs(w - inst.lastW) > 50 || Math.abs(h - inst.lastH) > 50) {
-              var area = w * h;
-              var count = Math.min(40000, Math.floor(area / 40));
-              inst.particles = generateParticles(count);
-              inst.lastW = w;
-              inst.lastH = h;
-            }
-          });
-        }
-        resizeAndRegenerate();
-        window.addEventListener('resize', resizeAndRegenerate);
-
-        var time = 0;
-
-        function draw() {
-          time += 0.008;
-
-          instances.forEach(function(inst) {
-            var cw = inst.canvas.width;
-            var ch = inst.canvas.height;
-            if (cw === 0 || ch === 0 || !inst.particles) return;
-
-            var ctx = inst.ctx;
-            ctx.clearRect(0, 0, cw, ch);
-
-            var particles = inst.particles;
-            var color = inst.isDark ? 'rgba(255,255,255,' : 'rgba(0,0,0,';
-
-            for (var i = 0; i < particles.length; i++) {
-              var pt = particles[i];
-
-              var x = pt.nx * cw;
-              var y = pt.ny * ch;
-
-              // Subtle vertical shimmer — particles drift slightly up/down
-              var shimmer = Math.sin(time * 0.6 + pt.phase + pt.nx * 8) * 1.5;
-              y += shimmer;
-
-              // Flicker: individual dots subtly fade in and out
-              var flicker = 0.6 + 0.4 * Math.sin(time * 0.4 + pt.phase * 3);
-              var a = pt.alpha * flicker;
-
-              ctx.fillStyle = color + a.toFixed(2) + ')';
-              ctx.fillRect(Math.floor(x), Math.floor(y), pt.size < 0.8 ? 1 : 2, pt.size < 0.8 ? 1 : 2);
-            }
-          });
-
-          requestAnimationFrame(draw);
-        }
-        draw();
-      };
     })();
 
     // ---- CURSOR — mini concentric ring disc ----
@@ -913,6 +886,37 @@
         requestAnimationFrame(loop);
       }
       loop();
+    })();
+
+    // ---- VIDEO MODAL ----
+    (function() {
+      var modal = document.getElementById('videoModal');
+      var frame = document.getElementById('videoModalFrame');
+      var closeBtn = document.getElementById('videoModalClose');
+      var triggers = document.querySelectorAll('.video-trigger[data-video]');
+
+      triggers.forEach(function(trigger) {
+        trigger.addEventListener('click', function() {
+          var id = trigger.getAttribute('data-video');
+          frame.src = 'https://www.youtube.com/embed/' + id + '?autoplay=1&rel=0&modestbranding=1&hd=1';
+          modal.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        });
+      });
+
+      function closeModal() {
+        modal.classList.remove('active');
+        frame.src = '';
+        document.body.style.overflow = '';
+      }
+
+      closeBtn.addEventListener('click', closeModal);
+      modal.addEventListener('click', function(e) {
+        if (e.target === modal) closeModal();
+      });
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeModal();
+      });
     })();
   </script>
 </body>
