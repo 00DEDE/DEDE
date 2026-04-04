@@ -816,7 +816,7 @@ img { max-width: 100%; display: block; }
   font-size: 0.92rem;
   line-height: 1.8;
   color: var(--gray-700);
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .about-image {
@@ -1233,8 +1233,9 @@ img { max-width: 100%; display: block; }
   font-size: 0.92rem;
   line-height: 1.8;
   color: var(--gray-700);
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
+.fw-world-content p:last-child { margin-bottom: 0; }
 
 .fw-stat {
   display: flex;

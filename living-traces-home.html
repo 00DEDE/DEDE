@@ -437,7 +437,7 @@
       font-size: clamp(13px, 1.2vw, 16px);
       line-height: 1.75;
       color: rgba(255,255,255,0.7);
-      margin-bottom: 28px;
+      margin-bottom: 40px;
     }
     .lt-closing-content p:last-child { margin-bottom: 0; }
     .lt-closing-tag {
@@ -452,18 +452,84 @@
       z-index: 2;
     }
 
-    /* ---- PHOTO COLLAGE ---- */
-    .lt-collage {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 0;
+    /* ---- LANGUAGE VISUALIZER ---- */
+    .lt-language-visualizer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 120px 24px 100px;
+      position: relative;
+      overflow: hidden;
     }
-    .lt-collage img {
+    .lt-lang-heading {
+      font-family: 'PPTelegrafLight', sans-serif;
+      font-size: clamp(18px, 3vw, 32px);
+      letter-spacing: 0.06em;
+      color: rgba(255,255,255,0.7);
+      text-align: center;
+      margin-bottom: 60px;
+      position: relative;
+      z-index: 2;
+    }
+    .lt-lang-orb-wrap {
+      position: relative;
       width: 100%;
-      aspect-ratio: 16/7;
-      object-fit: cover;
-      filter: grayscale(1);
-      display: block;
+      max-width: 600px;
+      aspect-ratio: 1 / 0.7;
+    }
+    .lt-lang-orb {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background-color: rgba(255,255,255,0.03);
+      background-image:
+        radial-gradient(ellipse 80% 60% at 20% 25%, rgba(255,255,255,0.12) 0%, transparent 65%),
+        radial-gradient(ellipse 70% 50% at 80% 70%, rgba(255,255,255,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 45% at 35% 70%, rgba(255,255,255,0.14) 0%, transparent 55%),
+        radial-gradient(ellipse 60% 40% at 70% 25%, rgba(255,255,255,0.04) 0%, transparent 50%),
+        radial-gradient(ellipse 55% 75% at 50% 50%, rgba(255,255,255,0.10) 0%, transparent 60%),
+        radial-gradient(ellipse 90% 45% at 65% 15%, rgba(255,255,255,0.07) 0%, transparent 65%);
+      background-size: 200% 200%;
+      animation: orb-idle 20s ease-in-out infinite alternate;
+      transition: background-image 0.15s ease, transform 0.3s ease;
+      filter: blur(1px);
+    }
+    @keyframes orb-idle {
+      0% { background-position: 0% 0%; transform: scale(1) rotate(0deg); }
+      25% { background-position: 35% 55%; transform: scale(1.02) rotate(0.5deg); }
+      50% { background-position: 65% 35%; transform: scale(0.98) rotate(-0.5deg); }
+      75% { background-position: 40% 75%; transform: scale(1.01) rotate(0.3deg); }
+      100% { background-position: 100% 100%; transform: scale(1) rotate(0deg); }
+    }
+    .lt-lang-orb.frozen {
+      animation-play-state: paused !important;
+    }
+    .lt-lang-label {
+      font-family: 'ABCMonumentGroteskMono', monospace;
+      font-size: 13px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      text-align: center;
+      margin-top: 48px;
+      min-height: 1.5em;
+      transition: color 0.4s ease, opacity 0.4s ease;
+      position: relative;
+      z-index: 2;
+    }
+    .lt-lang-label.active {
+      color: rgba(255,255,255,0.8);
+    }
+    .lt-lang-mic-prompt {
+      font-family: 'ABCMonumentGroteskMono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.2);
+      text-align: center;
+      margin-top: 16px;
+      position: relative;
+      z-index: 2;
     }
 
     /* ---- VIDEO PLAY OVERLAY ---- */
@@ -585,7 +651,7 @@
       .lt-greetings { padding: 80px 24px; }
       .lt-ubuntu { padding: 100px 24px; }
       .lt-closing { padding: 80px 24px; }
-      .lt-collage { grid-template-columns: 1fr; }
+      .lt-language-visualizer { padding: 80px 16px 60px; }
       .unesco-corner { top: 16px; right: 16px; }
     }
   </style>
@@ -638,7 +704,7 @@
     <!-- ======== HERO ======== -->
     <section class="lt-hero">
 
-      <h1 class="lt-hero-title">Living Traces</h1>
+      <h1 class="lt-hero-title">Living<br>Traces</h1>
       <p class="lt-hero-intro">Languages and traditions that still breathe, gathered from across oceans, deserts, forests, and ice — voices that cannot be&nbsp;replaced.</p>
       <div class="lt-hero-actions">
         <span class="lt-hero-pill">
@@ -772,13 +838,15 @@
       </div>
     </section>
 
-    <!-- ======== PHOTO COLLAGE ======== -->
-    <div class="lt-collage">
-      <img src="MICRO/MICRO_IMAGES/BIGWALA_2.png" alt="">
-      <img src="MICRO/MICRO_IMAGES/JEJU%20HAENYEO_2.png" alt="">
-      <img src="MICRO/MICRO_IMAGES/RAPA%20NUI_2.png" alt="" class="img-crop-upper">
-      <img src="MICRO/MICRO_IMAGES/NOKEN%20WEAVING_2.png" alt="">
-    </div>
+    <!-- ======== LANGUAGE VISUALIZER ======== -->
+    <section class="lt-language-visualizer" id="langVisualizer">
+      <div class="lt-lang-heading">What does your language look like?</div>
+      <div class="lt-lang-orb-wrap">
+        <div class="lt-lang-orb" id="langOrb"></div>
+      </div>
+      <div class="lt-lang-label" id="langLabel"></div>
+      <div class="lt-lang-mic-prompt" id="langMicPrompt">Click to begin &middot; speak into your microphone</div>
+    </section>
 
     <!-- ======== I AM BECAUSE WE ARE ======== -->
     <section class="lt-ubuntu">
@@ -1055,6 +1123,300 @@
         });
       }, { threshold: 0.15 });
       targets.forEach(function(el) { observer.observe(el); });
+    })();
+
+    // ---- AUDIO-REACTIVE LANGUAGE VISUALIZER ----
+    (function() {
+      var orb = document.getElementById('langOrb');
+      var label = document.getElementById('langLabel');
+      var prompt = document.getElementById('langMicPrompt');
+      var section = document.getElementById('langVisualizer');
+      if (!orb || !label) return;
+
+      var audioCtx = null;
+      var analyser = null;
+      var dataArray = null;
+      var stream = null;
+      var recognition = null;
+      var animFrame = null;
+      var isListening = false;
+      var isFrozen = false;
+      var silenceTimer = null;
+      var resetTimer = null;
+      var currentLang = '';
+      var time = 0;
+
+      // Language name map
+      var langNames = {
+        'en': 'English', 'en-US': 'English', 'en-GB': 'English',
+        'es': 'Spanish', 'es-ES': 'Spanish', 'es-MX': 'Spanish',
+        'fr': 'French', 'fr-FR': 'French',
+        'de': 'German', 'de-DE': 'German',
+        'it': 'Italian', 'it-IT': 'Italian',
+        'pt': 'Portuguese', 'pt-BR': 'Portuguese',
+        'ja': 'Japanese', 'ja-JP': 'Japanese',
+        'ko': 'Korean', 'ko-KR': 'Korean',
+        'zh': 'Chinese', 'zh-CN': 'Mandarin', 'zh-TW': 'Mandarin',
+        'cmn': 'Mandarin',
+        'ar': 'Arabic', 'ar-SA': 'Arabic',
+        'hi': 'Hindi', 'hi-IN': 'Hindi',
+        'ru': 'Russian', 'ru-RU': 'Russian',
+        'tr': 'Turkish', 'tr-TR': 'Turkish',
+        'nl': 'Dutch', 'nl-NL': 'Dutch',
+        'sv': 'Swedish', 'sv-SE': 'Swedish',
+        'pl': 'Polish', 'pl-PL': 'Polish',
+        'th': 'Thai', 'th-TH': 'Thai',
+        'vi': 'Vietnamese', 'vi-VN': 'Vietnamese',
+        'id': 'Indonesian', 'id-ID': 'Indonesian',
+        'uk': 'Ukrainian', 'uk-UA': 'Ukrainian',
+        'cs': 'Czech', 'cs-CZ': 'Czech',
+        'ro': 'Romanian', 'ro-RO': 'Romanian',
+        'el': 'Greek', 'el-GR': 'Greek',
+        'he': 'Hebrew', 'he-IL': 'Hebrew',
+        'da': 'Danish', 'da-DK': 'Danish',
+        'fi': 'Finnish', 'fi-FI': 'Finnish',
+        'no': 'Norwegian', 'nb-NO': 'Norwegian',
+        'hu': 'Hungarian', 'hu-HU': 'Hungarian',
+        'ms': 'Malay', 'ms-MY': 'Malay',
+        'sw': 'Swahili', 'sw-KE': 'Swahili',
+        'af': 'Afrikaans', 'af-ZA': 'Afrikaans'
+      };
+
+      function getLangName(code) {
+        if (!code) return '';
+        if (langNames[code]) return langNames[code];
+        var base = code.split('-')[0];
+        if (langNames[base]) return langNames[base];
+        return code;
+      }
+
+      // Build radial gradient string from audio data
+      function buildGradient(energy, bass, mid, high, t) {
+        var e = Math.min(energy, 1);
+        var baseAlpha = 0.03 + e * 0.12;
+        // Volatile jellyfish-like movement — positions shift rapidly with audio
+        var jitter = e * 30;
+        var pulse = e * 20;
+        var p1x = 20 + Math.sin(t * 2.3) * (15 + jitter) + bass * 15;
+        var p1y = 25 + Math.cos(t * 1.7) * (12 + jitter) + mid * 10;
+        var p2x = 80 + Math.sin(t * 3.1 + 1) * (12 + jitter) - high * 12;
+        var p2y = 70 + Math.cos(t * 2.5 + 2) * (15 + jitter) + bass * 8;
+        var p3x = 35 + Math.sin(t * 1.9 + 3) * (18 + jitter) + mid * 14;
+        var p3y = 70 + Math.cos(t * 2.8 + 1) * (14 + jitter) - high * 10;
+        var p4x = 70 + Math.sin(t * 2.6 + 2) * (10 + jitter) - bass * 10;
+        var p4y = 25 + Math.cos(t * 3.3 + 3) * (12 + jitter) + mid * 12;
+        var p5x = 50 + Math.sin(t * 1.4 + 4) * (20 + jitter) + high * 8;
+        var p5y = 50 + Math.cos(t * 2.1 + 2) * (18 + jitter) - bass * 6;
+        var p6x = 65 + Math.sin(t * 3.7 + 1) * (14 + jitter) + mid * 10;
+        var p6y = 15 + Math.cos(t * 1.8 + 3) * (10 + jitter) + high * 8;
+
+        // Size pulsing with audio
+        var s1w = 80 + pulse + bass * 25;
+        var s1h = 60 + pulse + mid * 20;
+        var s2w = 70 + pulse + high * 20;
+        var s2h = 50 + pulse + bass * 15;
+        var s3w = 50 + pulse + mid * 22;
+        var s3h = 45 + pulse + high * 18;
+        var s4w = 60 + pulse + bass * 18;
+        var s4h = 40 + pulse + mid * 15;
+        var s5w = 55 + pulse + high * 20;
+        var s5h = 75 + pulse + bass * 25;
+        var s6w = 90 + pulse + mid * 15;
+        var s6h = 45 + pulse + high * 12;
+
+        // Alpha intensities react to frequency bands
+        var a1 = (0.12 + bass * 0.35).toFixed(3);
+        var a2 = (0.06 + high * 0.25).toFixed(3);
+        var a3 = (0.14 + mid * 0.30).toFixed(3);
+        var a4 = (0.04 + bass * 0.20).toFixed(3);
+        var a5 = (0.10 + high * 0.28).toFixed(3);
+        var a6 = (0.07 + mid * 0.22).toFixed(3);
+
+        return 'radial-gradient(ellipse ' + s1w.toFixed(0) + '% ' + s1h.toFixed(0) + '% at ' + p1x.toFixed(1) + '% ' + p1y.toFixed(1) + '%, rgba(255,255,255,' + a1 + ') 0%, transparent 65%),' +
+          'radial-gradient(ellipse ' + s2w.toFixed(0) + '% ' + s2h.toFixed(0) + '% at ' + p2x.toFixed(1) + '% ' + p2y.toFixed(1) + '%, rgba(255,255,255,' + a2 + ') 0%, transparent 60%),' +
+          'radial-gradient(ellipse ' + s3w.toFixed(0) + '% ' + s3h.toFixed(0) + '% at ' + p3x.toFixed(1) + '% ' + p3y.toFixed(1) + '%, rgba(255,255,255,' + a3 + ') 0%, transparent 55%),' +
+          'radial-gradient(ellipse ' + s4w.toFixed(0) + '% ' + s4h.toFixed(0) + '% at ' + p4x.toFixed(1) + '% ' + p4y.toFixed(1) + '%, rgba(255,255,255,' + a4 + ') 0%, transparent 50%),' +
+          'radial-gradient(ellipse ' + s5w.toFixed(0) + '% ' + s5h.toFixed(0) + '% at ' + p5x.toFixed(1) + '% ' + p5y.toFixed(1) + '%, rgba(255,255,255,' + a5 + ') 0%, transparent 60%),' +
+          'radial-gradient(ellipse ' + s6w.toFixed(0) + '% ' + s6h.toFixed(0) + '% at ' + p6x.toFixed(1) + '% ' + p6y.toFixed(1) + '%, rgba(255,255,255,' + a6 + ') 0%, transparent 65%)';
+      }
+
+      // Get frequency band energies from analyser
+      function getEnergies() {
+        if (!analyser || !dataArray) return { energy: 0, bass: 0, mid: 0, high: 0 };
+        analyser.getByteFrequencyData(dataArray);
+        var len = dataArray.length;
+        var bassEnd = Math.floor(len * 0.15);
+        var midEnd = Math.floor(len * 0.5);
+        var total = 0, bass = 0, mid = 0, high = 0;
+        for (var i = 0; i < len; i++) {
+          var v = dataArray[i] / 255;
+          total += v;
+          if (i < bassEnd) bass += v;
+          else if (i < midEnd) mid += v;
+          else high += v;
+        }
+        return {
+          energy: total / len,
+          bass: bass / bassEnd,
+          mid: mid / (midEnd - bassEnd),
+          high: high / (len - midEnd)
+        };
+      }
+
+      // Animation loop
+      function animate() {
+        if (isFrozen) return;
+        time += 0.04;
+        var e = getEnergies();
+        // Scale up the orb with energy
+        var scale = 1 + e.energy * 0.15;
+        var skewX = (e.bass - e.high) * 5;
+        var skewY = (e.mid - e.bass) * 3;
+        orb.style.backgroundImage = buildGradient(e.energy, e.bass, e.mid, e.high, time);
+        orb.style.transform = 'scale(' + scale.toFixed(3) + ') skew(' + skewX.toFixed(1) + 'deg, ' + skewY.toFixed(1) + 'deg)';
+        orb.style.animation = 'none';
+        animFrame = requestAnimationFrame(animate);
+      }
+
+      function freezeOrb() {
+        isFrozen = true;
+        orb.classList.add('frozen');
+        if (animFrame) cancelAnimationFrame(animFrame);
+        // Reset after 5 seconds
+        resetTimer = setTimeout(function() {
+          resetOrb();
+        }, 5000);
+      }
+
+      function resetOrb() {
+        isFrozen = false;
+        orb.classList.remove('frozen');
+        orb.style.backgroundImage = '';
+        orb.style.transform = '';
+        orb.style.animation = '';
+        label.textContent = '';
+        label.classList.remove('active');
+        currentLang = '';
+        if (isListening) animate();
+      }
+
+      function startSilenceWatch() {
+        clearTimeout(silenceTimer);
+        clearTimeout(resetTimer);
+        silenceTimer = setTimeout(function() {
+          freezeOrb();
+        }, 2000);
+      }
+
+      // Start everything on click
+      function startListening() {
+        if (isListening) return;
+        isListening = true;
+        prompt.textContent = 'Listening\u2026';
+        prompt.style.color = 'rgba(255,255,255,0.4)';
+
+        // Audio context + analyser
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        analyser = audioCtx.createAnalyser();
+        analyser.fftSize = 256;
+        analyser.smoothingTimeConstant = 0.6;
+        dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+        navigator.mediaDevices.getUserMedia({ audio: true }).then(function(s) {
+          stream = s;
+          var source = audioCtx.createMediaStreamSource(stream);
+          source.connect(analyser);
+          animate();
+          startSilenceWatch();
+        }).catch(function() {
+          prompt.textContent = 'Microphone access denied';
+          isListening = false;
+        });
+
+        // Speech recognition for language detection
+        var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (SpeechRecognition) {
+          recognition = new SpeechRecognition();
+          recognition.continuous = true;
+          recognition.interimResults = true;
+          recognition.maxAlternatives = 1;
+
+          recognition.onresult = function(event) {
+            // Speech detected — unfreeze if frozen
+            if (isFrozen) {
+              clearTimeout(resetTimer);
+              isFrozen = false;
+              orb.classList.remove('frozen');
+              orb.style.animation = 'none';
+              animate();
+            }
+            clearTimeout(silenceTimer);
+            startSilenceWatch();
+
+            // Get detected language
+            var lang = event.results[event.results.length - 1][0].lang || recognition.lang || '';
+            if (lang) {
+              var name = getLangName(lang);
+              if (name && name !== currentLang) {
+                currentLang = name;
+                label.textContent = name;
+                label.classList.add('active');
+              }
+            }
+          };
+
+          recognition.onspeechend = function() {
+            startSilenceWatch();
+          };
+
+          recognition.onend = function() {
+            // Restart recognition if still listening
+            if (isListening && !isFrozen) {
+              try { recognition.start(); } catch(e) {}
+            }
+          };
+
+          recognition.onerror = function(e) {
+            if (e.error === 'no-speech') {
+              startSilenceWatch();
+            }
+            if (e.error !== 'aborted' && e.error !== 'no-speech' && isListening) {
+              try { recognition.start(); } catch(ex) {}
+            }
+          };
+
+          // Try detecting browser language first
+          var browserLang = navigator.language || 'en-US';
+          recognition.lang = browserLang;
+
+          try { recognition.start(); } catch(e) {}
+
+          // Display initial detected language
+          var initName = getLangName(browserLang);
+          if (initName) {
+            label.textContent = initName;
+            label.classList.add('active');
+            currentLang = initName;
+          }
+        }
+      }
+
+      // Click to start
+      section.addEventListener('click', function() {
+        if (!isListening) {
+          startListening();
+        }
+      });
+      section.style.cursor = 'pointer';
+
+      // Also auto-start when section scrolls into view
+      var visObserver = new IntersectionObserver(function(entries) {
+        if (entries[0].isIntersecting && !isListening) {
+          // Don't auto-start — just highlight the prompt
+          prompt.style.color = 'rgba(255,255,255,0.5)';
+        }
+      }, { threshold: 0.3 });
+      visObserver.observe(section);
     })();
   </script>
 </body>
