@@ -1315,7 +1315,7 @@
       }
       loop();
 
-      // Auto-start mic + speech recognition when section is visible
+      // Start mic + speech on first user interaction (getUserMedia requires gesture)
       var started = false;
       function startAudio() {
         if (started) return;
@@ -1323,6 +1323,7 @@
         isListening = true;
 
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
         analyser = audioCtx.createAnalyser();
         analyser.fftSize = 256;
         analyser.smoothingTimeConstant = 0.88;
@@ -1333,78 +1334,68 @@
           source.connect(analyser);
           freqData = new Uint8Array(analyser.frequencyBinCount);
           audioReady = true;
+          initSpeechRecognition();
         }).catch(function() { /* mic denied — circle still breathes */ });
+      }
 
-        // Speech recognition
+      function initSpeechRecognition() {
         var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
         if (!SR) return;
 
-        var langCodes = [
-          'en-US', 'es-ES', 'fr-FR', 'de-DE', 'it-IT', 'pt-BR',
-          'ja-JP', 'ko-KR', 'zh-CN', 'ar-SA', 'hi-IN', 'ru-RU',
-          'tr-TR', 'nl-NL', 'sv-SE', 'pl-PL', 'th-TH', 'vi-VN',
-          'id-ID', 'el-GR', 'he-IL', 'fi-FI', 'da-DK', 'hu-HU',
-          'cs-CZ', 'ro-RO', 'uk-UA', 'ms-MY', 'af-ZA'
-        ];
-        var langIndex = 0;
-        var browserLang = navigator.language || 'en-US';
-        var browserIdx = langCodes.indexOf(browserLang);
-        if (browserIdx !== -1) langIndex = browserIdx;
         var silenceTimeout = null;
 
-        function startRecognition() {
-          recognition = new SR();
-          recognition.continuous = true;
-          recognition.interimResults = true;
-          recognition.maxAlternatives = 5;
-          recognition.lang = langCodes[langIndex];
+        recognition = new SR();
+        recognition.continuous = true;
+        recognition.interimResults = true;
+        recognition.maxAlternatives = 1;
+        recognition.lang = navigator.language || 'en-US';
 
-          recognition.onresult = function(event) {
-            isSpeaking = true;
-            clearTimeout(silenceTimeout);
-            silenceTimeout = setTimeout(function() { isSpeaking = false; }, 800);
+        recognition.onresult = function(event) {
+          isSpeaking = true;
+          clearTimeout(silenceTimeout);
+          silenceTimeout = setTimeout(function() { isSpeaking = false; }, 800);
 
-            // Check for "unesco" voice command
-            for (var r = event.resultIndex; r < event.results.length; r++) {
-              var transcript = event.results[r][0].transcript.toLowerCase().trim();
-              if (transcript.indexOf('unesco') !== -1) {
-                window.location.href = 'home.html';
-                return;
-              }
+          // Check for "unesco" voice command
+          for (var r = event.resultIndex; r < event.results.length; r++) {
+            var transcript = event.results[r][0].transcript.toLowerCase().trim();
+            if (transcript.indexOf('unesco') !== -1) {
+              window.location.href = 'home.html';
+              return;
             }
-          };
+          }
+        };
 
-          recognition.onspeechend = function() {
-            isSpeaking = false;
-          };
+        recognition.onspeechend = function() {
+          isSpeaking = false;
+        };
 
-          recognition.onend = function() {
-            langIndex = (langIndex + 1) % langCodes.length;
-            try { startRecognition(); recognition.start(); } catch(e) {}
-          };
+        recognition.onend = function() {
+          // Restart continuously
+          if (isListening) {
+            try { recognition.start(); } catch(e) {}
+          }
+        };
 
-          recognition.onerror = function(e) {
-            if (e.error === 'no-speech') isSpeaking = false;
-            if (e.error !== 'aborted') {
-              langIndex = (langIndex + 1) % langCodes.length;
-              try { startRecognition(); recognition.start(); } catch(ex) {}
-            }
-          };
+        recognition.onerror = function(e) {
+          if (e.error === 'no-speech') isSpeaking = false;
+          if (e.error !== 'aborted' && isListening) {
+            try { recognition.start(); } catch(ex) {}
+          }
+        };
 
-          try { recognition.start(); } catch(e) {}
-        }
-
-        startRecognition();
+        try { recognition.start(); } catch(e) {}
       }
 
-      // Start when section scrolls into view
-      var visObserver = new IntersectionObserver(function(entries) {
-        if (entries[0].isIntersecting) {
-          startAudio();
-          visObserver.disconnect();
-        }
-      }, { threshold: 0.15 });
-      visObserver.observe(section);
+      // Listen for any user gesture to start audio
+      function onGesture() {
+        startAudio();
+        document.removeEventListener('click', onGesture);
+        document.removeEventListener('touchstart', onGesture);
+        document.removeEventListener('keydown', onGesture);
+      }
+      document.addEventListener('click', onGesture);
+      document.addEventListener('touchstart', onGesture);
+      document.addEventListener('keydown', onGesture);
     })();
   </script>
 </body>
