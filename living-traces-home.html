@@ -113,7 +113,7 @@
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
-      padding: 60px 0 48px;
+      padding: 0 0 48px;
       overflow: hidden;
       background: #000;
       box-sizing: border-box;
@@ -122,7 +122,7 @@
       font-family: 'RuderPlakat', Impact, sans-serif;
       font-size: clamp(100px, 20vw, 360px);
       line-height: 0.88;
-      letter-spacing: -0.01em;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
       color: #fff;
       position: relative;
@@ -461,7 +461,7 @@
       align-items: center;
       padding: 120px 24px 100px;
       position: relative;
-      overflow: hidden;
+      overflow: visible;
     }
     .lt-lang-heading {
       font-family: 'PPTelegrafLight', sans-serif;
@@ -476,7 +476,7 @@
     .lt-lang-orb-wrap {
       position: relative;
       width: 100%;
-      max-width: 500px;
+      max-width: 1500px;
       aspect-ratio: 1 / 1;
     }
     .lt-lang-orb-wrap canvas {
@@ -619,7 +619,7 @@
 
     /* ---- RESPONSIVE ---- */
     @media (max-width: 768px) {
-      .lt-hero { padding: 40px 0 32px; }
+      .lt-hero { padding: 0 0 32px; }
       .lt-hero-title { padding: 0 24px; font-size: clamp(64px, 18vw, 200px); }
       .lt-hero-intro { padding: 0 24px; }
       .lt-hero-actions { padding: 0 24px; flex-wrap: wrap; gap: 10px; }
@@ -1150,6 +1150,25 @@
         generateDots();
       }
 
+      // Pseudopod / tendril breakout zones
+      var breakouts = [];
+      var MAX_BREAKOUTS = 5;
+      var breakoutTimer = 0;
+
+      function spawnBreakout() {
+        if (breakouts.length >= MAX_BREAKOUTS) return;
+        breakouts.push({
+          angle: Math.random() * Math.PI * 2,
+          spread: 0.15 + Math.random() * 0.25,
+          strength: 0,
+          targetStrength: 0.4 + Math.random() * 0.8,
+          decay: 0.003 + Math.random() * 0.005,
+          ringStart: 0.5 + Math.random() * 0.3,
+          phase: Math.random() * Math.PI * 2,
+          wobbleSpeed: 0.5 + Math.random() * 1.5
+        });
+      }
+
       function generateDots() {
         dots = [];
         circleMaxR = canvas.width / 2 * 0.425;
@@ -1275,6 +1294,29 @@
             breathTarget = 0.96 + Math.random() * 0.1;
           }
           breathCurrent += (breathTarget - breathCurrent) * 0.012;
+
+          // Spawn breakouts randomly while speaking
+          if (isSpeaking) {
+            breakoutTimer++;
+            if (breakoutTimer > 15 + Math.random() * 40) {
+              breakoutTimer = 0;
+              spawnBreakout();
+            }
+          }
+        }
+
+        // Update breakouts
+        for (var b = breakouts.length - 1; b >= 0; b--) {
+          var br = breakouts[b];
+          if (isSpeaking) {
+            br.strength += (br.targetStrength - br.strength) * 0.08;
+          } else {
+            br.strength -= br.decay * 3;
+          }
+          br.angle += Math.sin(time * br.wobbleSpeed + br.phase) * 0.003;
+          if (br.strength <= 0.01 && !isSpeaking) {
+            breakouts.splice(b, 1);
+          }
         }
 
         var audioBreath = 1 + smoothAudio.volume * 0.5;
@@ -1301,6 +1343,23 @@
           var angle = d.baseAngle;
           var midFactor = 1 - Math.abs(rFactor - 0.5) * 2;
           angle += smoothAudio.mid * midFactor * 0.22 * Math.sin(time * 1.5 + d.phase);
+
+          // Breakout tendrils — outer dots in the breakout zone get pushed outward
+          for (var b = 0; b < breakouts.length; b++) {
+            var br = breakouts[b];
+            if (rFactor < br.ringStart) continue;
+            var angleDiff = angle - br.angle;
+            // Normalize to [-PI, PI]
+            while (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
+            while (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
+            if (Math.abs(angleDiff) < br.spread) {
+              var proximity = 1 - Math.abs(angleDiff) / br.spread;
+              var outerFactor = (rFactor - br.ringStart) / (1 - br.ringStart);
+              var push = proximity * proximity * outerFactor * br.strength * circleMaxR * 0.6;
+              push += Math.sin(time * 3 + d.phase) * push * 0.15;
+              r += push;
+            }
+          }
 
           var x = cx + Math.cos(angle) * r;
           var y = cy + Math.sin(angle) * r;
@@ -1337,66 +1396,101 @@
           isListening = false;
         });
 
-        // Speech recognition
+        // Speech recognition — cycle through language groups to detect different languages
         var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
         if (!SR) { promptEl.textContent = 'Speech recognition not supported'; return; }
 
-        recognition = new SR();
-        recognition.continuous = true;
-        recognition.interimResults = true;
-        recognition.maxAlternatives = 1;
-        recognition.lang = navigator.language || 'en-US';
+        var langCodes = [
+          'en-US', 'es-ES', 'fr-FR', 'de-DE', 'it-IT', 'pt-BR',
+          'ja-JP', 'ko-KR', 'zh-CN', 'ar-SA', 'hi-IN', 'ru-RU',
+          'tr-TR', 'nl-NL', 'sv-SE', 'pl-PL', 'th-TH', 'vi-VN',
+          'id-ID', 'el-GR', 'he-IL', 'fi-FI', 'da-DK', 'hu-HU',
+          'cs-CZ', 'ro-RO', 'uk-UA', 'ms-MY', 'af-ZA'
+        ];
+        var langIndex = 0;
+        // Start with browser language
+        var browserLang = navigator.language || 'en-US';
+        var browserIdx = langCodes.indexOf(browserLang);
+        if (browserIdx !== -1) langIndex = browserIdx;
 
-        recognition.onresult = function(event) {
-          isSpeaking = true;
-          if (isFrozen) {
-            clearTimeout(resetTimer);
-            isFrozen = false;
-          }
-          clearTimeout(silenceTimer);
-          silenceTimer = setTimeout(function() {
-            isSpeaking = false;
-            silenceTimer = setTimeout(function() {
-              // Freeze after 2s total silence
-              isFrozen = true;
-              resetTimer = setTimeout(function() {
-                isFrozen = false;
-                label.textContent = '';
-                label.classList.remove('active');
-                currentLang = '';
-              }, 5000);
-            }, 1500);
-          }, 500);
+        function startRecognition() {
+          recognition = new SR();
+          recognition.continuous = true;
+          recognition.interimResults = true;
+          recognition.maxAlternatives = 5;
+          recognition.lang = langCodes[langIndex];
 
-          var lang = event.results[event.results.length - 1][0].lang || recognition.lang || '';
-          if (lang) {
-            var name = getLangName(lang);
-            if (name && name !== currentLang) {
-              currentLang = name;
-              label.textContent = name;
-              label.classList.add('active');
+          recognition.onresult = function(event) {
+            isSpeaking = true;
+            if (isFrozen) {
+              clearTimeout(resetTimer);
+              isFrozen = false;
             }
-          }
-        };
+            clearTimeout(silenceTimer);
+            silenceTimer = setTimeout(function() {
+              isSpeaking = false;
+              silenceTimer = setTimeout(function() {
+                isFrozen = true;
+                resetTimer = setTimeout(function() {
+                  isFrozen = false;
+                  label.textContent = '';
+                  label.classList.remove('active');
+                  currentLang = '';
+                }, 5000);
+              }, 1500);
+            }, 500);
 
-        recognition.onspeechend = function() {
-          isSpeaking = false;
-        };
+            // Detect language from what was set + confidence
+            var result = event.results[event.results.length - 1];
+            var bestConf = 0;
+            var detectedLang = recognition.lang;
+            for (var a = 0; a < result.length; a++) {
+              if (result[a].confidence > bestConf) {
+                bestConf = result[a].confidence;
+                if (result[a].lang) detectedLang = result[a].lang;
+              }
+            }
+            // If confidence is high, show this language
+            if (bestConf > 0.5) {
+              var name = getLangName(detectedLang);
+              if (name && name !== currentLang) {
+                currentLang = name;
+                label.textContent = name;
+                label.classList.add('active');
+              }
+            }
+          };
 
-        recognition.onend = function() {
-          if (isListening) {
-            try { recognition.start(); } catch(e) {}
-          }
-        };
+          recognition.onspeechend = function() {
+            isSpeaking = false;
+          };
 
-        recognition.onerror = function(e) {
-          if (e.error === 'no-speech') isSpeaking = false;
-          if (e.error !== 'aborted' && e.error !== 'no-speech' && isListening) {
-            try { recognition.start(); } catch(ex) {}
-          }
-        };
+          recognition.onend = function() {
+            if (isListening) {
+              // If low confidence or no results, try next language
+              if (!currentLang || currentLang === '') {
+                langIndex = (langIndex + 1) % langCodes.length;
+              }
+              try { startRecognition(); recognition.start(); } catch(e) {}
+              return;
+            }
+          };
 
-        try { recognition.start(); } catch(e) {}
+          recognition.onerror = function(e) {
+            if (e.error === 'no-speech') {
+              isSpeaking = false;
+              // Cycle to next language on silence
+              langIndex = (langIndex + 1) % langCodes.length;
+            }
+            if (e.error !== 'aborted' && isListening) {
+              try { startRecognition(); recognition.start(); } catch(ex) {}
+            }
+          };
+
+          try { recognition.start(); } catch(e) {}
+        }
+
+        startRecognition();
       }
 
       function stopListening() {
