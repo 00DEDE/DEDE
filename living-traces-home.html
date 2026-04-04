@@ -11,32 +11,38 @@
       src: url('MICRO/ABCMonumentGroteskMono-Regular-Trial.otf') format('opentype');
       font-weight: 400;
       font-style: normal;
+      font-display: swap;
     }
     @font-face {
       font-family: 'ABCMonumentGroteskMonoLight';
       src: url('MICRO/ABCMonumentGroteskMono-Light-Trial.otf') format('opentype');
       font-weight: 300;
       font-style: normal;
+      font-display: swap;
     }
     @font-face {
       font-family: 'PPTelegraf';
       src: url('MICRO/PPTelegraf-Regular.otf') format('opentype');
       font-weight: 400;
       font-style: normal;
+      font-display: swap;
     }
     @font-face {
       font-family: 'PPTelegrafLight';
       src: url('MICRO/PPTelegraf-Ultralight.otf') format('opentype');
       font-weight: 200;
       font-style: normal;
+      font-display: swap;
     }
     @font-face {
       font-family: 'RuderPlakat';
       src: url('MICRO/RuderPlakatLLTrial-Regular.otf') format('opentype');
       font-weight: 400;
       font-style: normal;
+      font-display: swap;
     }
 
+    html { scroll-behavior: smooth; }
     body {
       background: #000;
       cursor: none !important;
@@ -44,6 +50,19 @@
       color: #fff;
     }
     body * { cursor: none !important; }
+
+    /* ---- SCROLL TYPEWRITER ---- */
+    .type-reveal {
+      overflow: hidden;
+      display: inline;
+    }
+    .type-reveal .type-char {
+      opacity: 0;
+      transition: opacity 0.04s ease;
+    }
+    .type-reveal .type-char.visible {
+      opacity: 1;
+    }
 
     /* Fallback for characters RuderPlakat can't render — Impact matches the heavy weight */
     .ac {
@@ -90,29 +109,32 @@
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
-      padding: 60px 48px 80px;
+      padding: 60px 0 80px;
       overflow: hidden;
       background: #000;
     }
     .lt-hero-title {
       font-family: 'RuderPlakat', Impact, sans-serif;
-      font-size: clamp(96px, 16.8vw, 240px);
-      line-height: 0.9;
-      letter-spacing: 0.05em;
+      font-size: clamp(96px, 19vw, 320px);
+      line-height: 0.88;
+      letter-spacing: 0.02em;
       text-transform: uppercase;
       color: #fff;
       position: relative;
       z-index: 2;
-      margin-bottom: 48px;
+      margin-bottom: 28px;
+      padding: 0 48px;
+      width: 100%;
     }
     .lt-hero-intro {
       font-family: 'PPTelegraf', sans-serif;
-      font-size: clamp(13px, 1.2vw, 16px);
-      line-height: 1.65;
+      font-size: clamp(14px, 1.3vw, 17px);
+      line-height: 1.55;
       color: rgba(255,255,255,0.75);
-      max-width: 560px;
+      max-width: 100%;
       position: relative;
       z-index: 2;
+      padding: 0 48px;
     }
 
     /* ---- SIDEBAR WITH ROTATING FACTS ---- */
@@ -141,13 +163,15 @@
     .lt-hero-sidebar .sidebar-fact.active { opacity: 1; }
 
     /* ---- HERO BUTTONS ---- */
-    .lt-hero-pills {
+    .lt-hero-actions {
       display: flex;
-      gap: 12px;
-      margin-top: 32px;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 16px;
+      margin-top: 28px;
       position: relative;
       z-index: 2;
-      flex-wrap: wrap;
+      padding: 0 48px;
     }
     .lt-hero-pill {
       display: inline-flex;
@@ -168,14 +192,6 @@
       height: 16px;
       flex-shrink: 0;
       opacity: 0.7;
-    }
-    .lt-hero-buttons {
-      display: flex;
-      gap: 12px;
-      margin-top: 16px;
-      position: relative;
-      z-index: 2;
-      flex-wrap: wrap;
     }
     .lt-hero-btn {
       display: inline-flex;
@@ -224,6 +240,8 @@
       align-items: flex-start;
       gap: 48px;
       margin-bottom: 80px;
+      position: relative;
+      z-index: 2;
     }
     .lt-languages-head .section-label {
       flex-shrink: 0;
@@ -553,7 +571,10 @@
 
     /* ---- RESPONSIVE ---- */
     @media (max-width: 768px) {
-      .lt-hero { padding: 40px 24px 60px; }
+      .lt-hero { padding: 40px 0 60px; }
+      .lt-hero-title { padding: 0 24px; font-size: clamp(64px, 15vw, 160px); }
+      .lt-hero-intro { padding: 0 24px; }
+      .lt-hero-actions { padding: 0 24px; flex-wrap: wrap; gap: 10px; }
       .lt-hero-sidebar { display: none; }
       .lt-languages, .lt-traditions { padding: 60px 24px; }
       .lt-languages-head { flex-direction: column; gap: 24px; }
@@ -563,7 +584,6 @@
       .lt-closing { padding: 80px 24px; }
       .lt-collage { grid-template-columns: 1fr; }
       .unesco-corner { top: 16px; right: 16px; }
-      .lt-hero-pills, .lt-hero-buttons { gap: 10px; }
     }
   </style>
 </head>
@@ -615,11 +635,9 @@
     <!-- ======== HERO ======== -->
     <section class="lt-hero">
 
-      <h1 class="lt-hero-title">Living<br>Traces</h1>
-      <p class="lt-hero-intro">
-        Living Traces gathers languages and traditions that still breathe, even as many stand at the edge of disappearance. Across oceans, deserts, forests, mountains, and ice, communities continue to sing, weave, heal, dive, carve, remember, and speak words that cannot be&nbsp;replaced.
-      </p>
-      <div class="lt-hero-pills">
+      <h1 class="lt-hero-title">Living Traces</h1>
+      <p class="lt-hero-intro">Languages and traditions that still breathe, gathered from across oceans, deserts, forests, and ice — voices that cannot be&nbsp;replaced.</p>
+      <div class="lt-hero-actions">
         <span class="lt-hero-pill">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
           March 16 - June 3, 2027
@@ -628,8 +646,6 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
           The Met Museum, NYC
         </span>
-      </div>
-      <div class="lt-hero-buttons">
         <a href="#" class="lt-hero-btn">Reserve Tickets</a>
         <a href="#" class="lt-hero-btn">Exhibition Preview</a>
       </div>
@@ -638,7 +654,7 @@
     <!-- ======== ENDANGERED LANGUAGES ======== -->
     <section class="lt-languages">
 
-      <div class="lt-languages-head" style="position:relative;z-index:2;">
+      <div class="lt-languages-head">
         <h2 class="section-label">Endangered<br>Languages</h2>
         <p class="lt-languages-intro">
           What you will see here are eight intangible heritages: four endangered languages and four fragile cultural practices, each carrying memory, knowledge, and identity across generations. We invite you to encounter heritage not as something finished or distant, but as something human, vulnerable, and still being kept&nbsp;alive.
@@ -797,18 +813,11 @@
     (function() {
       var facts = document.querySelectorAll('#sidebarFacts .sidebar-fact');
       var currentFact = 0;
-      var lastSwitch = Date.now();
-      function rotate() {
-        var now = Date.now();
-        if (now - lastSwitch > 4000) {
-          facts[currentFact].classList.remove('active');
-          currentFact = (currentFact + 1) % facts.length;
-          facts[currentFact].classList.add('active');
-          lastSwitch = now;
-        }
-        requestAnimationFrame(rotate);
-      }
-      rotate();
+      setInterval(function() {
+        facts[currentFact].classList.remove('active');
+        currentFact = (currentFact + 1) % facts.length;
+        facts[currentFact].classList.add('active');
+      }, 4000);
       var sidebar = document.getElementById('sidebarFacts');
       var lastSection = document.querySelector('.lt-closing');
       window.addEventListener('scroll', function() {
@@ -817,7 +826,7 @@
           sidebar.style.opacity = r.top < window.innerHeight * 0.5 ? '0' : '1';
           sidebar.style.transition = 'opacity 0.4s ease';
         }
-      });
+      }, { passive: true });
     })();
 
     // ---- CURSOR — mini concentric ring disc ----
@@ -857,15 +866,18 @@
       var breathInterval = 60 + Math.random() * 60;
       var cursorColor = '#fff';
 
+      var colorCheckTimer = 0;
       document.addEventListener('mousemove', function(e) {
         mouseX = e.clientX; mouseY = e.clientY;
-        canvas.style.display = 'none';
-        var el = document.elementFromPoint(mouseX, mouseY);
-        canvas.style.display = '';
-        if (el) {
-          var bg = getComputedStyle(el).backgroundColor;
-          var m = bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
-          if (m) cursorColor = (parseInt(m[1]) + parseInt(m[2]) + parseInt(m[3])) / 3 > 180 ? '#000' : '#fff';
+        if (++colorCheckTimer % 8 === 0) {
+          canvas.style.display = 'none';
+          var el = document.elementFromPoint(mouseX, mouseY);
+          canvas.style.display = '';
+          if (el) {
+            var bg = getComputedStyle(el).backgroundColor;
+            var m = bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+            if (m) cursorColor = (parseInt(m[1]) + parseInt(m[2]) + parseInt(m[3])) / 3 > 180 ? '#000' : '#fff';
+          }
         }
       });
 
@@ -1000,6 +1012,46 @@
       document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') closeModal();
       });
+    })();
+
+    // ---- SCROLL TYPEWRITER ----
+    (function() {
+      var targets = document.querySelectorAll('.lt-hero-intro, .lt-languages-intro, .culture-card p, .tradition-card p, .lt-closing-content p, .greeting-translation');
+      targets.forEach(function(el) {
+        var text = el.innerHTML;
+        el.classList.add('type-reveal');
+        var chars = '';
+        for (var i = 0; i < text.length; i++) {
+          var c = text[i];
+          if (c === '<') {
+            var end = text.indexOf('>', i);
+            chars += text.substring(i, end + 1);
+            i = end;
+          } else if (c === '&') {
+            var end = text.indexOf(';', i);
+            var entity = text.substring(i, end + 1);
+            chars += '<span class="type-char">' + entity + '</span>';
+            i = end;
+          } else if (c === ' ') {
+            chars += ' ';
+          } else {
+            chars += '<span class="type-char">' + c + '</span>';
+          }
+        }
+        el.innerHTML = chars;
+      });
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            var spans = entry.target.querySelectorAll('.type-char');
+            spans.forEach(function(s, i) {
+              setTimeout(function() { s.classList.add('visible'); }, i * 18);
+            });
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15 });
+      targets.forEach(function(el) { observer.observe(el); });
     })();
   </script>
 </body>
