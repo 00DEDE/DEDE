@@ -459,7 +459,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 120px 24px 100px;
+      padding: 80px 24px 100px;
       position: relative;
       overflow: visible;
     }
@@ -469,46 +469,19 @@
       letter-spacing: 0.06em;
       color: rgba(255,255,255,0.7);
       text-align: center;
-      margin-bottom: 60px;
+      margin-bottom: 40px;
       position: relative;
       z-index: 2;
     }
     .lt-lang-orb-wrap {
       position: relative;
       width: 100%;
-      max-width: 1500px;
+      max-width: 1125px;
       aspect-ratio: 1 / 1;
     }
     .lt-lang-orb-wrap canvas {
       width: 100%;
       height: 100%;
-    }
-    .lt-lang-label {
-      font-family: 'ABCMonumentGroteskMono', monospace;
-      font-size: 13px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.4);
-      text-align: center;
-      margin-top: 48px;
-      min-height: 1.5em;
-      transition: color 0.4s ease, opacity 0.4s ease;
-      position: relative;
-      z-index: 2;
-    }
-    .lt-lang-label.active {
-      color: rgba(255,255,255,0.8);
-    }
-    .lt-lang-mic-prompt {
-      font-family: 'ABCMonumentGroteskMono', monospace;
-      font-size: 10px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.2);
-      text-align: center;
-      margin-top: 16px;
-      position: relative;
-      z-index: 2;
     }
 
     /* ---- VIDEO PLAY OVERLAY ---- */
@@ -823,8 +796,6 @@
       <div class="lt-lang-orb-wrap">
         <canvas id="langOrb"></canvas>
       </div>
-      <div class="lt-lang-label" id="langLabel"></div>
-      <div class="lt-lang-mic-prompt" id="langMicPrompt">Click to begin &middot; speak into your microphone</div>
     </section>
 
     <!-- ======== I AM BECAUSE WE ARE ======== -->
@@ -1108,10 +1079,8 @@
     (function() {
       var canvas = document.getElementById('langOrb');
       var ctx = canvas.getContext('2d');
-      var label = document.getElementById('langLabel');
-      var promptEl = document.getElementById('langMicPrompt');
       var section = document.getElementById('langVisualizer');
-      if (!canvas || !label) return;
+      if (!canvas || !section) return;
 
       var recognition = null;
       var analyser = null;
@@ -1120,13 +1089,8 @@
       var stream = null;
       var audioReady = false;
       var isListening = false;
-      var isFrozen = false;
       var isSpeaking = false;
-      var silenceTimer = null;
-      var resetTimer = null;
-      var currentLang = '';
 
-      // Audio smoothing — only responds when speech detected
       var audio = { volume: 0, bass: 0, mid: 0, treble: 0 };
       var smoothAudio = { volume: 0, bass: 0, mid: 0, treble: 0 };
       var targetAudio = { volume: 0, bass: 0, mid: 0, treble: 0 };
@@ -1153,7 +1117,7 @@
       // Pseudopod / tendril breakout zones
       var breakouts = [];
       var MAX_BREAKOUTS = 5;
-      var breakoutTimer = 0;
+      var breakoutClock = 0;
 
       function spawnBreakout() {
         if (breakouts.length >= MAX_BREAKOUTS) return;
@@ -1194,49 +1158,6 @@
       sizeCanvas();
       window.addEventListener('resize', sizeCanvas);
 
-      var langNames = {
-        'en': 'English', 'en-US': 'English', 'en-GB': 'English',
-        'es': 'Spanish', 'es-ES': 'Spanish', 'es-MX': 'Spanish',
-        'fr': 'French', 'fr-FR': 'French',
-        'de': 'German', 'de-DE': 'German',
-        'it': 'Italian', 'it-IT': 'Italian',
-        'pt': 'Portuguese', 'pt-BR': 'Portuguese',
-        'ja': 'Japanese', 'ja-JP': 'Japanese',
-        'ko': 'Korean', 'ko-KR': 'Korean',
-        'zh': 'Chinese', 'zh-CN': 'Mandarin', 'zh-TW': 'Mandarin',
-        'cmn': 'Mandarin',
-        'ar': 'Arabic', 'ar-SA': 'Arabic',
-        'hi': 'Hindi', 'hi-IN': 'Hindi',
-        'ru': 'Russian', 'ru-RU': 'Russian',
-        'tr': 'Turkish', 'tr-TR': 'Turkish',
-        'nl': 'Dutch', 'nl-NL': 'Dutch',
-        'sv': 'Swedish', 'sv-SE': 'Swedish',
-        'pl': 'Polish', 'pl-PL': 'Polish',
-        'th': 'Thai', 'th-TH': 'Thai',
-        'vi': 'Vietnamese', 'vi-VN': 'Vietnamese',
-        'id': 'Indonesian', 'id-ID': 'Indonesian',
-        'uk': 'Ukrainian', 'uk-UA': 'Ukrainian',
-        'cs': 'Czech', 'cs-CZ': 'Czech',
-        'ro': 'Romanian', 'ro-RO': 'Romanian',
-        'el': 'Greek', 'el-GR': 'Greek',
-        'he': 'Hebrew', 'he-IL': 'Hebrew',
-        'da': 'Danish', 'da-DK': 'Danish',
-        'fi': 'Finnish', 'fi-FI': 'Finnish',
-        'no': 'Norwegian', 'nb-NO': 'Norwegian',
-        'hu': 'Hungarian', 'hu-HU': 'Hungarian',
-        'ms': 'Malay', 'ms-MY': 'Malay',
-        'sw': 'Swahili', 'sw-KE': 'Swahili',
-        'af': 'Afrikaans', 'af-ZA': 'Afrikaans'
-      };
-
-      function getLangName(code) {
-        if (!code) return '';
-        if (langNames[code]) return langNames[code];
-        var base = code.split('-')[0];
-        if (langNames[base]) return langNames[base];
-        return code;
-      }
-
       function updateAudio() {
         if (!audioReady || !analyser) return;
         analyser.getByteFrequencyData(freqData);
@@ -1255,7 +1176,6 @@
         audio.mid = midSum / Math.max(1, midN) / 255;
         audio.treble = trebSum / Math.max(1, len - bassN - midN) / 255;
 
-        // Only feed audio into the visualizer when speech is detected
         if (isSpeaking) {
           targetAudio.volume = audio.volume;
           targetAudio.bass = audio.bass;
@@ -1280,28 +1200,25 @@
         var cx = size / 2;
         var cy = size / 2;
         ctx.clearRect(0, 0, size, size);
-
-        if (!isFrozen) time += 0.02;
+        time += 0.02;
 
         if (isListening) updateAudio();
 
         // Breathing
-        if (!isFrozen) {
-          breathTimer++;
-          if (breathTimer >= breathInterval) {
-            breathTimer = 0;
-            breathInterval = 40 + Math.random() * 100;
-            breathTarget = 0.96 + Math.random() * 0.1;
-          }
-          breathCurrent += (breathTarget - breathCurrent) * 0.012;
+        breathTimer++;
+        if (breathTimer >= breathInterval) {
+          breathTimer = 0;
+          breathInterval = 40 + Math.random() * 100;
+          breathTarget = 0.96 + Math.random() * 0.1;
+        }
+        breathCurrent += (breathTarget - breathCurrent) * 0.012;
 
-          // Spawn breakouts randomly while speaking
-          if (isSpeaking) {
-            breakoutTimer++;
-            if (breakoutTimer > 15 + Math.random() * 40) {
-              breakoutTimer = 0;
-              spawnBreakout();
-            }
+        // Spawn breakouts randomly while speaking
+        if (isSpeaking) {
+          breakoutClock++;
+          if (breakoutClock > 15 + Math.random() * 40) {
+            breakoutClock = 0;
+            spawnBreakout();
           }
         }
 
@@ -1325,6 +1242,14 @@
         ctx.fillStyle = '#fff';
         ctx.globalAlpha = 1;
 
+        // Cymatics-like internal fluid pattern parameters
+        var vol = smoothAudio.volume;
+        var cymaticStrength = vol * 1.2;
+        // Number of symmetry nodes shifts with frequency content
+        var nodes = 3 + Math.round(smoothAudio.treble * 5);
+        var innerFlow = smoothAudio.mid * 0.4;
+        var bassWarp = smoothAudio.bass * 0.35;
+
         for (var i = 0; i < dots.length; i++) {
           var d = dots[i];
           var rFactor = d.baseR / circleMaxR;
@@ -1335,7 +1260,6 @@
           var wobble = Math.sin(time * d.speed + d.phase) * 0.3;
           r += wobble;
 
-          // Speech-reactive displacement
           var audioPush = smoothAudio.bass * (1 - rFactor) * 55
                         + smoothAudio.treble * rFactor * 40;
           r += audioPush;
@@ -1344,12 +1268,30 @@
           var midFactor = 1 - Math.abs(rFactor - 0.5) * 2;
           angle += smoothAudio.mid * midFactor * 0.22 * Math.sin(time * 1.5 + d.phase);
 
-          // Breakout tendrils — outer dots in the breakout zone get pushed outward
+          // Inner cymatics fluid pattern — creates flowing geometric shapes inside
+          if (cymaticStrength > 0.01) {
+            // Standing wave pattern based on angle symmetry
+            var wave1 = Math.sin(angle * nodes + time * 1.2) * cymaticStrength;
+            var wave2 = Math.cos(angle * (nodes - 1) - time * 0.8) * cymaticStrength * 0.6;
+            // Inner rings move more, outer rings less (inverse of breakouts)
+            var innerWeight = 1 - rFactor;
+            var cymaticDisplace = (wave1 + wave2) * innerWeight * d.baseR * 0.15;
+            r += cymaticDisplace;
+
+            // Angular flow — dots drift along rings creating fluid current
+            var flowAngle = innerFlow * Math.sin(angle * 2 + time * 0.7 + rFactor * Math.PI * 3);
+            angle += flowAngle * innerWeight;
+
+            // Bass creates radial warping — concentric rings breathe unevenly
+            var bassPattern = Math.sin(rFactor * Math.PI * 4 + time * 0.5) * bassWarp;
+            r += bassPattern * d.baseR * innerWeight * 0.3;
+          }
+
+          // Breakout tendrils
           for (var b = 0; b < breakouts.length; b++) {
             var br = breakouts[b];
             if (rFactor < br.ringStart) continue;
             var angleDiff = angle - br.angle;
-            // Normalize to [-PI, PI]
             while (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
             while (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
             if (Math.abs(angleDiff) < br.spread) {
@@ -1373,13 +1315,13 @@
       }
       loop();
 
-      // ---- START / STOP ----
-      function startListening() {
+      // Auto-start mic + speech recognition when section is visible
+      var started = false;
+      function startAudio() {
+        if (started) return;
+        started = true;
         isListening = true;
-        promptEl.textContent = 'Listening\u2026';
-        promptEl.style.color = 'rgba(255,255,255,0.4)';
 
-        // Audio
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         analyser = audioCtx.createAnalyser();
         analyser.fftSize = 256;
@@ -1391,14 +1333,11 @@
           source.connect(analyser);
           freqData = new Uint8Array(analyser.frequencyBinCount);
           audioReady = true;
-        }).catch(function() {
-          promptEl.textContent = 'Microphone access denied';
-          isListening = false;
-        });
+        }).catch(function() { /* mic denied — circle still breathes */ });
 
-        // Speech recognition — cycle through language groups to detect different languages
+        // Speech recognition
         var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (!SR) { promptEl.textContent = 'Speech recognition not supported'; return; }
+        if (!SR) return;
 
         var langCodes = [
           'en-US', 'es-ES', 'fr-FR', 'de-DE', 'it-IT', 'pt-BR',
@@ -1408,10 +1347,10 @@
           'cs-CZ', 'ro-RO', 'uk-UA', 'ms-MY', 'af-ZA'
         ];
         var langIndex = 0;
-        // Start with browser language
         var browserLang = navigator.language || 'en-US';
         var browserIdx = langCodes.indexOf(browserLang);
         if (browserIdx !== -1) langIndex = browserIdx;
+        var silenceTimeout = null;
 
         function startRecognition() {
           recognition = new SR();
@@ -1422,41 +1361,15 @@
 
           recognition.onresult = function(event) {
             isSpeaking = true;
-            if (isFrozen) {
-              clearTimeout(resetTimer);
-              isFrozen = false;
-            }
-            clearTimeout(silenceTimer);
-            silenceTimer = setTimeout(function() {
-              isSpeaking = false;
-              silenceTimer = setTimeout(function() {
-                isFrozen = true;
-                resetTimer = setTimeout(function() {
-                  isFrozen = false;
-                  label.textContent = '';
-                  label.classList.remove('active');
-                  currentLang = '';
-                }, 5000);
-              }, 1500);
-            }, 500);
+            clearTimeout(silenceTimeout);
+            silenceTimeout = setTimeout(function() { isSpeaking = false; }, 800);
 
-            // Detect language from what was set + confidence
-            var result = event.results[event.results.length - 1];
-            var bestConf = 0;
-            var detectedLang = recognition.lang;
-            for (var a = 0; a < result.length; a++) {
-              if (result[a].confidence > bestConf) {
-                bestConf = result[a].confidence;
-                if (result[a].lang) detectedLang = result[a].lang;
-              }
-            }
-            // If confidence is high, show this language
-            if (bestConf > 0.5) {
-              var name = getLangName(detectedLang);
-              if (name && name !== currentLang) {
-                currentLang = name;
-                label.textContent = name;
-                label.classList.add('active');
+            // Check for "unesco" voice command
+            for (var r = event.resultIndex; r < event.results.length; r++) {
+              var transcript = event.results[r][0].transcript.toLowerCase().trim();
+              if (transcript.indexOf('unesco') !== -1) {
+                window.location.href = 'home.html';
+                return;
               }
             }
           };
@@ -1466,23 +1379,14 @@
           };
 
           recognition.onend = function() {
-            if (isListening) {
-              // If low confidence or no results, try next language
-              if (!currentLang || currentLang === '') {
-                langIndex = (langIndex + 1) % langCodes.length;
-              }
-              try { startRecognition(); recognition.start(); } catch(e) {}
-              return;
-            }
+            langIndex = (langIndex + 1) % langCodes.length;
+            try { startRecognition(); recognition.start(); } catch(e) {}
           };
 
           recognition.onerror = function(e) {
-            if (e.error === 'no-speech') {
-              isSpeaking = false;
-              // Cycle to next language on silence
+            if (e.error === 'no-speech') isSpeaking = false;
+            if (e.error !== 'aborted') {
               langIndex = (langIndex + 1) % langCodes.length;
-            }
-            if (e.error !== 'aborted' && isListening) {
               try { startRecognition(); recognition.start(); } catch(ex) {}
             }
           };
@@ -1493,33 +1397,14 @@
         startRecognition();
       }
 
-      function stopListening() {
-        isListening = false;
-        isSpeaking = false;
-        isFrozen = false;
-        audioReady = false;
-        if (recognition) { try { recognition.stop(); } catch(e) {} recognition = null; }
-        if (stream) { stream.getTracks().forEach(function(t) { t.stop(); }); stream = null; }
-        if (audioCtx) { try { audioCtx.close(); } catch(e) {} audioCtx = null; }
-        analyser = null;
-        freqData = null;
-        clearTimeout(silenceTimer);
-        clearTimeout(resetTimer);
-        smoothAudio.volume = 0; smoothAudio.bass = 0; smoothAudio.mid = 0; smoothAudio.treble = 0;
-        targetAudio.volume = 0; targetAudio.bass = 0; targetAudio.mid = 0; targetAudio.treble = 0;
-        label.textContent = '';
-        label.classList.remove('active');
-        currentLang = '';
-        promptEl.textContent = 'Click to begin \u00b7 speak into your microphone';
-        promptEl.style.color = '';
-      }
-
-      // Click to toggle
-      section.addEventListener('click', function() {
-        if (isListening) stopListening();
-        else startListening();
-      });
-      section.style.cursor = 'pointer';
+      // Start when section scrolls into view
+      var visObserver = new IntersectionObserver(function(entries) {
+        if (entries[0].isIntersecting) {
+          startAudio();
+          visObserver.disconnect();
+        }
+      }, { threshold: 0.15 });
+      visObserver.observe(section);
     })();
   </script>
 </body>
