@@ -474,32 +474,32 @@
     .lt-lang-orb-wrap {
       position: relative;
       width: 100%;
-      max-width: 600px;
-      aspect-ratio: 1 / 0.7;
+      max-width: 500px;
+      aspect-ratio: 1 / 1;
     }
     .lt-lang-orb {
       position: absolute;
       inset: 0;
       border-radius: 50%;
-      background-color: rgba(255,255,255,0.03);
+      background-color: #1a1a1a;
       background-image:
-        radial-gradient(ellipse 80% 60% at 20% 25%, rgba(255,255,255,0.12) 0%, transparent 65%),
-        radial-gradient(ellipse 70% 50% at 80% 70%, rgba(255,255,255,0.06) 0%, transparent 60%),
-        radial-gradient(ellipse 50% 45% at 35% 70%, rgba(255,255,255,0.14) 0%, transparent 55%),
-        radial-gradient(ellipse 60% 40% at 70% 25%, rgba(255,255,255,0.04) 0%, transparent 50%),
-        radial-gradient(ellipse 55% 75% at 50% 50%, rgba(255,255,255,0.10) 0%, transparent 60%),
-        radial-gradient(ellipse 90% 45% at 65% 15%, rgba(255,255,255,0.07) 0%, transparent 65%);
+        radial-gradient(ellipse 80% 60% at 20% 25%, rgba(255,255,255,0.45) 0%, transparent 65%),
+        radial-gradient(ellipse 70% 50% at 80% 70%, rgba(255,255,255,0.25) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 45% at 35% 70%, rgba(255,255,255,0.50) 0%, transparent 55%),
+        radial-gradient(ellipse 60% 40% at 70% 25%, rgba(255,255,255,0.18) 0%, transparent 50%),
+        radial-gradient(ellipse 55% 75% at 50% 50%, rgba(255,255,255,0.35) 0%, transparent 60%),
+        radial-gradient(ellipse 90% 45% at 65% 15%, rgba(255,255,255,0.28) 0%, transparent 65%);
       background-size: 200% 200%;
-      animation: orb-idle 20s ease-in-out infinite alternate;
-      transition: background-image 0.15s ease, transform 0.3s ease;
-      filter: blur(1px);
+      animation: orb-idle 16s ease-in-out infinite alternate;
+      transition: background-image 0.1s ease;
     }
     @keyframes orb-idle {
-      0% { background-position: 0% 0%; transform: scale(1) rotate(0deg); }
-      25% { background-position: 35% 55%; transform: scale(1.02) rotate(0.5deg); }
-      50% { background-position: 65% 35%; transform: scale(0.98) rotate(-0.5deg); }
-      75% { background-position: 40% 75%; transform: scale(1.01) rotate(0.3deg); }
-      100% { background-position: 100% 100%; transform: scale(1) rotate(0deg); }
+      0% { background-position: 0% 0%; }
+      20% { background-position: 45% 60%; }
+      40% { background-position: 70% 25%; }
+      60% { background-position: 30% 80%; }
+      80% { background-position: 85% 45%; }
+      100% { background-position: 100% 100%; }
     }
     .lt-lang-orb.frozen {
       animation-play-state: paused !important;
@@ -1197,18 +1197,18 @@
         // Volatile jellyfish-like movement — positions shift rapidly with audio
         var jitter = e * 30;
         var pulse = e * 20;
-        var p1x = 20 + Math.sin(t * 2.3) * (15 + jitter) + bass * 15;
-        var p1y = 25 + Math.cos(t * 1.7) * (12 + jitter) + mid * 10;
-        var p2x = 80 + Math.sin(t * 3.1 + 1) * (12 + jitter) - high * 12;
-        var p2y = 70 + Math.cos(t * 2.5 + 2) * (15 + jitter) + bass * 8;
-        var p3x = 35 + Math.sin(t * 1.9 + 3) * (18 + jitter) + mid * 14;
-        var p3y = 70 + Math.cos(t * 2.8 + 1) * (14 + jitter) - high * 10;
-        var p4x = 70 + Math.sin(t * 2.6 + 2) * (10 + jitter) - bass * 10;
-        var p4y = 25 + Math.cos(t * 3.3 + 3) * (12 + jitter) + mid * 12;
-        var p5x = 50 + Math.sin(t * 1.4 + 4) * (20 + jitter) + high * 8;
-        var p5y = 50 + Math.cos(t * 2.1 + 2) * (18 + jitter) - bass * 6;
-        var p6x = 65 + Math.sin(t * 3.7 + 1) * (14 + jitter) + mid * 10;
-        var p6y = 15 + Math.cos(t * 1.8 + 3) * (10 + jitter) + high * 8;
+        var p1x = 20 + Math.sin(t * 1.15) * (15 + jitter) + bass * 15;
+        var p1y = 25 + Math.cos(t * 0.85) * (12 + jitter) + mid * 10;
+        var p2x = 80 + Math.sin(t * 1.55 + 1) * (12 + jitter) - high * 12;
+        var p2y = 70 + Math.cos(t * 1.25 + 2) * (15 + jitter) + bass * 8;
+        var p3x = 35 + Math.sin(t * 0.95 + 3) * (18 + jitter) + mid * 14;
+        var p3y = 70 + Math.cos(t * 1.4 + 1) * (14 + jitter) - high * 10;
+        var p4x = 70 + Math.sin(t * 1.3 + 2) * (10 + jitter) - bass * 10;
+        var p4y = 25 + Math.cos(t * 1.65 + 3) * (12 + jitter) + mid * 12;
+        var p5x = 50 + Math.sin(t * 0.7 + 4) * (20 + jitter) + high * 8;
+        var p5y = 50 + Math.cos(t * 1.05 + 2) * (18 + jitter) - bass * 6;
+        var p6x = 65 + Math.sin(t * 1.85 + 1) * (14 + jitter) + mid * 10;
+        var p6y = 15 + Math.cos(t * 0.9 + 3) * (10 + jitter) + high * 8;
 
         // Size pulsing with audio
         var s1w = 80 + pulse + bass * 25;
@@ -1225,12 +1225,12 @@
         var s6h = 45 + pulse + high * 12;
 
         // Alpha intensities react to frequency bands
-        var a1 = (0.12 + bass * 0.35).toFixed(3);
-        var a2 = (0.06 + high * 0.25).toFixed(3);
-        var a3 = (0.14 + mid * 0.30).toFixed(3);
-        var a4 = (0.04 + bass * 0.20).toFixed(3);
-        var a5 = (0.10 + high * 0.28).toFixed(3);
-        var a6 = (0.07 + mid * 0.22).toFixed(3);
+        var a1 = (0.45 + bass * 0.40).toFixed(3);
+        var a2 = (0.25 + high * 0.35).toFixed(3);
+        var a3 = (0.50 + mid * 0.35).toFixed(3);
+        var a4 = (0.18 + bass * 0.30).toFixed(3);
+        var a5 = (0.35 + high * 0.35).toFixed(3);
+        var a6 = (0.28 + mid * 0.30).toFixed(3);
 
         return 'radial-gradient(ellipse ' + s1w.toFixed(0) + '% ' + s1h.toFixed(0) + '% at ' + p1x.toFixed(1) + '% ' + p1y.toFixed(1) + '%, rgba(255,255,255,' + a1 + ') 0%, transparent 65%),' +
           'radial-gradient(ellipse ' + s2w.toFixed(0) + '% ' + s2h.toFixed(0) + '% at ' + p2x.toFixed(1) + '% ' + p2y.toFixed(1) + '%, rgba(255,255,255,' + a2 + ') 0%, transparent 60%),' +
@@ -1266,14 +1266,10 @@
       // Animation loop
       function animate() {
         if (isFrozen) return;
-        time += 0.04;
+        time += 0.02;
         var e = getEnergies();
-        // Scale up the orb with energy
-        var scale = 1 + e.energy * 0.15;
-        var skewX = (e.bass - e.high) * 5;
-        var skewY = (e.mid - e.bass) * 3;
+        // Update gradient only — no transform distortion, stays a circle
         orb.style.backgroundImage = buildGradient(e.energy, e.bass, e.mid, e.high, time);
-        orb.style.transform = 'scale(' + scale.toFixed(3) + ') skew(' + skewX.toFixed(1) + 'deg, ' + skewY.toFixed(1) + 'deg)';
         orb.style.animation = 'none';
         animFrame = requestAnimationFrame(animate);
       }
