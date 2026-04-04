@@ -88,6 +88,9 @@
       border: 1px solid rgba(255,255,255,0.08);
       transition: transform 0.15s ease, background 0.2s ease;
       text-decoration: none;
+      will-change: transform;
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
     }
     .unesco-corner:hover {
       background: rgba(255,255,255,0.1);
@@ -115,9 +118,9 @@
     }
     .lt-hero-title {
       font-family: 'RuderPlakat', Impact, sans-serif;
-      font-size: clamp(96px, 19vw, 320px);
+      font-size: clamp(120px, 28vw, 480px);
       line-height: 0.88;
-      letter-spacing: 0.02em;
+      letter-spacing: -0.01em;
       text-transform: uppercase;
       color: #fff;
       position: relative;
@@ -572,7 +575,7 @@
     /* ---- RESPONSIVE ---- */
     @media (max-width: 768px) {
       .lt-hero { padding: 40px 0 60px; }
-      .lt-hero-title { padding: 0 24px; font-size: clamp(64px, 15vw, 160px); }
+      .lt-hero-title { padding: 0 24px; font-size: clamp(72px, 22vw, 240px); }
       .lt-hero-intro { padding: 0 24px; }
       .lt-hero-actions { padding: 0 24px; flex-wrap: wrap; gap: 10px; }
       .lt-hero-sidebar { display: none; }
@@ -682,7 +685,7 @@
 
         <div class="culture-card">
           <div class="video-trigger" data-video-local="MICRO/MICRO_VIDEOS/rapa nui_video 1.mp4" data-video-subs="MICRO/MICRO_VIDEOS/rapa nui_video 1.vtt" data-video-end="60">
-            <img src="MICRO/MICRO_IMAGES/RAPA%20NUI_1.png" alt="Rapa Nui moai statues" class="img-crop-upper">
+            <img src="MICRO/MICRO_IMAGES/RAPA%20NUI_2.png" alt="Rapa Nui moai statues" class="img-crop-upper">
           </div>
           <h3>Rapa Nui</h3>
           <span class="location">Rapa Nui, Chile</span>
@@ -750,7 +753,7 @@
         </div>
 
         <div class="tradition-card">
-          <div class="video-trigger" data-video="lk7DQLMKBTE">
+          <div class="video-trigger" data-video-local="MICRO/MICRO_VIDEOS/Jeju Haenyeo_video 1.mp4" data-video-subs="MICRO/MICRO_VIDEOS/Jeju Haenyeo_video 1.vtt">
             <img src="MICRO/MICRO_IMAGES/JEJU%20HAENYEO_1.png" alt="Jeju Haenyeo women divers">
           </div>
           <h3>Jeju Haenyeo</h3>
@@ -773,7 +776,7 @@
     <div class="lt-collage">
       <img src="MICRO/MICRO_IMAGES/BIGWALA_2.png" alt="">
       <img src="MICRO/MICRO_IMAGES/JEJU%20HAENYEO_2.png" alt="">
-      <img src="MICRO/MICRO_IMAGES/RAPA%20NUI_1.png" alt="" class="img-crop-upper">
+      <img src="MICRO/MICRO_IMAGES/RAPA%20NUI_2.png" alt="" class="img-crop-upper">
       <img src="MICRO/MICRO_IMAGES/NOKEN%20WEAVING_2.png" alt="">
     </div>
 
@@ -870,9 +873,9 @@
       document.addEventListener('mousemove', function(e) {
         mouseX = e.clientX; mouseY = e.clientY;
         if (++colorCheckTimer % 8 === 0) {
-          canvas.style.display = 'none';
+          canvas.style.visibility = 'hidden';
           var el = document.elementFromPoint(mouseX, mouseY);
-          canvas.style.display = '';
+          canvas.style.visibility = '';
           if (el) {
             var bg = getComputedStyle(el).backgroundColor;
             var m = bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
@@ -1045,7 +1048,7 @@
           if (entry.isIntersecting) {
             var spans = entry.target.querySelectorAll('.type-char');
             spans.forEach(function(s, i) {
-              setTimeout(function() { s.classList.add('visible'); }, i * 18);
+              setTimeout(function() { s.classList.add('visible'); }, i * 36);
             });
             observer.unobserve(entry.target);
           }
