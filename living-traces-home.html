@@ -108,24 +108,26 @@
     /* ---- HERO ---- */
     .lt-hero {
       position: relative;
-      min-height: 100vh;
+      height: 100vh;
+      height: 100dvh;
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
-      padding: 60px 0 80px;
+      padding: 60px 0 48px;
       overflow: hidden;
       background: #000;
+      box-sizing: border-box;
     }
     .lt-hero-title {
       font-family: 'RuderPlakat', Impact, sans-serif;
-      font-size: clamp(120px, 28vw, 480px);
+      font-size: clamp(100px, 20vw, 360px);
       line-height: 0.88;
       letter-spacing: -0.01em;
       text-transform: uppercase;
       color: #fff;
       position: relative;
       z-index: 2;
-      margin-bottom: 28px;
+      margin-bottom: 20px;
       padding: 0 48px;
       width: 100%;
     }
@@ -171,7 +173,7 @@
       align-items: center;
       justify-content: flex-start;
       gap: 16px;
-      margin-top: 28px;
+      margin-top: 20px;
       position: relative;
       z-index: 2;
       padding: 0 48px;
@@ -477,32 +479,9 @@
       max-width: 500px;
       aspect-ratio: 1 / 1;
     }
-    .lt-lang-orb {
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
-      background-color: #1a1a1a;
-      background-image:
-        radial-gradient(ellipse 80% 60% at 20% 25%, rgba(255,255,255,0.45) 0%, transparent 65%),
-        radial-gradient(ellipse 70% 50% at 80% 70%, rgba(255,255,255,0.25) 0%, transparent 60%),
-        radial-gradient(ellipse 50% 45% at 35% 70%, rgba(255,255,255,0.50) 0%, transparent 55%),
-        radial-gradient(ellipse 60% 40% at 70% 25%, rgba(255,255,255,0.18) 0%, transparent 50%),
-        radial-gradient(ellipse 55% 75% at 50% 50%, rgba(255,255,255,0.35) 0%, transparent 60%),
-        radial-gradient(ellipse 90% 45% at 65% 15%, rgba(255,255,255,0.28) 0%, transparent 65%);
-      background-size: 200% 200%;
-      animation: orb-idle 16s ease-in-out infinite alternate;
-      transition: background-image 0.1s ease;
-    }
-    @keyframes orb-idle {
-      0% { background-position: 0% 0%; }
-      20% { background-position: 45% 60%; }
-      40% { background-position: 70% 25%; }
-      60% { background-position: 30% 80%; }
-      80% { background-position: 85% 45%; }
-      100% { background-position: 100% 100%; }
-    }
-    .lt-lang-orb.frozen {
-      animation-play-state: paused !important;
+    .lt-lang-orb-wrap canvas {
+      width: 100%;
+      height: 100%;
     }
     .lt-lang-label {
       font-family: 'ABCMonumentGroteskMono', monospace;
@@ -640,8 +619,8 @@
 
     /* ---- RESPONSIVE ---- */
     @media (max-width: 768px) {
-      .lt-hero { padding: 40px 0 60px; }
-      .lt-hero-title { padding: 0 24px; font-size: clamp(72px, 22vw, 240px); }
+      .lt-hero { padding: 40px 0 32px; }
+      .lt-hero-title { padding: 0 24px; font-size: clamp(64px, 18vw, 200px); }
       .lt-hero-intro { padding: 0 24px; }
       .lt-hero-actions { padding: 0 24px; flex-wrap: wrap; gap: 10px; }
       .lt-hero-sidebar { display: none; }
@@ -842,7 +821,7 @@
     <section class="lt-language-visualizer" id="langVisualizer">
       <div class="lt-lang-heading">What does your language look like?</div>
       <div class="lt-lang-orb-wrap">
-        <div class="lt-lang-orb" id="langOrb"></div>
+        <canvas id="langOrb"></canvas>
       </div>
       <div class="lt-lang-label" id="langLabel"></div>
       <div class="lt-lang-mic-prompt" id="langMicPrompt">Click to begin &middot; speak into your microphone</div>
@@ -1125,28 +1104,77 @@
       targets.forEach(function(el) { observer.observe(el); });
     })();
 
-    // ---- AUDIO-REACTIVE LANGUAGE VISUALIZER ----
+    // ---- LANGUAGE VISUALIZER (concentric dot circle) ----
     (function() {
-      var orb = document.getElementById('langOrb');
+      var canvas = document.getElementById('langOrb');
+      var ctx = canvas.getContext('2d');
       var label = document.getElementById('langLabel');
-      var prompt = document.getElementById('langMicPrompt');
+      var promptEl = document.getElementById('langMicPrompt');
       var section = document.getElementById('langVisualizer');
-      if (!orb || !label) return;
+      if (!canvas || !label) return;
 
-      var audioCtx = null;
-      var analyser = null;
-      var dataArray = null;
-      var stream = null;
       var recognition = null;
-      var animFrame = null;
+      var analyser = null;
+      var freqData = null;
+      var audioCtx = null;
+      var stream = null;
+      var audioReady = false;
       var isListening = false;
       var isFrozen = false;
+      var isSpeaking = false;
       var silenceTimer = null;
       var resetTimer = null;
       var currentLang = '';
-      var time = 0;
 
-      // Language name map
+      // Audio smoothing — only responds when speech detected
+      var audio = { volume: 0, bass: 0, mid: 0, treble: 0 };
+      var smoothAudio = { volume: 0, bass: 0, mid: 0, treble: 0 };
+      var targetAudio = { volume: 0, bass: 0, mid: 0, treble: 0 };
+
+      var dots = [];
+      var CENTER_HOLE = 50;
+      var circleMaxR = 0;
+      var time = 0;
+      var breathTarget = 1;
+      var breathCurrent = 1;
+      var breathTimer = 0;
+      var breathInterval = 60 + Math.random() * 80;
+
+      function sizeCanvas() {
+        var wrap = canvas.parentElement;
+        var s = wrap.clientWidth;
+        canvas.width = s * 2;
+        canvas.height = s * 2;
+        canvas.style.width = s + 'px';
+        canvas.style.height = s + 'px';
+        generateDots();
+      }
+
+      function generateDots() {
+        dots = [];
+        circleMaxR = canvas.width / 2 * 0.425;
+        var ringSpacing = 5;
+        var numRings = Math.floor((circleMaxR - CENTER_HOLE) / ringSpacing);
+        for (var ring = 0; ring < numRings; ring++) {
+          var r = CENTER_HOLE + ring * ringSpacing;
+          var circ = 2 * Math.PI * r;
+          var numDots = Math.floor(circ / 3);
+          for (var d = 0; d < numDots; d++) {
+            if (Math.random() < 0.2) continue;
+            dots.push({
+              baseR: r + (Math.random() - 0.5) * 1.2,
+              baseAngle: (d / numDots) * Math.PI * 2 + (Math.random() - 0.5) * (0.4 / (ring + 5)),
+              ring: ring,
+              phase: Math.random() * Math.PI * 2,
+              speed: 0.2 + Math.random() * 0.6
+            });
+          }
+        }
+      }
+
+      sizeCanvas();
+      window.addEventListener('resize', sizeCanvas);
+
       var langNames = {
         'en': 'English', 'en-US': 'English', 'en-GB': 'English',
         'es': 'Spanish', 'es-ES': 'Spanish', 'es-MX': 'Spanish',
@@ -1190,229 +1218,214 @@
         return code;
       }
 
-      // Build radial gradient string from audio data
-      function buildGradient(energy, bass, mid, high, t) {
-        var e = Math.min(energy, 1);
-        var baseAlpha = 0.03 + e * 0.12;
-        // Volatile jellyfish-like movement — positions shift rapidly with audio
-        var jitter = e * 30;
-        var pulse = e * 20;
-        var p1x = 20 + Math.sin(t * 1.15) * (15 + jitter) + bass * 15;
-        var p1y = 25 + Math.cos(t * 0.85) * (12 + jitter) + mid * 10;
-        var p2x = 80 + Math.sin(t * 1.55 + 1) * (12 + jitter) - high * 12;
-        var p2y = 70 + Math.cos(t * 1.25 + 2) * (15 + jitter) + bass * 8;
-        var p3x = 35 + Math.sin(t * 0.95 + 3) * (18 + jitter) + mid * 14;
-        var p3y = 70 + Math.cos(t * 1.4 + 1) * (14 + jitter) - high * 10;
-        var p4x = 70 + Math.sin(t * 1.3 + 2) * (10 + jitter) - bass * 10;
-        var p4y = 25 + Math.cos(t * 1.65 + 3) * (12 + jitter) + mid * 12;
-        var p5x = 50 + Math.sin(t * 0.7 + 4) * (20 + jitter) + high * 8;
-        var p5y = 50 + Math.cos(t * 1.05 + 2) * (18 + jitter) - bass * 6;
-        var p6x = 65 + Math.sin(t * 1.85 + 1) * (14 + jitter) + mid * 10;
-        var p6y = 15 + Math.cos(t * 0.9 + 3) * (10 + jitter) + high * 8;
-
-        // Size pulsing with audio
-        var s1w = 80 + pulse + bass * 25;
-        var s1h = 60 + pulse + mid * 20;
-        var s2w = 70 + pulse + high * 20;
-        var s2h = 50 + pulse + bass * 15;
-        var s3w = 50 + pulse + mid * 22;
-        var s3h = 45 + pulse + high * 18;
-        var s4w = 60 + pulse + bass * 18;
-        var s4h = 40 + pulse + mid * 15;
-        var s5w = 55 + pulse + high * 20;
-        var s5h = 75 + pulse + bass * 25;
-        var s6w = 90 + pulse + mid * 15;
-        var s6h = 45 + pulse + high * 12;
-
-        // Alpha intensities react to frequency bands
-        var a1 = (0.45 + bass * 0.40).toFixed(3);
-        var a2 = (0.25 + high * 0.35).toFixed(3);
-        var a3 = (0.50 + mid * 0.35).toFixed(3);
-        var a4 = (0.18 + bass * 0.30).toFixed(3);
-        var a5 = (0.35 + high * 0.35).toFixed(3);
-        var a6 = (0.28 + mid * 0.30).toFixed(3);
-
-        return 'radial-gradient(ellipse ' + s1w.toFixed(0) + '% ' + s1h.toFixed(0) + '% at ' + p1x.toFixed(1) + '% ' + p1y.toFixed(1) + '%, rgba(255,255,255,' + a1 + ') 0%, transparent 65%),' +
-          'radial-gradient(ellipse ' + s2w.toFixed(0) + '% ' + s2h.toFixed(0) + '% at ' + p2x.toFixed(1) + '% ' + p2y.toFixed(1) + '%, rgba(255,255,255,' + a2 + ') 0%, transparent 60%),' +
-          'radial-gradient(ellipse ' + s3w.toFixed(0) + '% ' + s3h.toFixed(0) + '% at ' + p3x.toFixed(1) + '% ' + p3y.toFixed(1) + '%, rgba(255,255,255,' + a3 + ') 0%, transparent 55%),' +
-          'radial-gradient(ellipse ' + s4w.toFixed(0) + '% ' + s4h.toFixed(0) + '% at ' + p4x.toFixed(1) + '% ' + p4y.toFixed(1) + '%, rgba(255,255,255,' + a4 + ') 0%, transparent 50%),' +
-          'radial-gradient(ellipse ' + s5w.toFixed(0) + '% ' + s5h.toFixed(0) + '% at ' + p5x.toFixed(1) + '% ' + p5y.toFixed(1) + '%, rgba(255,255,255,' + a5 + ') 0%, transparent 60%),' +
-          'radial-gradient(ellipse ' + s6w.toFixed(0) + '% ' + s6h.toFixed(0) + '% at ' + p6x.toFixed(1) + '% ' + p6y.toFixed(1) + '%, rgba(255,255,255,' + a6 + ') 0%, transparent 65%)';
-      }
-
-      // Get frequency band energies from analyser
-      function getEnergies() {
-        if (!analyser || !dataArray) return { energy: 0, bass: 0, mid: 0, high: 0 };
-        analyser.getByteFrequencyData(dataArray);
-        var len = dataArray.length;
-        var bassEnd = Math.floor(len * 0.15);
-        var midEnd = Math.floor(len * 0.5);
-        var total = 0, bass = 0, mid = 0, high = 0;
+      function updateAudio() {
+        if (!audioReady || !analyser) return;
+        analyser.getByteFrequencyData(freqData);
+        var len = freqData.length;
+        var bassN = Math.floor(len * 0.15);
+        var midN = Math.floor(len * 0.35);
+        var bassSum = 0, midSum = 0, trebSum = 0, total = 0;
         for (var i = 0; i < len; i++) {
-          var v = dataArray[i] / 255;
-          total += v;
-          if (i < bassEnd) bass += v;
-          else if (i < midEnd) mid += v;
-          else high += v;
+          total += freqData[i];
+          if (i < bassN) bassSum += freqData[i];
+          else if (i < bassN + midN) midSum += freqData[i];
+          else trebSum += freqData[i];
         }
-        return {
-          energy: total / len,
-          bass: bass / bassEnd,
-          mid: mid / (midEnd - bassEnd),
-          high: high / (len - midEnd)
-        };
+        audio.volume = total / len / 255;
+        audio.bass = bassSum / Math.max(1, bassN) / 255;
+        audio.mid = midSum / Math.max(1, midN) / 255;
+        audio.treble = trebSum / Math.max(1, len - bassN - midN) / 255;
+
+        // Only feed audio into the visualizer when speech is detected
+        if (isSpeaking) {
+          targetAudio.volume = audio.volume;
+          targetAudio.bass = audio.bass;
+          targetAudio.mid = audio.mid;
+          targetAudio.treble = audio.treble;
+        } else {
+          targetAudio.volume = 0;
+          targetAudio.bass = 0;
+          targetAudio.mid = 0;
+          targetAudio.treble = 0;
+        }
+
+        smoothAudio.volume += (targetAudio.volume - smoothAudio.volume) * 0.07;
+        smoothAudio.bass += (targetAudio.bass - smoothAudio.bass) * 0.07;
+        smoothAudio.mid += (targetAudio.mid - smoothAudio.mid) * 0.05;
+        smoothAudio.treble += (targetAudio.treble - smoothAudio.treble) * 0.09;
       }
 
       // Animation loop
-      function animate() {
-        if (isFrozen) return;
-        time += 0.02;
-        var e = getEnergies();
-        // Update gradient only — no transform distortion, stays a circle
-        orb.style.backgroundImage = buildGradient(e.energy, e.bass, e.mid, e.high, time);
-        orb.style.animation = 'none';
-        animFrame = requestAnimationFrame(animate);
-      }
+      function loop() {
+        var size = canvas.width;
+        var cx = size / 2;
+        var cy = size / 2;
+        ctx.clearRect(0, 0, size, size);
 
-      function freezeOrb() {
-        isFrozen = true;
-        orb.classList.add('frozen');
-        if (animFrame) cancelAnimationFrame(animFrame);
-        // Reset after 5 seconds
-        resetTimer = setTimeout(function() {
-          resetOrb();
-        }, 5000);
-      }
+        if (!isFrozen) time += 0.02;
 
-      function resetOrb() {
-        isFrozen = false;
-        orb.classList.remove('frozen');
-        orb.style.backgroundImage = '';
-        orb.style.transform = '';
-        orb.style.animation = '';
-        label.textContent = '';
-        label.classList.remove('active');
-        currentLang = '';
-        if (isListening) animate();
-      }
+        if (isListening) updateAudio();
 
-      function startSilenceWatch() {
-        clearTimeout(silenceTimer);
-        clearTimeout(resetTimer);
-        silenceTimer = setTimeout(function() {
-          freezeOrb();
-        }, 2000);
-      }
+        // Breathing
+        if (!isFrozen) {
+          breathTimer++;
+          if (breathTimer >= breathInterval) {
+            breathTimer = 0;
+            breathInterval = 40 + Math.random() * 100;
+            breathTarget = 0.96 + Math.random() * 0.1;
+          }
+          breathCurrent += (breathTarget - breathCurrent) * 0.012;
+        }
 
-      // Start everything on click
+        var audioBreath = 1 + smoothAudio.volume * 0.5;
+        var pulseWave = time * 0.6;
+
+        ctx.fillStyle = '#fff';
+        ctx.globalAlpha = 1;
+
+        for (var i = 0; i < dots.length; i++) {
+          var d = dots[i];
+          var rFactor = d.baseR / circleMaxR;
+          var ringPhase = rFactor * Math.PI * 1.5;
+          var pulse = Math.sin(pulseWave - ringPhase);
+          var amplitude = 0.06 + rFactor * 0.08;
+          var r = d.baseR * breathCurrent * audioBreath * (1 + pulse * amplitude);
+          var wobble = Math.sin(time * d.speed + d.phase) * 0.3;
+          r += wobble;
+
+          // Speech-reactive displacement
+          var audioPush = smoothAudio.bass * (1 - rFactor) * 55
+                        + smoothAudio.treble * rFactor * 40;
+          r += audioPush;
+
+          var angle = d.baseAngle;
+          var midFactor = 1 - Math.abs(rFactor - 0.5) * 2;
+          angle += smoothAudio.mid * midFactor * 0.22 * Math.sin(time * 1.5 + d.phase);
+
+          var x = cx + Math.cos(angle) * r;
+          var y = cy + Math.sin(angle) * r;
+
+          ctx.beginPath();
+          ctx.arc(x, y, 0.8, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        requestAnimationFrame(loop);
+      }
+      loop();
+
+      // ---- START / STOP ----
       function startListening() {
-        if (isListening) return;
         isListening = true;
-        prompt.textContent = 'Listening\u2026';
-        prompt.style.color = 'rgba(255,255,255,0.4)';
+        promptEl.textContent = 'Listening\u2026';
+        promptEl.style.color = 'rgba(255,255,255,0.4)';
 
-        // Audio context + analyser
+        // Audio
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         analyser = audioCtx.createAnalyser();
         analyser.fftSize = 256;
-        analyser.smoothingTimeConstant = 0.6;
-        dataArray = new Uint8Array(analyser.frequencyBinCount);
+        analyser.smoothingTimeConstant = 0.88;
 
         navigator.mediaDevices.getUserMedia({ audio: true }).then(function(s) {
           stream = s;
           var source = audioCtx.createMediaStreamSource(stream);
           source.connect(analyser);
-          animate();
-          startSilenceWatch();
+          freqData = new Uint8Array(analyser.frequencyBinCount);
+          audioReady = true;
         }).catch(function() {
-          prompt.textContent = 'Microphone access denied';
+          promptEl.textContent = 'Microphone access denied';
           isListening = false;
         });
 
-        // Speech recognition for language detection
-        var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (SpeechRecognition) {
-          recognition = new SpeechRecognition();
-          recognition.continuous = true;
-          recognition.interimResults = true;
-          recognition.maxAlternatives = 1;
+        // Speech recognition
+        var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SR) { promptEl.textContent = 'Speech recognition not supported'; return; }
 
-          recognition.onresult = function(event) {
-            // Speech detected — unfreeze if frozen
-            if (isFrozen) {
-              clearTimeout(resetTimer);
-              isFrozen = false;
-              orb.classList.remove('frozen');
-              orb.style.animation = 'none';
-              animate();
-            }
-            clearTimeout(silenceTimer);
-            startSilenceWatch();
+        recognition = new SR();
+        recognition.continuous = true;
+        recognition.interimResults = true;
+        recognition.maxAlternatives = 1;
+        recognition.lang = navigator.language || 'en-US';
 
-            // Get detected language
-            var lang = event.results[event.results.length - 1][0].lang || recognition.lang || '';
-            if (lang) {
-              var name = getLangName(lang);
-              if (name && name !== currentLang) {
-                currentLang = name;
-                label.textContent = name;
-                label.classList.add('active');
-              }
-            }
-          };
-
-          recognition.onspeechend = function() {
-            startSilenceWatch();
-          };
-
-          recognition.onend = function() {
-            // Restart recognition if still listening
-            if (isListening && !isFrozen) {
-              try { recognition.start(); } catch(e) {}
-            }
-          };
-
-          recognition.onerror = function(e) {
-            if (e.error === 'no-speech') {
-              startSilenceWatch();
-            }
-            if (e.error !== 'aborted' && e.error !== 'no-speech' && isListening) {
-              try { recognition.start(); } catch(ex) {}
-            }
-          };
-
-          // Try detecting browser language first
-          var browserLang = navigator.language || 'en-US';
-          recognition.lang = browserLang;
-
-          try { recognition.start(); } catch(e) {}
-
-          // Display initial detected language
-          var initName = getLangName(browserLang);
-          if (initName) {
-            label.textContent = initName;
-            label.classList.add('active');
-            currentLang = initName;
+        recognition.onresult = function(event) {
+          isSpeaking = true;
+          if (isFrozen) {
+            clearTimeout(resetTimer);
+            isFrozen = false;
           }
-        }
+          clearTimeout(silenceTimer);
+          silenceTimer = setTimeout(function() {
+            isSpeaking = false;
+            silenceTimer = setTimeout(function() {
+              // Freeze after 2s total silence
+              isFrozen = true;
+              resetTimer = setTimeout(function() {
+                isFrozen = false;
+                label.textContent = '';
+                label.classList.remove('active');
+                currentLang = '';
+              }, 5000);
+            }, 1500);
+          }, 500);
+
+          var lang = event.results[event.results.length - 1][0].lang || recognition.lang || '';
+          if (lang) {
+            var name = getLangName(lang);
+            if (name && name !== currentLang) {
+              currentLang = name;
+              label.textContent = name;
+              label.classList.add('active');
+            }
+          }
+        };
+
+        recognition.onspeechend = function() {
+          isSpeaking = false;
+        };
+
+        recognition.onend = function() {
+          if (isListening) {
+            try { recognition.start(); } catch(e) {}
+          }
+        };
+
+        recognition.onerror = function(e) {
+          if (e.error === 'no-speech') isSpeaking = false;
+          if (e.error !== 'aborted' && e.error !== 'no-speech' && isListening) {
+            try { recognition.start(); } catch(ex) {}
+          }
+        };
+
+        try { recognition.start(); } catch(e) {}
       }
 
-      // Click to start
+      function stopListening() {
+        isListening = false;
+        isSpeaking = false;
+        isFrozen = false;
+        audioReady = false;
+        if (recognition) { try { recognition.stop(); } catch(e) {} recognition = null; }
+        if (stream) { stream.getTracks().forEach(function(t) { t.stop(); }); stream = null; }
+        if (audioCtx) { try { audioCtx.close(); } catch(e) {} audioCtx = null; }
+        analyser = null;
+        freqData = null;
+        clearTimeout(silenceTimer);
+        clearTimeout(resetTimer);
+        smoothAudio.volume = 0; smoothAudio.bass = 0; smoothAudio.mid = 0; smoothAudio.treble = 0;
+        targetAudio.volume = 0; targetAudio.bass = 0; targetAudio.mid = 0; targetAudio.treble = 0;
+        label.textContent = '';
+        label.classList.remove('active');
+        currentLang = '';
+        promptEl.textContent = 'Click to begin \u00b7 speak into your microphone';
+        promptEl.style.color = '';
+      }
+
+      // Click to toggle
       section.addEventListener('click', function() {
-        if (!isListening) {
-          startListening();
-        }
+        if (isListening) stopListening();
+        else startListening();
       });
       section.style.cursor = 'pointer';
-
-      // Also auto-start when section scrolls into view
-      var visObserver = new IntersectionObserver(function(entries) {
-        if (entries[0].isIntersecting && !isListening) {
-          // Don't auto-start — just highlight the prompt
-          prompt.style.color = 'rgba(255,255,255,0.5)';
-        }
-      }, { threshold: 0.3 });
-      visObserver.observe(section);
     })();
   </script>
 </body>
