@@ -17,7 +17,8 @@
     span.style.backgroundColor = color;
     span.style.webkitMaskImage = "url('" + src + "')";
     span.style.maskImage = "url('" + src + "')";
-    span.style.animationDelay = (Math.random() * 3).toFixed(2) + 's';
+    var appearDelay = (Math.random() * 1.5).toFixed(2);
+    span.style.animationDelay = appearDelay + 's, ' + (Math.random() * 3).toFixed(2) + 's';
     container.appendChild(span);
   });
 })();
