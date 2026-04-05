@@ -202,9 +202,20 @@
 
     @media (max-width: 600px) {
       .postcard {
-        width: 100px;
-        height: 145px;
+        width: 90px;
+        height: 130px;
       }
+      .postcard[data-index="0"] { left: 5% !important; top: 8% !important; }
+      .postcard[data-index="1"] { left: 35% !important; top: 3% !important; }
+      .postcard[data-index="2"] { left: 65% !important; top: 10% !important; }
+      .postcard[data-index="3"] { left: 3% !important; top: 50% !important; }
+      .postcard[data-index="4"] { left: 38% !important; top: 55% !important; }
+      .postcard[data-index="5"] { left: 66% !important; top: 45% !important; }
+
+      .postcard-layer {
+        overflow: visible;
+      }
+
       .postcard-text {
         left: 5% !important;
         right: 5%;
@@ -221,6 +232,7 @@
       .postcard-text p {
         font-size: 0.78rem;
         text-align: left;
+        line-height: 1.5;
       }
     }
   </style>
@@ -517,9 +529,9 @@
         var layerH = layer.clientHeight;
         var isMobile = window.innerWidth <= 600;
 
-        var cardW = isMobile ? 100 : 160;
-        var cardH = isMobile ? 145 : 230;
-        var gap = isMobile ? 12 : 16;
+        var cardW = isMobile ? 90 : 160;
+        var cardH = isMobile ? 130 : 230;
+        var gap = isMobile ? 10 : 16;
 
         postcards.forEach(function(card, i) {
           var rect = card.getBoundingClientRect();
@@ -545,13 +557,16 @@
           var startY = 20;
 
           postcards.forEach(function(card, i) {
+            // Remove CSS !important overrides by adding inline !important
+            card.style.setProperty('width', cardW + 'px', 'important');
+            card.style.setProperty('height', cardH + 'px', 'important');
             card.classList.add('aligning');
             var row = Math.floor(i / cols);
             var col = i % cols;
             var targetX = startX + col * (cardW + gap);
             var targetY = startY + row * (cardH + rowGap);
-            card.style.left = targetX + 'px';
-            card.style.top = targetY + 'px';
+            card.style.setProperty('left', targetX + 'px', 'important');
+            card.style.setProperty('top', targetY + 'px', 'important');
           });
         } else {
           // Desktop: single row
@@ -607,15 +622,8 @@
         if (isMobile) {
           // Position below the 2-row grid with comfortable padding
           var lastRowCard = postcards[3].getBoundingClientRect();
-          var layerRect = layer.getBoundingClientRect();
-          var textTop = lastRowCard.bottom - layerRect.top + 24;
+          var textTop = lastRowCard.bottom + 30;
           textBlock.style.top = textTop + 'px';
-          textBlock.style.left = '5%';
-          textBlock.style.right = '5%';
-          textBlock.style.width = '90%';
-          textBlock.style.transform = 'none';
-          textBlock.style.maxWidth = 'none';
-          textBlock.style.textAlign = 'left';
         } else {
           var firstCard = postcards[0].getBoundingClientRect();
           var textTop = firstCard.bottom + 24;
