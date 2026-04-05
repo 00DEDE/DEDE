@@ -275,24 +275,14 @@ img { max-width: 100%; display: block; }
 }
 
 .hero-desc-wrap {
-  position: relative;
-  min-height: 5em;
   margin-bottom: 2rem;
 }
 
 .hero-desc {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.5s ease;
+  display: none;
 }
 .hero-desc.active {
-  position: relative;
-  opacity: 1;
-  pointer-events: auto;
+  display: block;
 }
 
 .hero-buttons {
