@@ -175,14 +175,15 @@ if (document.body.dataset.page !== 'living-traces') {
     numberFadeObserver.observe(el);
   });
 
-  // Subtle parallax on hero backgrounds
+  // Subtle parallax on hero backgrounds (desktop only)
   var heroSlideshow = document.querySelector('.hero-slideshow');
   var pageHero = document.querySelector('.page-hero');
   if (heroSlideshow || pageHero) {
     window.addEventListener('scroll', function() {
       var y = window.scrollY;
       if (y > window.innerHeight) return;
-      if (heroSlideshow) heroSlideshow.style.transform = 'translateY(' + (y * 0.18) + 'px)';
+      var isMobile = window.innerWidth <= 600;
+      if (heroSlideshow && !isMobile) heroSlideshow.style.transform = 'translateY(' + (y * 0.18) + 'px)';
       if (pageHero) pageHero.style.backgroundPositionY = (y * 0.12) + 'px';
     }, { passive: true });
   }
