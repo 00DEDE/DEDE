@@ -29,6 +29,7 @@ const navLinks = document.querySelector('.nav-links');
 
 menuToggle.addEventListener('click', () => {
   navLinks.classList.toggle('open');
+  menuToggle.classList.toggle('active');
 });
 
 // Hero slideshow with synced descriptions

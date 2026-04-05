@@ -82,7 +82,7 @@ body {
     radial-gradient(ellipse 50% 70% at 25% 80%, #e7e2de 0%, transparent 65%);
   background-size: 200% 200%;
   background-attachment: fixed;
-  animation: lava-drift 60s ease-in-out infinite alternate;
+  animation: lava-drift 35s ease-in-out infinite alternate;
 }
 
 @keyframes lava-drift {
@@ -303,10 +303,11 @@ img { max-width: 100%; display: block; }
 
 .hero-icons {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(5, 54px);
   gap: 1rem;
   margin-top: 2rem;
   justify-items: center;
+  justify-content: start;
 }
 
 .hero-icon {
@@ -1475,19 +1476,38 @@ img { max-width: 100%; display: block; }
   .menu-toggle { display: flex; }
 
   .nav-links {
-    display: none;
+    display: flex;
     position: absolute;
     top: 70px;
     left: 0;
     right: 0;
     background: var(--white);
     flex-direction: column;
-    padding: 1.5rem 2rem;
-    gap: 1rem;
+    padding: 0 2rem;
+    gap: 0;
     border-bottom: 1px solid rgba(0,0,0,0.08);
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.4s ease, opacity 0.3s ease, padding 0.4s ease;
   }
 
-  .nav-links.open { display: flex; }
+  .nav-links.open {
+    max-height: 400px;
+    opacity: 1;
+    padding: 1.5rem 2rem;
+    gap: 1rem;
+  }
+
+  .menu-toggle.active span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+  .menu-toggle.active span:nth-child(2) {
+    opacity: 0;
+  }
+  .menu-toggle.active span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
 
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -1626,6 +1646,8 @@ img { max-width: 100%; display: block; }
 
   .hero-icons {
     order: 5;
+    grid-template-columns: repeat(5, 1fr);
+    justify-content: center;
   }
 
   .hero-icon {
