@@ -165,6 +165,19 @@ new p5(function(p) {
   p.windowResized = function() {
     p.resizeCanvas(p.windowWidth, p.windowHeight);
   };
+
+  // Listen for toggle message from parent (mobile button)
+  window.addEventListener('message', function(e) {
+    if (e.data && e.data.type === 'toggleDraw') {
+      drawing = !drawing;
+      updateCursor();
+      prevX = p.mouseX;
+      prevY = p.mouseY;
+      if (window.parent !== window) {
+        window.parent.postMessage({ type: 'drawMode', drawing: drawing }, '*');
+      }
+    }
+  });
 });
 </script>
 

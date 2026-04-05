@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#1e6fa0">
   <title>UNESCO — Uncover</title>
   <link rel="stylesheet" href="style.css">
   <style>
@@ -151,6 +152,32 @@
       opacity: 1;
       pointer-events: auto;
     }
+
+    /* Mobile draw toggle button */
+    .draw-toggle {
+      display: none;
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 20;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(103, 93, 82, 0.3);
+      background: rgba(238, 235, 224, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s ease, border-color 0.3s ease;
+    }
+    .draw-toggle svg { width: 22px; height: 22px; stroke: #675d52; fill: none; stroke-width: 1.8; }
+    .draw-toggle.active { background: rgba(103, 93, 82, 0.2); border-color: #675d52; }
+    @media (max-width: 768px) {
+      .draw-toggle { display: flex; }
+      .uncover-hint { display: none; }
+    }
     .postcard-text h3 {
       font-family: var(--font-heading);
       font-size: 1.1rem;
@@ -242,6 +269,11 @@
     <p id="postcard-desc"></p>
   </div>
 
+  <!-- Mobile draw toggle -->
+  <button class="draw-toggle active" id="drawToggle" aria-label="Toggle drawing mode">
+    <svg viewBox="0 0 24 24"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
+  </button>
+
   <!-- Drawing canvas -->
   <iframe id="sketch-frame" class="uncover-frame" src="unesco_textile_sketch.html" title="UNESCO Textile Sketch" allowtransparency="true"></iframe>
   <div class="uncover-spacer"></div>
@@ -301,6 +333,15 @@
     const frame = document.getElementById('sketch-frame');
     frame.addEventListener('load', function() { frame.focus(); });
     frame.addEventListener('mouseenter', function() { frame.focus(); });
+
+    // Mobile draw toggle button
+    var drawToggleBtn = document.getElementById('drawToggle');
+    drawToggleBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      // Send D key press to iframe
+      frame.contentWindow.postMessage({ type: 'toggleDraw' }, '*');
+      drawToggleBtn.classList.toggle('active');
+    });
 
     // Postcard reveal system
     (function() {

@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#111111">
   <title>Living Traces — Home</title>
   <link rel="stylesheet" href="style.css">
   <style>
@@ -45,11 +46,13 @@
     html { scroll-behavior: smooth; }
     body {
       background: #000;
-      cursor: none !important;
       margin: 0;
       color: #fff;
     }
-    body * { cursor: none !important; }
+    /* Hide system cursor on desktop only — no custom cursor on mobile */
+    @media (pointer: fine) {
+      body, body * { cursor: none !important; }
+    }
 
     /* ---- SCROLL TYPEWRITER ---- */
     .type-reveal {
@@ -58,10 +61,73 @@
     }
     .type-reveal .type-char {
       opacity: 0;
-      transition: opacity 0.04s ease;
+      filter: blur(6px);
+      transition: opacity 0.04s ease, filter 0.4s ease;
     }
     .type-reveal .type-char.visible {
       opacity: 1;
+      filter: blur(0);
+    }
+
+    @keyframes hero-blur-in {
+      to { opacity: 1; filter: blur(0); }
+    }
+
+    /* Closing section: graceful blur-in on load via observer */
+    .lt-closing-content p,
+    .lt-closing-tag {
+      opacity: 0;
+      filter: blur(10px);
+      transition: opacity 1.8s ease, filter 2s ease;
+    }
+    .lt-closing-content p.blur-visible,
+    .lt-closing-tag.blur-visible {
+      opacity: 1;
+      filter: blur(0);
+    }
+
+    /* Culture/tradition card subtle animations */
+    .culture-card img,
+    .tradition-card img {
+      transition: transform 0.6s ease, filter 0.6s ease;
+    }
+    .culture-card:hover img,
+    .tradition-card:hover img {
+      transform: scale(1.03);
+    }
+    .culture-card,
+    .tradition-card {
+      position: relative;
+    }
+    .culture-card::before,
+    .tradition-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border: 1px solid rgba(255,255,255,0);
+      border-radius: 4px;
+      transition: border-color 0.5s ease;
+      pointer-events: none;
+      z-index: 2;
+    }
+    .culture-card:hover::before,
+    .tradition-card:hover::before {
+      border-color: rgba(255,255,255,0.15);
+    }
+    /* Subtle breathing glow on card images */
+    @keyframes card-breathe {
+      0%, 100% { opacity: 0; }
+      50% { opacity: 0.08; }
+    }
+    .culture-card .video-trigger::before,
+    .tradition-card .video-trigger::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(255,255,255,0.3) 0%, transparent 70%);
+      animation: card-breathe 4s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 1;
     }
 
     /* Fallback for characters RuderPlakat can't render — Impact matches the heavy weight */
@@ -140,6 +206,9 @@
       position: relative;
       z-index: 2;
       padding: 0 48px;
+      opacity: 0;
+      filter: blur(12px);
+      animation: hero-blur-in 2.5s ease 0.8s forwards;
     }
 
     /* ---- SIDEBAR WITH ROTATING FACTS ---- */
@@ -469,7 +538,7 @@
       letter-spacing: 0.06em;
       color: rgba(255,255,255,0.7);
       text-align: center;
-      margin-bottom: 40px;
+      margin-bottom: -60px;
       position: relative;
       z-index: 2;
     }
@@ -490,7 +559,6 @@
     .tradition-card .video-trigger {
       position: relative;
       display: block;
-      cursor: none !important;
     }
     .video-trigger::after {
       content: '';
@@ -586,8 +654,8 @@
     .video-modal-close:hover {
       background: rgba(255,255,255,0.12);
     }
-    .video-modal, .video-modal * {
-      cursor: default !important;
+    @media (pointer: coarse) {
+      .video-modal, .video-modal * { cursor: default !important; }
     }
 
     /* ---- RESPONSIVE ---- */
@@ -850,8 +918,11 @@
       }, { passive: true });
     })();
 
-    // ---- CURSOR — mini concentric ring disc ----
+    // ---- CURSOR — mini concentric ring disc (desktop only) ----
     (function() {
+      // Skip custom cursor on touch/mobile devices
+      if (!window.matchMedia('(pointer: fine)').matches) return;
+
       var canvas = document.createElement('canvas');
       canvas.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;';
       document.body.appendChild(canvas);
@@ -894,10 +965,18 @@
           canvas.style.visibility = 'hidden';
           var el = document.elementFromPoint(mouseX, mouseY);
           canvas.style.visibility = '';
-          if (el) {
+          // Walk up DOM to find first element with a non-transparent background
+          while (el) {
             var bg = getComputedStyle(el).backgroundColor;
-            var m = bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
-            if (m) cursorColor = (parseInt(m[1]) + parseInt(m[2]) + parseInt(m[3])) / 3 > 180 ? '#000' : '#fff';
+            var m = bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?/);
+            if (m) {
+              var alpha = m[4] !== undefined ? parseFloat(m[4]) : 1;
+              if (alpha > 0.1) {
+                cursorColor = (parseInt(m[1]) + parseInt(m[2]) + parseInt(m[3])) / 3 > 140 ? '#000' : '#fff';
+                break;
+              }
+            }
+            el = el.parentElement;
           }
         }
       });
@@ -1037,7 +1116,8 @@
 
     // ---- SCROLL TYPEWRITER ----
     (function() {
-      var targets = document.querySelectorAll('.lt-hero-intro, .lt-languages-intro, .culture-card p, .tradition-card p, .lt-closing-content p, .greeting-translation');
+      // Scroll typewriter with blur — exclude hero intro (auto-animates) and closing (soft blur)
+      var targets = document.querySelectorAll('.lt-languages-intro, .culture-card p, .tradition-card p, .greeting-translation');
       targets.forEach(function(el) {
         var text = el.innerHTML;
         el.classList.add('type-reveal');
@@ -1073,6 +1153,21 @@
         });
       }, { threshold: 0.15 });
       targets.forEach(function(el) { observer.observe(el); });
+
+      // Closing section — soft blur reveal on scroll
+      var closingEls = document.querySelectorAll('.lt-closing-content p, .lt-closing-tag');
+      var closingObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('blur-visible');
+            closingObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+      closingEls.forEach(function(el, i) {
+        el.style.transitionDelay = (i * 0.4) + 's';
+        closingObserver.observe(el);
+      });
     })();
 
     // ---- LANGUAGE VISUALIZER (concentric dot circle) ----
