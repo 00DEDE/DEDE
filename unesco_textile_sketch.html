@@ -145,6 +145,28 @@ new p5(function(p) {
     if (lastShape) lastShape.size += 30;
   };
 
+  p.touchMoved = function() {
+    if (!drawing) return;
+    var tx = p.touches.length ? p.touches[0].x : p.mouseX;
+    var ty = p.touches.length ? p.touches[0].y : p.mouseY;
+    var dx = tx - prevX;
+    var dy = ty - prevY;
+    if (Math.sqrt(dx * dx + dy * dy) < MIN_DIST) return false;
+    spawnShape(tx, ty);
+    prevX = tx;
+    prevY = ty;
+    return false;
+  };
+
+  p.touchStarted = function() {
+    if (!drawing) return;
+    var tx = p.touches.length ? p.touches[0].x : p.mouseX;
+    var ty = p.touches.length ? p.touches[0].y : p.mouseY;
+    prevX = tx;
+    prevY = ty;
+    return false;
+  };
+
   p.keyPressed = function() {
     if (p.key === 'd' || p.key === 'D') {
       drawing = !drawing;

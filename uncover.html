@@ -191,6 +191,23 @@
       margin: 0;
       color: #675d52;
     }
+
+    @media (max-width: 600px) {
+      .postcard {
+        width: 100px;
+        height: 145px;
+      }
+      .postcard-text {
+        max-width: 90%;
+        padding: 1rem 1.2rem;
+      }
+      .postcard-text h3 {
+        font-size: 0.95rem;
+      }
+      .postcard-text p {
+        font-size: 0.78rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -436,13 +453,11 @@
       function alignAndFlip() {
         var layerW = layer.clientWidth;
         var layerH = layer.clientHeight;
+        var isMobile = window.innerWidth <= 600;
 
-        var cardW = 160;
-        var cardH = 230;
-        var gap = 16;
-        var totalW = 6 * cardW + 5 * gap;
-        var startX = (layerW - totalW) / 2;
-        var centerY = (layerH - cardH) / 2;
+        var cardW = isMobile ? 100 : 160;
+        var cardH = isMobile ? 145 : 230;
+        var gap = isMobile ? 12 : 16;
 
         postcards.forEach(function(card, i) {
           var rect = card.getBoundingClientRect();
@@ -451,16 +466,45 @@
           var currentTop = rect.top - layerRect.top;
           card.style.left = currentLeft + 'px';
           card.style.top = currentTop + 'px';
+          if (isMobile) {
+            card.style.width = cardW + 'px';
+            card.style.height = cardH + 'px';
+          }
         });
 
         layer.offsetHeight;
 
-        postcards.forEach(function(card, i) {
-          card.classList.add('aligning');
-          var targetX = startX + i * (cardW + gap);
-          card.style.left = targetX + 'px';
-          card.style.top = centerY + 'px';
-        });
+        if (isMobile) {
+          // 2 rows x 3 columns: U N E / S C O
+          var cols = 3;
+          var totalW = cols * cardW + (cols - 1) * gap;
+          var startX = (layerW - totalW) / 2;
+          var rowGap = gap;
+          var totalH = 2 * cardH + rowGap;
+          var startY = (layerH - totalH) / 2;
+
+          postcards.forEach(function(card, i) {
+            card.classList.add('aligning');
+            var row = Math.floor(i / cols);
+            var col = i % cols;
+            var targetX = startX + col * (cardW + gap);
+            var targetY = startY + row * (cardH + rowGap);
+            card.style.left = targetX + 'px';
+            card.style.top = targetY + 'px';
+          });
+        } else {
+          // Desktop: single row
+          var totalW = 6 * cardW + 5 * gap;
+          var startX = (layerW - totalW) / 2;
+          var centerY = (layerH - cardH) / 2;
+
+          postcards.forEach(function(card, i) {
+            card.classList.add('aligning');
+            var targetX = startX + i * (cardW + gap);
+            card.style.left = targetX + 'px';
+            card.style.top = centerY + 'px';
+          });
+        }
 
         // After alignment, flip to backs one by one, then enable clicking
         setTimeout(function() {
