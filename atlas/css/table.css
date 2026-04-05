@@ -1,0 +1,225 @@
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #1a1413;
+  color: #e7e2de;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  cursor: none;
+  user-select: none;
+}
+
+/* Map container */
+.map-wrap {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.map-svg {
+  width: 92%;
+  height: 88%;
+  opacity: 0.6;
+}
+
+.continent {
+  fill: #2a2320;
+  stroke: #3d3530;
+  stroke-width: 1;
+  transition: fill 0.6s ease;
+}
+
+/* Zone markers */
+.zone-marker {
+  cursor: none;
+  transition: all 0.5s ease;
+}
+
+.zone-dot {
+  fill: #3d3530;
+  transition: fill 0.5s ease, r 0.5s ease;
+}
+
+.zone-ring {
+  fill: none;
+  stroke: transparent;
+  stroke-width: 1.5;
+  transition: stroke 0.5s ease, opacity 0.5s ease;
+  opacity: 0;
+}
+
+.zone-marker.active .zone-dot {
+  r: 6;
+}
+
+.zone-marker.active .zone-ring {
+  opacity: 1;
+  stroke-width: 2;
+}
+
+/* Pulse animation on active zone */
+@keyframes zone-pulse {
+  0% { r: 14; opacity: 0.6; }
+  100% { r: 28; opacity: 0; }
+}
+
+.zone-pulse {
+  fill: none;
+  opacity: 0;
+}
+
+.zone-marker.active .zone-pulse {
+  animation: zone-pulse 2s ease-out infinite;
+}
+
+/* Zone label */
+.zone-label {
+  position: absolute;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: rgba(26, 20, 19, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.08);
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 10;
+}
+
+.zone-label.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.zone-label .label-category {
+  font-size: 0.6rem;
+  opacity: 0.5;
+  display: block;
+  margin-bottom: 2px;
+}
+
+/* Status bar */
+.status-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  background: rgba(26, 20, 19, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(255,255,255,0.05);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(231, 226, 222, 0.4);
+  z-index: 20;
+}
+
+.status-zone {
+  color: rgba(231, 226, 222, 0.7);
+}
+
+.status-hint {
+  opacity: 0.3;
+}
+
+/* Sequence progress dots */
+.progress-dots {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.progress-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(231, 226, 222, 0.15);
+  transition: background 0.4s ease, transform 0.4s ease;
+}
+
+.progress-dot.visited {
+  background: rgba(231, 226, 222, 0.35);
+}
+
+.progress-dot.current {
+  background: rgba(231, 226, 222, 0.8);
+  transform: scale(1.4);
+}
+
+/* Category color classes */
+.color-monuments { color: #2491d0; }
+.color-nature { color: #9dd3b2; }
+.color-language { color: #f8e166; }
+.color-intangible { color: #e7e2de; }
+
+.fill-monuments { fill: #2491d0; }
+.fill-nature { fill: #9dd3b2; }
+.fill-language { fill: #f8e166; }
+.fill-intangible { fill: #e7e2de; }
+
+.stroke-monuments { stroke: #2491d0; }
+.stroke-nature { stroke: #9dd3b2; }
+.stroke-language { stroke: #f8e166; }
+.stroke-intangible { stroke: #e7e2de; }
+
+/* Grid overlay (subtle) */
+.grid-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.03;
+  background-image:
+    linear-gradient(rgba(231,226,222,0.3) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(231,226,222,0.3) 1px, transparent 1px);
+  background-size: 60px 60px;
+  z-index: 1;
+}
+
+/* World category indicator */
+.world-indicator {
+  position: fixed;
+  top: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0;
+  transition: opacity 0.6s ease, color 0.6s ease;
+  z-index: 10;
+  text-align: center;
+}
+
+.world-indicator.visible {
+  opacity: 0.6;
+}
+
+.world-indicator .world-name {
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  margin-top: 4px;
+  opacity: 0.9;
+}

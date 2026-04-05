@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UNESCO Atlas — Table Display</title>
+  <link rel="stylesheet" href="css/table.css">
+</head>
+<body>
+
+  <div class="grid-overlay"></div>
+
+  <div class="world-indicator" id="world-indicator"></div>
+
+  <div class="map-wrap">
+    <svg class="map-svg" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid meet">
+      <!-- Simplified continent shapes -->
+
+      <!-- North America -->
+      <path class="continent" d="M120,80 Q140,60 180,55 Q220,50 250,65 Q270,70 280,90 Q285,110 275,130 Q265,145 250,155 Q240,170 220,185 Q200,195 180,200 Q160,195 145,185 Q130,170 120,150 Q110,125 115,100 Z"/>
+
+      <!-- Central America & Caribbean -->
+      <path class="continent" d="M180,200 Q195,205 210,215 Q220,225 225,240 Q222,250 215,255 Q205,258 195,255 Q185,250 178,240 Q175,225 177,210 Z"/>
+
+      <!-- South America -->
+      <path class="continent" d="M215,265 Q235,255 255,260 Q275,270 285,290 Q290,315 285,340 Q280,365 270,385 Q260,405 250,420 Q240,440 235,455 Q230,465 225,470 Q218,468 215,458 Q210,440 208,420 Q205,395 200,370 Q195,345 195,320 Q195,295 200,275 Z"/>
+
+      <!-- Europe -->
+      <path class="continent" d="M420,70 Q440,58 465,55 Q490,55 505,65 Q515,75 510,90 Q505,105 495,115 Q485,125 470,132 Q455,138 440,140 Q425,138 415,130 Q408,120 410,105 Q412,90 418,78 Z"/>
+
+      <!-- Africa -->
+      <path class="continent" d="M440,175 Q460,165 480,170 Q500,178 515,195 Q525,215 530,240 Q532,265 528,290 Q522,315 515,335 Q505,355 495,370 Q482,380 470,375 Q458,368 448,355 Q438,335 432,310 Q428,285 428,260 Q430,235 432,210 Q435,190 438,178 Z"/>
+
+      <!-- Asia (main mass) -->
+      <path class="continent" d="M520,50 Q560,38 600,35 Q650,32 700,38 Q740,45 770,58 Q790,70 800,88 Q805,110 798,130 Q790,148 775,160 Q758,170 740,175 Q720,178 700,180 Q675,182 650,178 Q625,172 600,162 Q575,148 555,132 Q538,115 528,95 Q520,78 520,60 Z"/>
+
+      <!-- South/Southeast Asia -->
+      <path class="continent" d="M630,185 Q660,180 685,188 Q705,198 720,215 Q730,232 735,252 Q732,268 722,278 Q708,285 692,282 Q675,275 660,265 Q648,252 640,238 Q632,220 628,200 Z"/>
+
+      <!-- Middle East -->
+      <path class="continent" d="M505,140 Q525,135 545,140 Q560,148 565,162 Q562,175 552,182 Q540,188 525,185 Q512,180 505,168 Q500,155 502,145 Z"/>
+
+      <!-- Australia -->
+      <path class="continent" d="M760,340 Q790,328 820,330 Q850,338 870,355 Q882,372 878,392 Q870,408 855,418 Q835,425 812,420 Q790,412 775,398 Q762,382 758,365 Q756,348 758,342 Z"/>
+
+      <!-- New Zealand -->
+      <path class="continent" d="M885,415 Q892,408 898,412 Q902,420 900,432 Q895,440 888,438 Q883,430 884,420 Z"/>
+
+      <!-- Indonesia archipelago -->
+      <path class="continent" d="M700,290 Q720,285 740,288 Q755,295 760,305 Q758,315 748,318 Q735,320 720,318 Q708,312 702,302 Q698,295 700,290 Z"/>
+
+      <!-- Japan -->
+      <path class="continent" d="M800,85 Q808,78 815,82 Q820,92 818,105 Q812,115 805,112 Q798,105 798,95 Z"/>
+
+      <!-- Greenland -->
+      <path class="continent" d="M300,25 Q320,18 340,22 Q355,30 358,45 Q354,58 342,62 Q328,64 315,58 Q304,48 300,35 Z"/>
+
+      <!-- Zone markers -->
+      <!-- Zone 1: Angkor Wat (Cambodia) -->
+      <g class="zone-marker" id="zone-1" transform="translate(740, 288)">
+        <circle class="zone-pulse" r="14" stroke-width="1.5"/>
+        <circle class="zone-ring" r="14"/>
+        <circle class="zone-dot" r="3.5"/>
+      </g>
+
+      <!-- Zone 2: Galapagos Islands -->
+      <g class="zone-marker" id="zone-2" transform="translate(220, 330)">
+        <circle class="zone-pulse" r="14" stroke-width="1.5"/>
+        <circle class="zone-ring" r="14"/>
+        <circle class="zone-dot" r="3.5"/>
+      </g>
+
+      <!-- Zone 3: Ainu Language Region (Hokkaido) -->
+      <g class="zone-marker" id="zone-3" transform="translate(820, 192)">
+        <circle class="zone-pulse" r="14" stroke-width="1.5"/>
+        <circle class="zone-ring" r="14"/>
+        <circle class="zone-dot" r="3.5"/>
+      </g>
+
+      <!-- Zone 4: Djemaa el-Fna (Morocco) -->
+      <g class="zone-marker" id="zone-4" transform="translate(440, 228)">
+        <circle class="zone-pulse" r="14" stroke-width="1.5"/>
+        <circle class="zone-ring" r="14"/>
+        <circle class="zone-dot" r="3.5"/>
+      </g>
+
+      <!-- Zone 5: Machu Picchu (Peru) -->
+      <g class="zone-marker" id="zone-5" transform="translate(240, 360)">
+        <circle class="zone-pulse" r="14" stroke-width="1.5"/>
+        <circle class="zone-ring" r="14"/>
+        <circle class="zone-dot" r="3.5"/>
+      </g>
+
+      <!-- Zone 6: Great Barrier Reef -->
+      <g class="zone-marker" id="zone-6" transform="translate(840, 396)">
+        <circle class="zone-pulse" r="14" stroke-width="1.5"/>
+        <circle class="zone-ring" r="14"/>
+        <circle class="zone-dot" r="3.5"/>
+      </g>
+
+      <!-- Zone 7: Welsh Language Heartland -->
+      <g class="zone-marker" id="zone-7" transform="translate(430, 168)">
+        <circle class="zone-pulse" r="14" stroke-width="1.5"/>
+        <circle class="zone-ring" r="14"/>
+        <circle class="zone-dot" r="3.5"/>
+      </g>
+
+      <!-- Zone 8: Buenos Aires -->
+      <g class="zone-marker" id="zone-8" transform="translate(270, 444)">
+        <circle class="zone-pulse" r="14" stroke-width="1.5"/>
+        <circle class="zone-ring" r="14"/>
+        <circle class="zone-dot" r="3.5"/>
+      </g>
+
+      <!-- Zone 9: Petra (Jordan) -->
+      <g class="zone-marker" id="zone-9" transform="translate(540, 228)">
+        <circle class="zone-pulse" r="14" stroke-width="1.5"/>
+        <circle class="zone-ring" r="14"/>
+        <circle class="zone-dot" r="3.5"/>
+      </g>
+
+      <!-- Zone 10: Serengeti (Tanzania) -->
+      <g class="zone-marker" id="zone-10" transform="translate(520, 336)">
+        <circle class="zone-pulse" r="14" stroke-width="1.5"/>
+        <circle class="zone-ring" r="14"/>
+        <circle class="zone-dot" r="3.5"/>
+      </g>
+    </svg>
+  </div>
+
+  <div class="zone-label" id="zone-label"></div>
+
+  <div class="status-bar">
+    <span class="status-zone" id="status-zone">Ready</span>
+    <div class="progress-dots" id="progress-dots"></div>
+    <span class="status-hint">&larr; &rarr; Navigate zones</span>
+  </div>
+
+  <script src="js/table.js"></script>
+</body>
+</html>

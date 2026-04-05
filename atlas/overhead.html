@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UNESCO Atlas — Overhead Display</title>
+  <link rel="stylesheet" href="css/overhead.css">
+</head>
+<body>
+
+  <div class="ambient-glow" id="ambient-glow"></div>
+  <div class="transition-flash" id="transition-flash"></div>
+
+  <div class="overhead-wrap">
+
+    <!-- Idle state (before any activation) -->
+    <div class="idle-state" id="idle-state">
+      <div class="idle-logo">A</div>
+      <div class="idle-text">Waiting for activation</div>
+    </div>
+
+    <!-- Active content (shown on activation) -->
+    <div class="active-content" id="active-content">
+
+      <div class="world-bar" id="world-bar"></div>
+      <div class="zone-number" id="zone-number"></div>
+
+      <div class="video-area">
+        <div class="video-placeholder" id="video-placeholder">Video placeholder</div>
+      </div>
+
+      <div class="location-title" id="location-title"></div>
+      <div class="accent-line" id="accent-line"></div>
+      <div class="category-desc" id="category-desc"></div>
+
+      <div class="sequence-counter" id="sequence-counter"></div>
+
+    </div>
+
+  </div>
+
+  <script src="js/overhead.js"></script>
+</body>
+</html>
