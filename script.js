@@ -1,3 +1,27 @@
+// Hero brand icons — randomized on each load
+(function() {
+  var container = document.getElementById('heroIcons');
+  if (!container) return;
+  var colors = ['#675d52', '#1a1413', '#2490cf', '#f8e166', '#9dd3b2'];
+  var icons = [];
+  for (var i = 1; i <= 15; i++) icons.push('cursors/icon-' + i + '.svg');
+  // Shuffle
+  for (var j = icons.length - 1; j > 0; j--) {
+    var k = Math.floor(Math.random() * (j + 1));
+    var tmp = icons[j]; icons[j] = icons[k]; icons[k] = tmp;
+  }
+  icons.forEach(function(src, idx) {
+    var span = document.createElement('span');
+    span.className = 'hero-icon';
+    var color = colors[Math.floor(Math.random() * colors.length)];
+    span.style.backgroundColor = color;
+    span.style.webkitMaskImage = "url('" + src + "')";
+    span.style.maskImage = "url('" + src + "')";
+    span.style.animationDelay = (Math.random() * 3).toFixed(2) + 's';
+    container.appendChild(span);
+  });
+})();
+
 // Mobile menu toggle
 const menuToggle = document.querySelector('.menu-toggle');
 const navLinks = document.querySelector('.nav-links');
@@ -189,7 +213,7 @@ if (document.body.dataset.page === 'living-traces') {
 }
 if (document.body.dataset.page !== 'living-traces')
 (function() {
-  const totalIcons = 13;
+  const totalIcons = 15;
   const brandColors = ['#2490cf', '#f8e166', '#9dd3b2', '#e7e2de', '#675d52', '#1a1413'];
   const cachedSVGs = [];
   let cursorIndex = 0;

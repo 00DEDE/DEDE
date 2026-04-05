@@ -308,31 +308,33 @@ img { max-width: 100%; display: block; }
   animation: none;
 }
 
+@keyframes icon-float {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(2px, -3px) rotate(2deg); }
+  50% { transform: translate(-1px, 2px) rotate(-1deg); }
+  75% { transform: translate(3px, 1px) rotate(-2deg); }
+}
+
 .hero-icons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-top: 2.5rem;
-  align-items: center;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1.2rem;
+  margin-top: 3rem;
+  justify-items: center;
 }
 
 .hero-icon {
   display: inline-block;
-  width: 36px;
-  height: 36px;
+  width: 108px;
+  height: 108px;
   -webkit-mask-size: contain;
   mask-size: contain;
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
   -webkit-mask-position: center;
   mask-position: center;
+  animation: icon-float 4s ease-in-out infinite;
 }
-
-.hi-brown { background-color: #675d52; }
-.hi-dark { background-color: #1a1413; }
-.hi-blue { background-color: #2490cf; }
-.hi-yellow { background-color: #f8e166; }
-.hi-green { background-color: #9dd3b2; }
 
 .btn {
   display: inline-flex;
