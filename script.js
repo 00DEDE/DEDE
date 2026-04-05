@@ -13,17 +13,10 @@ if (heroSlides.length > 0) {
   let slideIndex = 0;
   setInterval(() => {
     heroSlides[slideIndex].classList.remove('active');
-    if (heroDescs[slideIndex]) {
-      heroDescs[slideIndex].classList.remove('active');
-      heroDescs[slideIndex].classList.add('exiting');
-    }
-    var prevIndex = slideIndex;
+    if (heroDescs[slideIndex]) heroDescs[slideIndex].classList.remove('active');
     slideIndex = (slideIndex + 1) % heroSlides.length;
     heroSlides[slideIndex].classList.add('active');
-    setTimeout(function() {
-      if (heroDescs[prevIndex]) heroDescs[prevIndex].classList.remove('exiting');
-      if (heroDescs[slideIndex]) heroDescs[slideIndex].classList.add('active');
-    }, 600);
+    if (heroDescs[slideIndex]) heroDescs[slideIndex].classList.add('active');
   }, 7500);
 }
 
