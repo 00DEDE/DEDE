@@ -1,6 +1,14 @@
 // BroadcastChannel for receiving from table display
 var channel = new BroadcastChannel('atlas-channel');
 
+// Icon map for each world category
+var ICONS = {
+  monuments:  '../UNESCO_ICON_KNOWLEDGE.svg',
+  nature:     '../UNESCO_ICON_NATURE.svg',
+  intangible: '../UNESCO_ICON_HERITAGE.svg',
+  language:   '../UNESCO_ICON_LANGUAGE.svg'
+};
+
 var idleState = null;
 var activeContent = null;
 var worldBar = null;
@@ -12,6 +20,7 @@ var sequenceCounter = null;
 var transitionFlash = null;
 var ambientGlow = null;
 var videoPlaceholder = null;
+var overheadIcon = null;
 
 var CATEGORY_LABELS = {
   monuments:  'Monuments & Built Heritage',
@@ -32,6 +41,7 @@ function init() {
   transitionFlash  = document.getElementById('transition-flash');
   ambientGlow      = document.getElementById('ambient-glow');
   videoPlaceholder = document.getElementById('video-placeholder');
+  overheadIcon     = document.getElementById('overhead-icon');
 
   // Listen for activations from table display
   channel.onmessage = function(e) {
@@ -58,6 +68,11 @@ function showActivation(data) {
 
   // Update content with slight delay for drama
   setTimeout(function() {
+    // World icon
+    if (overheadIcon && ICONS[data.world]) {
+      overheadIcon.src = ICONS[data.world];
+    }
+
     // World category bar
     worldBar.textContent = data.worldName;
     worldBar.style.color = data.color;

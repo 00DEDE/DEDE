@@ -19,16 +19,16 @@ html, body {
 .map-wrap {
   position: relative;
   width: 100vw;
-  height: 100vh;
+  height: calc(100vh - 160px);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .map-svg {
-  width: 92%;
-  height: 88%;
-  opacity: 0.6;
+  width: 88%;
+  height: 82%;
+  opacity: 0.55;
 }
 
 .continent {
@@ -51,7 +51,7 @@ html, body {
 
 .zone-ring {
   fill: none;
-  stroke: rgba(231, 226, 222, 0.15);
+  stroke: rgba(231, 226, 222, 0.12);
   stroke-width: 1.5;
   transition: stroke 0.5s ease, opacity 0.5s ease, stroke-width 0.5s ease;
 }
@@ -62,7 +62,7 @@ html, body {
 }
 
 .zone-marker:hover .zone-ring {
-  stroke: rgba(231, 226, 222, 0.4);
+  stroke: rgba(231, 226, 222, 0.35);
 }
 
 /* Active state */
@@ -75,16 +75,16 @@ html, body {
   opacity: 1;
 }
 
-/* World-specific active ring colors */
+/* World-specific active ring colors — cream for intangible */
 .zone-marker.active.world-monuments .zone-ring { stroke: #2491d0; }
 .zone-marker.active.world-nature .zone-ring { stroke: #9dd3b2; }
-.zone-marker.active.world-intangible .zone-ring { stroke: #675d52; }
+.zone-marker.active.world-intangible .zone-ring { stroke: #e7e2de; }
 .zone-marker.active.world-language .zone-ring { stroke: #f8e166; }
 
 /* Pulse animation on active zone */
 @keyframes zone-pulse {
-  0% { r: 16; opacity: 0.6; }
-  100% { r: 32; opacity: 0; }
+  0% { r: 22; opacity: 0.6; }
+  100% { r: 40; opacity: 0; }
 }
 
 .zone-pulse {
@@ -98,57 +98,74 @@ html, body {
 
 .zone-marker.active.world-monuments .zone-pulse { stroke: #2491d0; }
 .zone-marker.active.world-nature .zone-pulse { stroke: #9dd3b2; }
-.zone-marker.active.world-intangible .zone-pulse { stroke: #675d52; }
+.zone-marker.active.world-intangible .zone-pulse { stroke: #e7e2de; }
 .zone-marker.active.world-language .zone-pulse { stroke: #f8e166; }
 
-/* Zone label */
-.zone-label {
-  position: absolute;
-  padding: 0.6rem 1rem;
-  border-radius: 6px;
-  font-size: 0.72rem;
-  font-weight: 500;
+/* Bottom context panel */
+.context-panel {
+  position: fixed;
+  bottom: 52px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  padding: 1rem 2.5rem;
+  min-width: 360px;
+  max-width: 600px;
+  background: rgba(26, 20, 19, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(231, 226, 222, 0.06);
+  border-radius: 10px;
+  z-index: 15;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.context-icon-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0.6rem;
+}
+
+.context-icon {
+  width: 28px;
+  height: 28px;
+  opacity: 0.6;
+  transition: opacity 0.4s ease;
+}
+
+.context-icon[src=""] {
+  display: none;
+}
+
+.context-location {
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition: color 0.4s ease;
+}
+
+.context-region {
+  font-size: 0.7rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  background: rgba(26, 20, 19, 0.9);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-left: 3px solid rgba(255,255,255,0.08);
-  opacity: 0;
-  transform: translateY(6px);
-  transition: opacity 0.4s ease, transform 0.4s ease;
-  pointer-events: none;
-  white-space: nowrap;
-  z-index: 10;
-  line-height: 1.5;
+  opacity: 0.4;
+  margin-top: 0.2rem;
 }
 
-.zone-label.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.zone-label .label-category {
-  font-size: 0.55rem;
-  opacity: 0.5;
-  display: block;
-  margin-bottom: 2px;
-}
-
-.zone-label .label-location {
-  display: block;
-  font-weight: 600;
-  font-size: 0.8rem;
-  letter-spacing: 0.04em;
-}
-
-.zone-label .label-region {
-  display: block;
+.context-world {
   font-size: 0.6rem;
-  opacity: 0.45;
-  text-transform: none;
-  letter-spacing: 0.02em;
-  margin-top: 1px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.3;
+  margin-top: 0.5rem;
+}
+
+.context-desc {
+  font-size: 0.68rem;
+  line-height: 1.5;
+  opacity: 0.35;
+  margin-top: 0.5rem;
+  max-width: 480px;
 }
 
 /* Status bar */
@@ -205,21 +222,21 @@ html, body {
   transform: scale(1.4);
 }
 
-/* Category color classes */
+/* Category color classes — cream for intangible */
 .color-monuments { color: #2491d0; }
 .color-nature { color: #9dd3b2; }
 .color-language { color: #f8e166; }
-.color-intangible { color: #675d52; }
+.color-intangible { color: #e7e2de; }
 
 .fill-monuments { fill: #2491d0; }
 .fill-nature { fill: #9dd3b2; }
 .fill-language { fill: #f8e166; }
-.fill-intangible { fill: #675d52; }
+.fill-intangible { fill: #e7e2de; }
 
 .stroke-monuments { stroke: #2491d0; }
 .stroke-nature { stroke: #9dd3b2; }
 .stroke-language { stroke: #f8e166; }
-.stroke-intangible { stroke: #675d52; }
+.stroke-intangible { stroke: #e7e2de; }
 
 /* Grid overlay (subtle) */
 .grid-overlay {

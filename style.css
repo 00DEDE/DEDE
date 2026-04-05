@@ -1499,6 +1499,11 @@ img { max-width: 100%; display: block; }
     gap: 1rem;
   }
 
+  /* Hide Digital Atlas button on mobile */
+  .nav-links li:has(.btn-nav) {
+    display: none;
+  }
+
   .menu-backdrop {
     position: fixed;
     top: 70px;
