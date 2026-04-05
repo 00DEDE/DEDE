@@ -86,33 +86,15 @@
       filter: blur(0);
     }
 
-    /* Culture/tradition card subtle animations */
-    .culture-card img,
-    .tradition-card img {
-      transition: transform 0.6s ease, filter 0.6s ease;
-    }
-    .culture-card:hover img,
-    .tradition-card:hover img {
-      transform: scale(1.03);
-    }
-    .culture-card,
-    .tradition-card {
-      position: relative;
-    }
-    /* Subtle breathing glow on card images */
-    @keyframes card-breathe {
-      0%, 100% { opacity: 0; }
-      50% { opacity: 0.08; }
-    }
+    .culture-card, .tradition-card { position: relative; }
+    .culture-card img, .tradition-card img { transition: transform 0.6s ease; }
+    .culture-card:hover img, .tradition-card:hover img { transform: scale(1.03); }
+    @keyframes card-breathe { 0%, 100% { opacity: 0; } 50% { opacity: 0.08; } }
     .culture-card .video-trigger::before,
     .tradition-card .video-trigger::before {
-      content: '';
-      position: absolute;
-      inset: 0;
+      content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
       background: radial-gradient(circle at center, rgba(255,255,255,0.3) 0%, transparent 70%);
       animation: card-breathe 4s ease-in-out infinite;
-      pointer-events: none;
-      z-index: 1;
     }
 
     /* Fallback for characters RuderPlakat can't render — Impact matches the heavy weight */
@@ -124,536 +106,247 @@
 
     /* ---- UNESCO CORNER LOGO ---- */
     .unesco-corner {
-      position: fixed;
-      top: 24px;
-      right: 24px;
-      z-index: 9990;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 10px 12px;
-      border-radius: 10px;
-      background: rgba(255,255,255,0.06);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      border: 1px solid rgba(255,255,255,0.08);
+      position: fixed; top: 24px; right: 24px; z-index: 9990;
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 10px 12px; border-radius: 10px;
+      background: rgba(255,255,255,0.06); backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.08);
       transition: transform 0.15s ease, background 0.2s ease;
-      text-decoration: none;
-      will-change: transform;
-      -webkit-transform: translateZ(0);
-      transform: translateZ(0);
+      text-decoration: none; will-change: transform; transform: translateZ(0);
     }
-    .unesco-corner:hover {
-      background: rgba(255,255,255,0.1);
-    }
-    .unesco-corner:active {
-      transform: scale(0.9);
-      background: rgba(255,255,255,0.14);
-    }
-    .unesco-corner svg {
-      width: 80px;
-      height: auto;
-      display: block;
-    }
+    .unesco-corner:hover { background: rgba(255,255,255,0.1); }
+    .unesco-corner:active { transform: scale(0.9); background: rgba(255,255,255,0.14); }
+    .unesco-corner svg { width: 80px; height: auto; display: block; }
 
     /* ---- HERO ---- */
     .lt-hero {
-      position: relative;
-      height: 100vh;
-      height: 100dvh;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      padding: 0 0 48px;
-      overflow: hidden;
-      background: #000;
-      box-sizing: border-box;
+      position: relative; height: 100dvh; display: flex; flex-direction: column;
+      justify-content: flex-end; padding: 0 0 48px; overflow: hidden;
+      background: #000; box-sizing: border-box;
     }
     .lt-hero-title {
       font-family: 'RuderPlakat', Impact, sans-serif;
-      font-size: clamp(100px, 20vw, 360px);
-      line-height: 0.88;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: #fff;
-      position: relative;
-      z-index: 2;
-      margin-bottom: 20px;
-      padding: 0 48px;
-      width: 100%;
+      font-size: clamp(100px, 20vw, 360px); line-height: 0.88;
+      letter-spacing: 0.06em; text-transform: uppercase; color: #fff;
+      position: relative; z-index: 2; margin-bottom: 20px; padding: 0 48px;
     }
     .lt-hero-intro {
-      font-family: 'PPTelegraf', sans-serif;
-      font-size: clamp(14px, 1.3vw, 17px);
-      line-height: 1.55;
-      color: rgba(255,255,255,0.75);
-      max-width: 100%;
-      position: relative;
-      z-index: 2;
-      padding: 0 48px;
-      opacity: 0;
-      filter: blur(12px);
-      animation: hero-blur-in 2.5s ease 0.8s forwards;
+      font-family: 'PPTelegraf', sans-serif; font-size: clamp(14px, 1.3vw, 17px);
+      line-height: 1.55; color: rgba(255,255,255,0.75);
+      position: relative; z-index: 2; padding: 0 48px;
+      opacity: 0; filter: blur(12px); animation: hero-blur-in 2.5s ease 0.8s forwards;
     }
 
-    /* ---- SIDEBAR WITH ROTATING FACTS ---- */
+    /* ---- SIDEBAR ---- */
     .lt-hero-sidebar {
-      position: fixed;
-      right: 24px;
-      top: calc(50% + 40px);
-      transform: translateY(-50%);
-      writing-mode: vertical-rl;
-      font-family: 'ABCMonumentGroteskMono', monospace;
-      font-size: 12.5px;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.3);
-      z-index: 90;
+      position: fixed; right: 24px; top: calc(50% + 40px); transform: translateY(-50%);
+      writing-mode: vertical-rl; font-family: 'ABCMonumentGroteskMono', monospace;
+      font-size: 12.5px; letter-spacing: 0.15em; text-transform: uppercase;
+      color: rgba(255,255,255,0.3); z-index: 90;
     }
     .lt-hero-sidebar .sidebar-fact {
-      position: absolute;
-      right: 0;
-      top: 50%;
-      transform: translateY(-50%);
-      transition: opacity 0.8s ease;
-      opacity: 0;
-      white-space: nowrap;
+      position: absolute; right: 0; top: 50%; transform: translateY(-50%);
+      transition: opacity 0.8s ease; opacity: 0; white-space: nowrap;
     }
     .lt-hero-sidebar .sidebar-fact.active { opacity: 1; }
 
     /* ---- HERO BUTTONS ---- */
     .lt-hero-actions {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      gap: 16px;
-      margin-top: 20px;
-      position: relative;
-      z-index: 2;
-      padding: 0 48px;
+      display: flex; align-items: center; justify-content: flex-start;
+      gap: 16px; margin-top: 20px; position: relative; z-index: 2; padding: 0 48px;
     }
     .lt-hero-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 22px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.12);
-      color: rgba(255,255,255,0.85);
-      font-family: 'PPTelegraf', sans-serif;
-      font-size: clamp(13px, 1.1vw, 15px);
-      border: none;
-      text-decoration: none;
+      display: inline-flex; align-items: center; gap: 8px; padding: 10px 22px;
+      border-radius: 999px; background: rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.85); font-family: 'PPTelegraf', sans-serif;
+      font-size: clamp(13px, 1.1vw, 15px); border: none; text-decoration: none;
       white-space: nowrap;
     }
-    .lt-hero-pill svg {
-      width: 16px;
-      height: 16px;
-      flex-shrink: 0;
-      opacity: 0.7;
-    }
+    .lt-hero-pill svg { width: 16px; height: 16px; flex-shrink: 0; opacity: 0.7; }
     .lt-hero-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 14px 32px;
-      border-radius: 14px;
-      background: #fff;
-      color: #000;
-      font-family: 'PPTelegraf', sans-serif;
-      font-size: clamp(14px, 1.2vw, 16px);
-      font-weight: 400;
-      border: none;
-      text-decoration: none;
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 14px 32px; border-radius: 14px; background: #fff; color: #000;
+      font-family: 'PPTelegraf', sans-serif; font-size: clamp(14px, 1.2vw, 16px);
+      font-weight: 400; border: none; text-decoration: none;
       transition: transform 0.15s ease, box-shadow 0.2s ease;
     }
-    .lt-hero-btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 20px rgba(255,255,255,0.15);
-    }
-    .lt-hero-btn:active {
-      transform: scale(0.97);
-    }
+    .lt-hero-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(255,255,255,0.15); }
+    .lt-hero-btn:active { transform: scale(0.97); }
 
     /* ---- SECTION LABEL ---- */
     .section-label {
-      font-family: 'RuderPlakat', Impact, sans-serif;
-      font-size: clamp(60px, 10vw, 140px);
-      line-height: 0.95;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      color: #000;
+      font-family: 'RuderPlakat', Impact, sans-serif; font-size: clamp(60px, 10vw, 140px);
+      line-height: 0.95; letter-spacing: 0.05em; text-transform: uppercase; color: #000;
     }
-    .section-label--white { color: #fff; }
 
     /* ---- LANGUAGES ---- */
     .lt-languages {
-      background: #b0b0b0;
-      color: #000;
-      padding: 100px 48px 80px;
-      position: relative;
-      overflow: hidden;
+      background: #b0b0b0; color: #000; padding: 100px 48px 80px;
+      position: relative; overflow: hidden;
     }
     .lt-languages-head {
-      display: flex;
-      align-items: flex-start;
-      gap: 48px;
-      margin-bottom: 80px;
-      position: relative;
-      z-index: 2;
+      display: flex; align-items: flex-start; gap: 48px;
+      margin-bottom: 80px; position: relative; z-index: 2;
     }
-    .lt-languages-head .section-label {
-      flex-shrink: 0;
-    }
+    .lt-languages-head .section-label { flex-shrink: 0; }
     .lt-languages-intro {
-      font-family: 'PPTelegraf', sans-serif;
-      font-size: clamp(13px, 1.1vw, 15px);
-      line-height: 1.65;
-      max-width: 480px;
-      color: rgba(0,0,0,0.7);
-      padding-top: 20px;
+      font-family: 'PPTelegraf', sans-serif; font-size: clamp(13px, 1.1vw, 15px);
+      line-height: 1.65; max-width: 480px; color: rgba(0,0,0,0.7); padding-top: 20px;
     }
-
-    /* Culture cards grid */
-    .culture-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 48px 40px;
-      position: relative;
-      z-index: 2;
+    .culture-grid, .tradition-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr);
+      gap: 48px 40px; position: relative; z-index: 2;
     }
-    .culture-card img {
-      width: 100%;
-      aspect-ratio: 4/3;
-      object-fit: cover;
-      filter: grayscale(1);
-      display: block;
-      border-radius: 12px;
+    .culture-card img, .tradition-card img {
+      width: 100%; aspect-ratio: 4/3; object-fit: cover;
+      filter: grayscale(1); display: block; border-radius: 12px;
     }
     .img-crop-upper { object-position: center 30%; }
-    .culture-card h3 {
+    .culture-card h3, .tradition-card h3 {
       font-family: 'RuderPlakat', Impact, sans-serif;
-      font-size: clamp(24px, 3vw, 40px);
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      margin: 16px 0 10px;
-      line-height: 1;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      margin: 16px 0 10px; line-height: 1;
     }
-    .culture-card p {
+    .culture-card h3 { font-size: clamp(24px, 3vw, 40px); }
+    .tradition-card h3 { font-size: clamp(22px, 2.8vw, 36px); }
+    .culture-card p, .tradition-card p {
       font-family: 'PPTelegraf', sans-serif;
-      font-size: clamp(11px, 1vw, 13px);
-      line-height: 1.6;
-      color: rgba(0,0,0,0.6);
+      font-size: clamp(11px, 1vw, 13px); line-height: 1.6; color: rgba(0,0,0,0.6);
     }
-    .culture-card .location {
+    .culture-card .location, .tradition-card .location {
       font-family: 'ABCMonumentGroteskMono', monospace;
-      font-size: 9px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: rgba(0,0,0,0.4);
-      margin-bottom: 8px;
-      display: block;
+      font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
+      color: rgba(0,0,0,0.4); margin-bottom: 8px; display: block;
     }
 
-    /* ---- GREETINGS — full width, one at a time ---- */
-    .lt-greetings {
-      background: #000;
-      padding: 120px 48px;
-      position: relative;
-      overflow: hidden;
-    }
+    /* ---- GREETINGS ---- */
+    .lt-greetings { background: #000; padding: 120px 48px; position: relative; overflow: hidden; }
     .greeting {
       border-top: 1px solid rgba(255,255,255,0.15);
-      padding: 48px 0 80px;
-      position: relative;
-      z-index: 2;
+      padding: 48px 0 80px; position: relative; z-index: 2;
     }
     .greeting:last-child { padding-bottom: 0; }
     .greeting-label {
-      font-family: 'ABCMonumentGroteskMono', monospace;
-      font-size: 10px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.35);
-      margin-bottom: 32px;
+      font-family: 'ABCMonumentGroteskMono', monospace; font-size: 10px;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(255,255,255,0.35); margin-bottom: 32px;
     }
     .greeting-word {
-      font-family: 'RuderPlakat', Impact, sans-serif;
-      font-size: clamp(60px, 12vw, 180px);
-      line-height: 1;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      color: #fff;
-      margin-bottom: 24px;
-      word-break: break-word;
+      font-family: 'RuderPlakat', Impact, sans-serif; font-size: clamp(60px, 12vw, 180px);
+      line-height: 1; letter-spacing: 0.05em; text-transform: uppercase;
+      color: #fff; margin-bottom: 24px; word-break: break-word;
     }
     .greeting-translation {
-      font-family: 'PPTelegrafLight', sans-serif;
-      font-size: clamp(15px, 1.5vw, 20px);
-      color: rgba(255,255,255,0.45);
-      font-style: italic;
+      font-family: 'PPTelegrafLight', sans-serif; font-size: clamp(15px, 1.5vw, 20px);
+      color: rgba(255,255,255,0.45); font-style: italic;
     }
 
     /* ---- TRADITIONS ---- */
     .lt-traditions {
-      background: #e8e8e8;
-      color: #000;
-      padding: 100px 48px 80px;
-      position: relative;
-      overflow: hidden;
+      background: #e8e8e8; color: #000; padding: 100px 48px 80px;
+      position: relative; overflow: hidden;
     }
-    .lt-traditions .section-label {
-      margin-bottom: 80px;
-      position: relative;
-      z-index: 2;
-    }
-    .tradition-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 48px 40px;
-      position: relative;
-      z-index: 2;
-    }
-    .tradition-card img {
-      width: 100%;
-      aspect-ratio: 4/3;
-      object-fit: cover;
-      filter: grayscale(1);
-      display: block;
-      border-radius: 12px;
-    }
-    .tradition-card h3 {
-      font-family: 'RuderPlakat', Impact, sans-serif;
-      font-size: clamp(22px, 2.8vw, 36px);
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      margin: 16px 0 10px;
-      line-height: 1;
-    }
-    .tradition-card .location {
-      font-family: 'ABCMonumentGroteskMono', monospace;
-      font-size: 9px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: rgba(0,0,0,0.4);
-      margin-bottom: 8px;
-      display: block;
-    }
-    .tradition-card p {
-      font-family: 'PPTelegraf', sans-serif;
-      font-size: clamp(11px, 1vw, 13px);
-      line-height: 1.6;
-      color: rgba(0,0,0,0.6);
-    }
-
+    .lt-traditions .section-label { margin-bottom: 80px; position: relative; z-index: 2; }
     /* ---- UBUNTU ---- */
     .lt-ubuntu {
-      background: #000;
-      padding: 160px 48px;
-      position: relative;
-      overflow: hidden;
-      text-align: center;
+      background: #000; padding: 160px 48px; position: relative;
+      overflow: hidden; text-align: center;
     }
     .lt-ubuntu-text {
-      font-family: 'RuderPlakat', Impact, sans-serif;
-      font-size: clamp(48px, 9vw, 160px);
-      line-height: 0.95;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      color: #fff;
-      position: relative;
-      z-index: 2;
-      max-width: 900px;
-      margin: 0 auto;
+      font-family: 'RuderPlakat', Impact, sans-serif; font-size: clamp(48px, 9vw, 160px);
+      line-height: 0.95; letter-spacing: 0.05em; text-transform: uppercase;
+      color: #fff; position: relative; z-index: 2; max-width: 900px; margin: 0 auto;
     }
     .lt-ubuntu-source {
-      font-family: 'ABCMonumentGroteskMono', monospace;
-      font-size: 10px;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.3);
-      margin-top: 40px;
-      position: relative;
-      z-index: 2;
+      font-family: 'ABCMonumentGroteskMono', monospace; font-size: 10px;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: rgba(255,255,255,0.3); margin-top: 40px; position: relative; z-index: 2;
     }
 
-    /* ---- CLOSING ESSAY ---- */
-    .lt-closing {
-      background: #111;
-      padding: 120px 48px;
-      position: relative;
-      overflow: hidden;
-    }
-    .lt-closing-content {
-      max-width: 600px;
-      margin: 0 auto;
-      position: relative;
-      z-index: 2;
-    }
+    /* ---- CLOSING ---- */
+    .lt-closing { background: #111; padding: 120px 48px; position: relative; overflow: hidden; }
+    .lt-closing-content { max-width: 600px; margin: 0 auto; position: relative; z-index: 2; }
     .lt-closing-content p {
-      font-family: 'PPTelegraf', sans-serif;
-      font-size: clamp(13px, 1.2vw, 16px);
-      line-height: 1.75;
-      color: rgba(255,255,255,0.7);
-      margin-bottom: 40px;
+      font-family: 'PPTelegraf', sans-serif; font-size: clamp(13px, 1.2vw, 16px);
+      line-height: 1.75; color: rgba(255,255,255,0.7); margin-bottom: 40px;
     }
     .lt-closing-content p:last-child { margin-bottom: 0; }
     .lt-closing-tag {
-      font-family: 'ABCMonumentGroteskMono', monospace;
-      font-size: 10px;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.25);
-      text-align: center;
-      margin-top: 80px;
-      position: relative;
-      z-index: 2;
+      font-family: 'ABCMonumentGroteskMono', monospace; font-size: 10px;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: rgba(255,255,255,0.25); text-align: center; margin-top: 80px;
+      position: relative; z-index: 2;
     }
 
     /* ---- LANGUAGE VISUALIZER ---- */
     .lt-language-visualizer {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 80px 24px 100px;
-      position: relative;
-      overflow: visible;
+      display: flex; flex-direction: column; align-items: center;
+      padding: 80px 24px 100px; position: relative; overflow: visible;
     }
     .lt-lang-heading {
-      font-family: 'PPTelegrafLight', sans-serif;
-      font-size: clamp(18px, 3vw, 32px);
-      letter-spacing: 0.06em;
-      color: rgba(255,255,255,0.7);
-      text-align: center;
-      margin-bottom: -60px;
-      position: relative;
-      z-index: 2;
+      font-family: 'PPTelegrafLight', sans-serif; font-size: clamp(18px, 3vw, 32px);
+      letter-spacing: 0.06em; color: rgba(255,255,255,0.7);
+      text-align: center; margin-bottom: -60px; position: relative; z-index: 2;
     }
-    .lt-lang-orb-wrap {
-      position: relative;
-      width: 100%;
-      max-width: 1125px;
-      aspect-ratio: 1 / 1;
-    }
-    .lt-lang-orb-wrap canvas {
-      width: 100%;
-      height: 100%;
-    }
+    .lt-lang-orb-wrap { position: relative; width: 100%; max-width: 1125px; aspect-ratio: 1/1; }
+    .lt-lang-orb-wrap canvas { width: 100%; height: 100%; }
 
     /* ---- VIDEO PLAY OVERLAY ---- */
-    .culture-card, .tradition-card { position: relative; }
     .culture-card .video-trigger,
     .tradition-card .video-trigger {
-      position: relative;
-      display: block;
-      border-radius: 12px;
-      overflow: hidden;
+      position: relative; display: block; border-radius: 12px; overflow: hidden;
     }
     .video-trigger::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 64px;
-      height: 64px;
-      border-radius: 50%;
-      background: rgba(0,0,0,0.55);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
+      content: ''; position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%); width: 64px; height: 64px;
+      border-radius: 50%; background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
       border: 1.5px solid rgba(255,255,255,0.25);
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpolygon points='9,6 18,12 9,18'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: center;
-      background-size: 22px;
-      opacity: 0;
-      transition: opacity 0.3s ease, transform 0.3s ease;
-      pointer-events: none;
-      z-index: 3;
+      background-repeat: no-repeat; background-position: center; background-size: 22px;
+      opacity: 0; transition: opacity 0.3s ease, transform 0.3s ease;
+      pointer-events: none; z-index: 3;
     }
-    .video-trigger:hover::after {
-      opacity: 1;
-      transform: translate(-50%, -50%) scale(1.05);
-    }
+    .video-trigger:hover::after { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
 
     /* ---- VIDEO MODAL ---- */
     .video-modal {
-      position: fixed;
-      inset: 0;
-      z-index: 10000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(0,0,0,0.92);
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.35s ease, visibility 0.35s ease;
+      position: fixed; inset: 0; z-index: 10000; display: flex;
+      align-items: center; justify-content: center; background: rgba(0,0,0,0.92);
+      opacity: 0; visibility: hidden; transition: opacity 0.35s ease, visibility 0.35s ease;
     }
-    .video-modal.active {
-      opacity: 1;
-      visibility: visible;
-    }
+    .video-modal.active { opacity: 1; visibility: visible; }
     .video-modal-inner {
-      position: relative;
-      width: 90vw;
-      max-width: 960px;
-      aspect-ratio: 16/9;
-      border-radius: 16px;
-      overflow: hidden;
+      position: relative; width: 90vw; max-width: 960px;
+      aspect-ratio: 16/9; border-radius: 16px; overflow: hidden;
     }
-    .video-modal-inner iframe,
-    .video-modal-inner video {
-      width: 100%;
-      height: 100%;
-      border: none;
-      border-radius: 16px;
-      filter: grayscale(1);
-      object-fit: cover;
-    }
-    .video-modal-inner video.video-zoom {
-      transform: scale(1.15);
+    .video-modal-inner iframe, .video-modal-inner video {
+      width: 100%; height: 100%; border: none; border-radius: 16px;
+      filter: grayscale(1); object-fit: contain;
     }
     .video-modal-inner video::cue {
-      background: rgba(0,0,0,0.7);
-      color: #fff;
-      font-family: 'PPTelegraf', sans-serif;
-      font-size: 14px;
+      background: rgba(0,0,0,0.7); color: #fff;
+      font-family: 'PPTelegraf', sans-serif; font-size: 14px;
     }
-    .video-modal-inner video.fading {
-      transition: opacity 2.5s ease-out;
-      opacity: 0;
-    }
+    .video-modal-inner video.fading { transition: opacity 2.5s ease-out; opacity: 0; }
     .video-modal-close {
-      position: absolute;
-      top: -44px;
-      right: 0;
-      width: 36px;
-      height: 36px;
-      background: none;
-      border: 1px solid rgba(255,255,255,0.25);
-      border-radius: 50%;
-      color: #fff;
-      font-size: 18px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: none !important;
-      transition: background 0.2s ease;
+      position: absolute; top: -44px; right: 0; width: 36px; height: 36px;
+      background: none; border: 1px solid rgba(255,255,255,0.25); border-radius: 50%;
+      color: #fff; font-size: 18px; display: flex; align-items: center;
+      justify-content: center; cursor: none !important; transition: background 0.2s ease;
     }
-    .video-modal-close:hover {
-      background: rgba(255,255,255,0.12);
-    }
-    @media (pointer: coarse) {
-      .video-modal, .video-modal * { cursor: default !important; }
-    }
+    .video-modal-close:hover { background: rgba(255,255,255,0.12); }
+    @media (pointer: coarse) { .video-modal, .video-modal * { cursor: default !important; } }
 
     /* ---- RESPONSIVE ---- */
     @media (max-width: 768px) {
-      .lt-hero { padding: 0 0 24px; justify-content: center; }
-      .lt-hero-title { padding: 0 24px; font-size: clamp(80px, 24vw, 260px); }
-      .lt-hero-intro { padding: 0 24px; }
-      .lt-hero-actions { padding: 0 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-      .lt-hero-btn { text-align: center; justify-content: center; font-size: 12px; padding: 12px 10px; }
+      .lt-hero { padding: 0 0 24px; justify-content: flex-end; }
+      .lt-hero-title { padding: 0 20px; font-size: clamp(72px, 22vw, 240px); }
+      .lt-hero-intro { padding: 0 20px; }
+      .lt-hero-actions { padding: 0 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+      .lt-hero-pill { font-size: 11px; padding: 8px 12px; gap: 6px; }
+      .lt-hero-pill svg { width: 13px; height: 13px; }
+      .lt-hero-btn { font-size: 12px; padding: 10px 8px; border-radius: 10px; white-space: nowrap; }
       .lt-hero-sidebar { display: none; }
       .lt-languages, .lt-traditions { padding: 60px 24px; }
       .lt-languages-head { flex-direction: column; gap: 24px; }
@@ -661,18 +354,13 @@
       .lt-greetings { padding: 80px 24px; }
       .lt-ubuntu { padding: 100px 24px; }
       .lt-closing { padding: 80px 24px; }
-      .lt-language-visualizer { padding: 60px 0 60px; }
-      .lt-lang-orb-wrap { max-width: 100vw; }
-      /* UNESCO logo: centered at bottom, 25% smaller */
+      .lt-language-visualizer { padding: 40px 0; overflow: visible; }
+      .lt-lang-orb-wrap { max-width: none; width: 150vw; margin-left: -25vw; }
       .unesco-corner {
-        top: auto;
-        right: auto;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
+        top: auto; right: auto; bottom: 20px; left: 50%;
+        transform: translateX(-50%); padding: 7px 9px; border-radius: 8px;
       }
       .unesco-corner svg { width: 60px; }
-      .unesco-corner { padding: 7px 9px; border-radius: 8px; }
     }
   </style>
 </head>
@@ -746,7 +434,7 @@
       <div class="lt-languages-head">
         <h2 class="section-label">Endangered<br>Languages</h2>
         <p class="lt-languages-intro">
-          What you will see here are eight intangible heritages: four endangered languages and four fragile cultural practices, each carrying memory, knowledge, and identity across generations. We invite you to encounter heritage not as something finished or distant, but as something human, vulnerable, and still being kept&nbsp;alive.
+          What you will see here are eight intangible heritages: four endangered languages and four fragile cultural practices, each carrying memory, knowledge, and identity across generations. We invite you to encounter heritage not as something finished or distant, but as something deeply human, vulnerable, and still being kept&nbsp;alive.
         </p>
       </div>
 
@@ -757,7 +445,7 @@
           </div>
           <h3>Ainu</h3>
           <span class="location">Hokkaido, Japan</span>
-          <p>Once suppressed through assimilation policies, Ainu survives through song, ritual, and renewed teaching. Its vocabulary encodes relationships between people, animals, and spirits. Today, community-led schools and performances restore its presence, not as a relic, but as a living voice reclaiming identity, land, and continuity across&nbsp;generations.</p>
+          <p>Once suppressed through assimilation policies, Ainu survives through song, ritual, and renewed teaching. Its vocabulary encodes relationships between people, animals, and spirits. Today, community-led schools and performances restore its presence, not as a relic, but as a living voice reclaiming identity, land, and continuity across generations and&nbsp;communities.</p>
         </div>
 
         <div class="culture-card">
@@ -766,7 +454,7 @@
           </div>
           <h3>Northern S&#225;mi</h3>
           <span class="location">Norway, Sweden, Finland</span>
-          <p>S&#225;mi languages articulate a deep ecological knowledge shaped by Arctic life. Terms for snow, migration, and reindeer herding reflect centuries of adaptation. Colonial policies once suppressed its use. Today, revitalization through education, media, and governance reconnects language with land and Indigenous&nbsp;presence.</p>
+          <p>S&#225;mi languages articulate a deep ecological knowledge shaped by Arctic life. Terms for snow, migration, and reindeer herding reflect centuries of careful adaptation. Colonial policies once suppressed its use. Today, revitalization through education, media, and governance reconnects language with land and&nbsp;Indigenous&nbsp;presence.</p>
         </div>
 
         <div class="culture-card">
@@ -775,7 +463,7 @@
           </div>
           <h3>Rapa Nui</h3>
           <span class="location">Rapa Nui, Chile</span>
-          <p>Spoken on one of the most remote inhabited islands, Rapa Nui carries ancestral memory tied to land and ocean. Pressures from tourism and Spanish dominance have weakened transmission. Revival efforts center on schools and storytelling, ensuring the language continues to anchor identity within a rapidly changing&nbsp;culture.</p>
+          <p>Spoken on one of the most remote inhabited islands, Rapa Nui carries ancestral memory tied to land and ocean. Pressures from tourism and Spanish dominance have steadily weakened transmission. Revival efforts center on schools and oral storytelling, ensuring the language continues to anchor identity within a rapidly changing&nbsp;world.</p>
         </div>
 
         <div class="culture-card">
@@ -784,7 +472,7 @@
           </div>
           <h3>Ju<span class="ac">|'</span>hoansi</h3>
           <span class="location">Namibia / Botswana</span>
-          <p>Ju|'hoansi is rooted in one of the world's oldest continuous cultures. Its click-based phonetics carry knowledge of tracking, plants, and survival. As modernization shifts lifestyles, transmission weakens. Documentation and community storytelling sustain it, preserving a language inseparable from the rhythms of Kalahari human&nbsp;history.</p>
+          <p>Ju|'hoansi is rooted in one of the world's oldest continuous cultures. Its click-based phonetics carry deep knowledge of tracking, plants, and survival. As modernization shifts lifestyles, generational transmission weakens. Documentation and community storytelling sustain it, preserving a language inseparable from the rhythms of Kalahari&nbsp;life.</p>
         </div>
       </div>
     </section>
@@ -826,16 +514,16 @@
           </div>
           <h3>Bigwala</h3>
           <span class="location">Uganda</span>
-          <p>Bigwala is a royal music tradition performed with gourd trumpets during ceremonies of the Busoga Kingdom. Once central to cultural identity, it now faces decline due to reduced patronage and aging practitioners. Safeguarding efforts focus on transmission, ensuring that its powerful sound continues to resonate across&nbsp;generations.</p>
+          <p>Bigwala is a royal music tradition performed with gourd trumpets during ceremonies of the Busoga Kingdom. Once central to cultural identity, it now faces decline due to reduced patronage and aging practitioners. Safeguarding efforts focus on intergenerational transmission, ensuring that its powerful sound continues to resonate across&nbsp;time.</p>
         </div>
 
         <div class="tradition-card">
-          <div class="video-trigger" data-video-local="MICRO/MICRO_VIDEOS/sanke mon_video 1.mp4" data-video-subs="MICRO/MICRO_VIDEOS/sanke mon_video 1.vtt" data-video-zoom="1" data-video-volume="3">
+          <div class="video-trigger" data-video-local="MICRO/MICRO_VIDEOS/sanke mon_video 1.mp4" data-video-subs="MICRO/MICRO_VIDEOS/sanke mon_video 1.vtt" data-video-volume="3">
             <img src="MICRO/MICRO_IMAGES/SANK%C3%89%20MON_1.png" alt="Sanke Mon fishing ritual">
           </div>
           <h3>Sank&#233; Mon</h3>
           <span class="location">Mali</span>
-          <p>Sank&#233; Mon is a communal fishing ritual marking seasonal cycles and social unity. Thousands gather in coordinated action, blending ecology, spirituality, and celebration. Environmental pressures and social change threaten its continuity, making safeguarding essential to preserving both the practice and its connection to&nbsp;identity.</p>
+          <p>Sank&#233; Mon is a communal fishing ritual marking seasonal cycles and social unity. Thousands gather in coordinated action, blending ecology, spirituality, and celebration. Environmental pressures and social change threaten its continuity, making safeguarding essential to preserving both the living practice and its deep connection to collective&nbsp;identity.</p>
         </div>
 
         <div class="tradition-card">
@@ -844,7 +532,7 @@
           </div>
           <h3>Jeju Haenyeo</h3>
           <span class="location">South Korea</span>
-          <p>Haenyeo are women divers who harvest seafood without oxygen tanks, relying on breath, skill, and environmental knowledge. Aging practitioners and modernization threaten continuity. Their practice embodies resilience, community, and sustainable interaction with the ocean, making its preservation both cultural and&nbsp;ecological.</p>
+          <p>Haenyeo are women divers who harvest seafood without oxygen tanks, relying on breath, skill, and environmental knowledge passed down through generations. Aging practitioners and modernization threaten continuity. Their practice embodies resilience, community, and sustainable interaction with the ocean, making its preservation both cultural and&nbsp;ecological.</p>
         </div>
 
         <div class="tradition-card">
@@ -853,7 +541,7 @@
           </div>
           <h3>Noken Weaving</h3>
           <span class="location">Papua, Indonesia</span>
-          <p>Noken bags are hand-knotted from natural fibers and used for daily life, ceremony, and symbolic exchange. Their production embodies community identity and knowledge. Industrial alternatives and shifting lifestyles threaten their use, making revitalization essential to sustaining both craft and cultural&nbsp;meaning.</p>
+          <p>Noken bags are hand-knotted from natural fibers and used for daily life, ceremony, and symbolic exchange. Their production embodies community identity and inherited knowledge. Industrial alternatives and shifting lifestyles threaten their continued use, making revitalization essential to sustaining both the craft and its cultural&nbsp;meaning.</p>
         </div>
       </div>
     </section>
@@ -877,10 +565,10 @@
     <section class="lt-closing">
 
       <div class="lt-closing-content">
-        <p>What remains when a language falls silent, or a tradition is no longer practiced? Not only words or gestures are lost, but entire ways of understanding the world. These living traces carry memory, identity, and knowledge shaped over centuries. They hold ways of seeing time, land, community, and spirit that cannot be replicated once&nbsp;gone.</p>
-        <p>Yet this is not a narrative of disappearance alone. Across continents, communities are choosing to remember, to teach, to speak, to make, and to continue. Preservation is not passive. It is an act of will. It is the commitment to continuous support in the face of&nbsp;change.</p>
-        <p>Living Traces is a push forward to recognize that heritage is not distant or static. It exists now, carried by people whose voices and practices remain necessary. Their work asks something of us: to listen more intently, to value what is fragile, and to understand that cultural diversity is not ornamental, but required and&nbsp;essential.</p>
-        <p>The future of these languages and traditions is not guaranteed. It depends on awareness, respect, and participation. We leave you with a final thought, consider what it means to keep something alive. Not preserved behind glass, but practiced, spoken, and&nbsp;shared.</p>
+        <p>What remains when a language falls silent, or a tradition is no longer practiced? Not only words or gestures are lost, but entire ways of understanding the world. These living traces carry memory, identity, and knowledge shaped over centuries. They hold ways of seeing time, land, community, and spirit that cannot be replicated once they are&nbsp;gone.</p>
+        <p>Yet this is not a narrative of disappearance alone. Across continents, communities are choosing to remember, to teach, to speak, to make, and to continue. Preservation is not passive. It is an act of will and a commitment to continuous support in the face of profound&nbsp;change.</p>
+        <p>Living Traces is a push forward to recognize that heritage is not distant or static. It exists now, carried by people whose voices and practices remain necessary. Their work asks something of us: to listen more intently, to value what is fragile, and to understand that cultural diversity is not ornamental but required and&nbsp;essential.</p>
+        <p>The future of these languages and traditions is not guaranteed. It depends on awareness, respect, and active participation. We leave you with a final thought: consider what it means to keep something alive. Not preserved behind glass, but practiced, spoken, and&nbsp;shared.</p>
       </div>
       <div class="lt-closing-tag">Living Traces &mdash; 2027</div>
     </section>
@@ -898,23 +586,21 @@
 
   <script src="script.js"></script>
   <script>
-    // ---- SIDEBAR FACT ROTATION ----
+    // Sidebar fact rotation
     (function() {
       var facts = document.querySelectorAll('#sidebarFacts .sidebar-fact');
-      var currentFact = 0;
+      var cur = 0;
       setInterval(function() {
-        facts[currentFact].classList.remove('active');
-        currentFact = (currentFact + 1) % facts.length;
-        facts[currentFact].classList.add('active');
+        facts[cur].classList.remove('active');
+        cur = (cur + 1) % facts.length;
+        facts[cur].classList.add('active');
       }, 4000);
-      var sidebar = document.getElementById('sidebarFacts');
-      var lastSection = document.querySelector('.lt-closing');
-      window.addEventListener('scroll', function() {
-        if (lastSection) {
-          var r = lastSection.getBoundingClientRect();
-          sidebar.style.opacity = r.top < window.innerHeight * 0.5 ? '0' : '1';
-          sidebar.style.transition = 'opacity 0.4s ease';
-        }
+      var sb = document.getElementById('sidebarFacts');
+      var cls = document.querySelector('.lt-closing');
+      if (cls) window.addEventListener('scroll', function() {
+        var r = cls.getBoundingClientRect();
+        sb.style.opacity = r.top < innerHeight * 0.5 ? '0' : '1';
+        sb.style.transition = 'opacity 0.4s ease';
       }, { passive: true });
     })();
 
@@ -1042,7 +728,7 @@
           if (localSrc) {
             frame.style.display = 'none';
             localVideo.style.display = 'block';
-            localVideo.className = trigger.getAttribute('data-video-zoom') ? 'video-zoom' : '';
+            localVideo.className = '';
             localVideo.style.opacity = '1';
             localVideo.innerHTML = '';
             var source = document.createElement('source');

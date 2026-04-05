@@ -13,78 +13,30 @@
       font-weight: 400;
       font-style: normal;
     }
-    body {
-      background: #000;
-      margin: 0;
-      overflow: hidden;
-    }
-    @media (pointer: fine) {
-      body, body * { cursor: none !important; }
-    }
-
-    /* Full-bleed logo */
-    /* Final logo at top */
+    body { background: #000; margin: 0; overflow: hidden; }
+    @media (pointer: fine) { body, body * { cursor: none !important; } }
     .intro-logo {
-      position: fixed;
-      top: 30px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 50;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 1.2s ease;
+      position: fixed; top: 30px; left: 50%; transform: translateX(-50%);
+      z-index: 50; pointer-events: none; opacity: 0; transition: opacity 1.2s ease;
     }
-    .intro-logo.show {
-      opacity: 1;
-    }
-    .intro-logo img {
-      width: 180px;
-      height: auto;
-      display: block;
-    }
-    /* Chaos canvas for rapid logo stamps */
+    .intro-logo.show { opacity: 1; }
+    .intro-logo img { width: 180px; height: auto; display: block; }
     #chaos-canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 49;
-      pointer-events: none;
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 49; pointer-events: none;
     }
-
-    /* Circle container */
     .circle-wrap {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      opacity: 0;
-      transition: opacity 1.5s ease;
+      position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      opacity: 0; transition: opacity 1.5s ease;
     }
-    .circle-wrap.visible {
-      opacity: 1;
-    }
-
-    /* Bottom prompt */
+    .circle-wrap.visible { opacity: 1; }
     .prompt {
-      position: fixed;
-      bottom: 40px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-family: 'ABCMonumentGroteskMono', monospace;
-      font-size: 0.75rem;
-      letter-spacing: 0.08em;
-      color: #fff;
-      opacity: 0;
-      transition: opacity 1.5s ease;
-      text-transform: uppercase;
-      user-select: none;
-      pointer-events: none;
+      position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
+      font-family: 'ABCMonumentGroteskMono', monospace; font-size: 0.75rem;
+      letter-spacing: 0.08em; color: #fff; opacity: 0; transition: opacity 1.5s ease;
+      text-transform: uppercase; user-select: none; pointer-events: none;
     }
-    .prompt.visible {
-      opacity: 0.5;
-    }
+    .prompt.visible { opacity: 0.5; }
   </style>
 </head>
 <body data-page="living-traces">
