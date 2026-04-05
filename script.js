@@ -6,14 +6,17 @@ menuToggle.addEventListener('click', () => {
   navLinks.classList.toggle('open');
 });
 
-// Hero slideshow
+// Hero slideshow with synced descriptions
 const heroSlides = document.querySelectorAll('.hero-slide');
+const heroDescs = document.querySelectorAll('.hero-desc');
 if (heroSlides.length > 0) {
   let slideIndex = 0;
   setInterval(() => {
     heroSlides[slideIndex].classList.remove('active');
+    if (heroDescs[slideIndex]) heroDescs[slideIndex].classList.remove('active');
     slideIndex = (slideIndex + 1) % heroSlides.length;
     heroSlides[slideIndex].classList.add('active');
+    if (heroDescs[slideIndex]) heroDescs[slideIndex].classList.add('active');
   }, 5000);
 }
 
