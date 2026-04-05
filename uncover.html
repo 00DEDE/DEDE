@@ -206,14 +206,21 @@
         height: 145px;
       }
       .postcard-text {
-        max-width: 90%;
+        left: 5% !important;
+        right: 5%;
+        width: 90% !important;
+        max-width: none !important;
+        transform: none !important;
+        text-align: left;
         padding: 1rem 1.2rem;
       }
       .postcard-text h3 {
         font-size: 0.95rem;
+        text-align: left;
       }
       .postcard-text p {
         font-size: 0.78rem;
+        text-align: left;
       }
     }
   </style>
@@ -535,8 +542,7 @@
           var totalW = cols * cardW + (cols - 1) * gap;
           var startX = (layerW - totalW) / 2;
           var rowGap = gap;
-          var totalH = 2 * cardH + rowGap;
-          var startY = (layerH - totalH) / 2;
+          var startY = 20;
 
           postcards.forEach(function(card, i) {
             card.classList.add('aligning');
@@ -597,10 +603,24 @@
       }
 
       function positionTextBlock() {
-        // Place text block below the card row
-        var firstCard = postcards[0].getBoundingClientRect();
-        var textTop = firstCard.bottom + 24;
-        textBlock.style.top = textTop + 'px';
+        var isMobile = window.innerWidth <= 600;
+        if (isMobile) {
+          // Position below the 2-row grid with comfortable padding
+          var lastRowCard = postcards[3].getBoundingClientRect();
+          var layerRect = layer.getBoundingClientRect();
+          var textTop = lastRowCard.bottom - layerRect.top + 24;
+          textBlock.style.top = textTop + 'px';
+          textBlock.style.left = '5%';
+          textBlock.style.right = '5%';
+          textBlock.style.width = '90%';
+          textBlock.style.transform = 'none';
+          textBlock.style.maxWidth = 'none';
+          textBlock.style.textAlign = 'left';
+        } else {
+          var firstCard = postcards[0].getBoundingClientRect();
+          var textTop = firstCard.bottom + 24;
+          textBlock.style.top = textTop + 'px';
+        }
       }
 
       function handleCardClick(index) {
