@@ -7,6 +7,12 @@
   <title>UNESCO — Uncover</title>
   <link rel="stylesheet" href="style.css">
   <style>
+    html, body {
+      overflow: hidden !important;
+      height: 100%;
+      touch-action: none;
+    }
+    .footer { display: none; }
     .uncover-frame {
       position: fixed;
       top: 70px;
@@ -15,10 +21,10 @@
       height: calc(100vh - 70px);
       z-index: 1;
       border: none;
+      touch-action: none;
     }
     .uncover-spacer {
-      height: 500vh;
-      pointer-events: none;
+      display: none;
     }
     .uncover-hint {
       position: fixed;
