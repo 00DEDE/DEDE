@@ -10,6 +10,8 @@
     html, body {
       overflow: hidden !important;
       height: 100%;
+    }
+    .postcard-layer {
       touch-action: none;
     }
     .footer { display: none; }
@@ -361,10 +363,38 @@
     var drawToggleBtn = document.getElementById('drawToggle');
     drawToggleBtn.addEventListener('click', function(e) {
       e.stopPropagation();
-      // Send D key press to iframe
       frame.contentWindow.postMessage({ type: 'toggleDraw' }, '*');
       drawToggleBtn.classList.toggle('active');
     });
+
+    // Mobile: forward touch events from parent page to iframe
+    // Iframes don't reliably receive touch events on mobile
+    (function() {
+      var overlay = document.getElementById('postcard-layer');
+      var headerH = 70;
+
+      overlay.addEventListener('touchstart', function(e) {
+        var t = e.touches[0];
+        frame.contentWindow.postMessage({ type: 'touchstart', x: t.clientX, y: t.clientY - headerH }, '*');
+        e.preventDefault();
+      }, { passive: false });
+
+      overlay.addEventListener('touchmove', function(e) {
+        var t = e.touches[0];
+        frame.contentWindow.postMessage({ type: 'touchmove', x: t.clientX, y: t.clientY - headerH }, '*');
+        e.preventDefault();
+      }, { passive: false });
+
+      overlay.addEventListener('touchend', function(e) {
+        frame.contentWindow.postMessage({ type: 'touchend' }, '*');
+        e.preventDefault();
+      }, { passive: false });
+
+      // On mobile, enable pointer-events on overlay to capture touches for forwarding
+      if ('ontouchstart' in window) {
+        overlay.style.pointerEvents = 'auto';
+      }
+    })();
 
     // Postcard reveal system
     (function() {

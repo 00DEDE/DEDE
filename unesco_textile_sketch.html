@@ -190,9 +190,10 @@ new p5(function(p) {
     p.resizeCanvas(p.windowWidth, p.windowHeight);
   };
 
-  // Listen for toggle message from parent (mobile button)
+  // Listen for messages from parent (mobile button + forwarded touches)
   window.addEventListener('message', function(e) {
-    if (e.data && e.data.type === 'toggleDraw') {
+    if (!e.data) return;
+    if (e.data.type === 'toggleDraw') {
       drawing = !drawing;
       updateCursor();
       prevX = p.mouseX;
@@ -200,6 +201,23 @@ new p5(function(p) {
       if (window.parent !== window) {
         window.parent.postMessage({ type: 'drawMode', drawing: drawing }, '*');
       }
+    }
+    // Forwarded touch events from parent page (mobile)
+    if (e.data.type === 'touchstart') {
+      if (!drawing) return;
+      prevX = e.data.x;
+      prevY = e.data.y;
+    }
+    if (e.data.type === 'touchmove') {
+      if (!drawing) return;
+      var tx = e.data.x;
+      var ty = e.data.y;
+      var dx = tx - prevX;
+      var dy = ty - prevY;
+      if (Math.sqrt(dx * dx + dy * dy) < MIN_DIST) return;
+      spawnShape(tx, ty);
+      prevX = tx;
+      prevY = ty;
     }
   });
 });
