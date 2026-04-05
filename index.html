@@ -77,7 +77,11 @@
     /* Ring of brand icons */
     #brandRing {
       position: fixed;
-      inset: 0;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 0;
+      height: 0;
       z-index: 10;
       pointer-events: none;
     }
@@ -306,27 +310,16 @@
 
     Promise.all(iconFetches).then(function() {
       var ring = document.getElementById('brandRing');
-      var cx = window.innerWidth / 2;
-      var cy = window.innerHeight / 2;
       // Responsive radius — shrink on smaller screens
       var radius = Math.min(300, Math.min(window.innerWidth, window.innerHeight) * 0.32);
 
-      // Playful animation variants
       var animations = [
-        'icon-bounce-in',
-        'icon-tumble-in',
-        'icon-drop-bounce',
-        'icon-spring-left',
-        'icon-spring-right',
-        'icon-flip-in'
+        'icon-bounce-in', 'icon-tumble-in', 'icon-drop-bounce',
+        'icon-spring-left', 'icon-spring-right', 'icon-flip-in'
       ];
-
       var durations = [0.7, 0.8, 0.9, 1.0, 1.1];
-
-      // Place 16 icons in a perfect circle
       var totalIcons = 16;
 
-      // Generate random, non-sequential delays
       var delays = [];
       for (var d = 0; d < totalIcons; d++) {
         delays.push(1.2 + Math.random() * 3.8);
@@ -336,8 +329,9 @@
         var angle = (i / totalIcons) * Math.PI * 2 - Math.PI / 2;
         var size = 48 + Math.random() * 16;
 
-        var x = cx + Math.cos(angle) * radius - size / 2;
-        var y = cy + Math.sin(angle) * radius - size / 2;
+        // Position relative to center (0,0) of #brandRing
+        var x = Math.cos(angle) * radius - size / 2;
+        var y = Math.sin(angle) * radius - size / 2;
 
         var el = document.createElement('div');
         el.className = 'brand-icon';
