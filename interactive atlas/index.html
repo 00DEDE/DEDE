@@ -13,118 +13,201 @@
   <div class="world-indicator" id="world-indicator"></div>
 
   <div class="map-wrap">
-    <svg class="map-svg" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid meet">
+    <svg class="map-svg" viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid meet">
       <!-- Simplified continent shapes -->
 
       <!-- North America -->
-      <path class="continent" d="M120,80 Q140,60 180,55 Q220,50 250,65 Q270,70 280,90 Q285,110 275,130 Q265,145 250,155 Q240,170 220,185 Q200,195 180,200 Q160,195 145,185 Q130,170 120,150 Q110,125 115,100 Z"/>
+      <path class="continent" d="M100,60 Q130,35 175,30 Q230,25 280,40 Q320,50 345,75 Q360,100 350,130 Q340,158 320,178 Q300,198 275,215 Q250,228 225,235 Q195,240 170,235 Q145,225 125,210 Q108,190 98,165 Q88,135 92,105 Z"/>
 
       <!-- Central America & Caribbean -->
-      <path class="continent" d="M180,200 Q195,205 210,215 Q220,225 225,240 Q222,250 215,255 Q205,258 195,255 Q185,250 178,240 Q175,225 177,210 Z"/>
+      <path class="continent" d="M210,240 Q230,245 250,258 Q265,272 270,290 Q267,302 258,308 Q245,312 232,308 Q220,300 212,288 Q205,272 207,255 Z"/>
 
       <!-- South America -->
-      <path class="continent" d="M215,265 Q235,255 255,260 Q275,270 285,290 Q290,315 285,340 Q280,365 270,385 Q260,405 250,420 Q240,440 235,455 Q230,465 225,470 Q218,468 215,458 Q210,440 208,420 Q205,395 200,370 Q195,345 195,320 Q195,295 200,275 Z"/>
+      <path class="continent" d="M260,320 Q285,308 310,315 Q335,328 348,352 Q355,382 350,415 Q342,448 330,475 Q318,500 305,520 Q292,540 282,555 Q272,565 265,560 Q258,550 252,530 Q245,505 240,478 Q235,448 232,415 Q230,382 232,350 Z"/>
 
       <!-- Europe -->
-      <path class="continent" d="M420,70 Q440,58 465,55 Q490,55 505,65 Q515,75 510,90 Q505,105 495,115 Q485,125 470,132 Q455,138 440,140 Q425,138 415,130 Q408,120 410,105 Q412,90 418,78 Z"/>
+      <path class="continent" d="M490,55 Q515,40 545,35 Q575,35 598,48 Q612,60 608,78 Q602,98 590,110 Q578,122 562,130 Q545,136 528,138 Q512,136 500,128 Q490,118 488,102 Q486,85 490,68 Z"/>
 
       <!-- Africa -->
-      <path class="continent" d="M440,175 Q460,165 480,170 Q500,178 515,195 Q525,215 530,240 Q532,265 528,290 Q522,315 515,335 Q505,355 495,370 Q482,380 470,375 Q458,368 448,355 Q438,335 432,310 Q428,285 428,260 Q430,235 432,210 Q435,190 438,178 Z"/>
+      <path class="continent" d="M510,195 Q535,182 558,190 Q580,200 598,222 Q612,248 618,278 Q622,310 618,342 Q612,375 602,402 Q590,428 575,445 Q560,455 545,450 Q530,442 518,425 Q508,402 502,375 Q498,345 498,315 Q500,282 502,252 Q505,222 508,200 Z"/>
 
       <!-- Asia (main mass) -->
-      <path class="continent" d="M520,50 Q560,38 600,35 Q650,32 700,38 Q740,45 770,58 Q790,70 800,88 Q805,110 798,130 Q790,148 775,160 Q758,170 740,175 Q720,178 700,180 Q675,182 650,178 Q625,172 600,162 Q575,148 555,132 Q538,115 528,95 Q520,78 520,60 Z"/>
+      <path class="continent" d="M610,32 Q660,18 720,15 Q785,12 850,20 Q900,30 940,48 Q965,62 978,85 Q985,112 978,138 Q968,162 950,178 Q930,190 908,195 Q885,200 860,202 Q830,205 800,200 Q770,192 740,178 Q710,162 685,142 Q662,120 648,98 Q638,75 635,55 Z"/>
 
       <!-- South/Southeast Asia -->
-      <path class="continent" d="M630,185 Q660,180 685,188 Q705,198 720,215 Q730,232 735,252 Q732,268 722,278 Q708,285 692,282 Q675,275 660,265 Q648,252 640,238 Q632,220 628,200 Z"/>
+      <path class="continent" d="M770,210 Q805,202 835,212 Q858,225 875,248 Q885,268 890,292 Q888,312 876,325 Q860,335 842,330 Q822,322 805,310 Q790,295 780,278 Q772,258 768,235 Z"/>
 
       <!-- Middle East -->
-      <path class="continent" d="M505,140 Q525,135 545,140 Q560,148 565,162 Q562,175 552,182 Q540,188 525,185 Q512,180 505,168 Q500,155 502,145 Z"/>
+      <path class="continent" d="M590,155 Q615,148 640,155 Q658,165 662,182 Q658,198 648,208 Q635,215 618,212 Q602,205 592,192 Q585,178 588,162 Z"/>
 
       <!-- Australia -->
-      <path class="continent" d="M760,340 Q790,328 820,330 Q850,338 870,355 Q882,372 878,392 Q870,408 855,418 Q835,425 812,420 Q790,412 775,398 Q762,382 758,365 Q756,348 758,342 Z"/>
+      <path class="continent" d="M920,395 Q955,380 990,385 Q1025,395 1048,418 Q1062,438 1058,462 Q1048,480 1030,492 Q1008,500 982,495 Q958,485 942,468 Q928,450 922,430 Q918,410 920,400 Z"/>
 
       <!-- New Zealand -->
-      <path class="continent" d="M885,415 Q892,408 898,412 Q902,420 900,432 Q895,440 888,438 Q883,430 884,420 Z"/>
+      <path class="continent" d="M1068,488 Q1076,480 1084,485 Q1088,495 1086,510 Q1080,520 1072,516 Q1066,508 1068,495 Z"/>
 
       <!-- Indonesia archipelago -->
-      <path class="continent" d="M700,290 Q720,285 740,288 Q755,295 760,305 Q758,315 748,318 Q735,320 720,318 Q708,312 702,302 Q698,295 700,290 Z"/>
+      <path class="continent" d="M855,340 Q878,332 902,338 Q920,348 925,362 Q922,375 910,380 Q895,385 878,382 Q862,375 856,362 Q852,350 855,340 Z"/>
 
       <!-- Japan -->
-      <path class="continent" d="M800,85 Q808,78 815,82 Q820,92 818,105 Q812,115 805,112 Q798,105 798,95 Z"/>
+      <path class="continent" d="M975,75 Q985,65 992,72 Q998,85 995,102 Q988,115 980,110 Q972,100 972,88 Z"/>
 
       <!-- Greenland -->
-      <path class="continent" d="M300,25 Q320,18 340,22 Q355,30 358,45 Q354,58 342,62 Q328,64 315,58 Q304,48 300,35 Z"/>
+      <path class="continent" d="M350,15 Q375,5 398,10 Q415,20 418,38 Q414,55 400,60 Q385,65 370,58 Q358,48 354,35 Z"/>
 
-      <!-- Zone markers -->
-      <!-- Zone 1: Angkor Wat (Cambodia) -->
-      <g class="zone-marker" id="zone-1" transform="translate(740, 288)">
-        <circle class="zone-pulse" r="14" stroke-width="1.5"/>
-        <circle class="zone-ring" r="14"/>
-        <circle class="zone-dot" r="3.5"/>
+
+      <!-- ============================================== -->
+      <!-- ZONE MARKERS — 20 Heritage Sites              -->
+      <!-- ============================================== -->
+
+      <!-- MONUMENTS (Blue #2491d0) — UNESCO_ICON_KNOWLEDGE.svg -->
+
+      <!-- Zone 1: Machu Picchu — Peru -->
+      <g class="zone-marker" id="zone-1" data-world="monuments" transform="translate(265, 388)">
+        <circle class="zone-pulse" r="16" stroke-width="1.5"/>
+        <circle class="zone-ring" r="16"/>
+        <image class="zone-icon" href="../UNESCO_ICON_KNOWLEDGE.svg" x="-10" y="-10" width="20" height="20" opacity="0.7"/>
       </g>
 
-      <!-- Zone 2: Galapagos Islands -->
-      <g class="zone-marker" id="zone-2" transform="translate(220, 330)">
-        <circle class="zone-pulse" r="14" stroke-width="1.5"/>
-        <circle class="zone-ring" r="14"/>
-        <circle class="zone-dot" r="3.5"/>
+      <!-- Zone 2: Joya de Cerén — El Salvador -->
+      <g class="zone-marker" id="zone-2" data-world="monuments" transform="translate(228, 278)">
+        <circle class="zone-pulse" r="16" stroke-width="1.5"/>
+        <circle class="zone-ring" r="16"/>
+        <image class="zone-icon" href="../UNESCO_ICON_KNOWLEDGE.svg" x="-10" y="-10" width="20" height="20" opacity="0.7"/>
       </g>
 
-      <!-- Zone 3: Ainu Language Region (Hokkaido) -->
-      <g class="zone-marker" id="zone-3" transform="translate(820, 192)">
-        <circle class="zone-pulse" r="14" stroke-width="1.5"/>
-        <circle class="zone-ring" r="14"/>
-        <circle class="zone-dot" r="3.5"/>
+      <!-- Zone 3: Borobudur — Indonesia -->
+      <g class="zone-marker" id="zone-3" data-world="monuments" transform="translate(878, 348)">
+        <circle class="zone-pulse" r="16" stroke-width="1.5"/>
+        <circle class="zone-ring" r="16"/>
+        <image class="zone-icon" href="../UNESCO_ICON_KNOWLEDGE.svg" x="-10" y="-10" width="20" height="20" opacity="0.7"/>
       </g>
 
-      <!-- Zone 4: Djemaa el-Fna (Morocco) -->
-      <g class="zone-marker" id="zone-4" transform="translate(440, 228)">
-        <circle class="zone-pulse" r="14" stroke-width="1.5"/>
-        <circle class="zone-ring" r="14"/>
-        <circle class="zone-dot" r="3.5"/>
+      <!-- Zone 4: Petra — Jordan -->
+      <g class="zone-marker" id="zone-4" data-world="monuments" transform="translate(622, 192)">
+        <circle class="zone-pulse" r="16" stroke-width="1.5"/>
+        <circle class="zone-ring" r="16"/>
+        <image class="zone-icon" href="../UNESCO_ICON_KNOWLEDGE.svg" x="-10" y="-10" width="20" height="20" opacity="0.7"/>
       </g>
 
-      <!-- Zone 5: Machu Picchu (Peru) -->
-      <g class="zone-marker" id="zone-5" transform="translate(240, 360)">
-        <circle class="zone-pulse" r="14" stroke-width="1.5"/>
-        <circle class="zone-ring" r="14"/>
-        <circle class="zone-dot" r="3.5"/>
+      <!-- Zone 5: Timbuktu — Mali -->
+      <g class="zone-marker" id="zone-5" data-world="monuments" transform="translate(498, 252)">
+        <circle class="zone-pulse" r="16" stroke-width="1.5"/>
+        <circle class="zone-ring" r="16"/>
+        <image class="zone-icon" href="../UNESCO_ICON_KNOWLEDGE.svg" x="-10" y="-10" width="20" height="20" opacity="0.7"/>
       </g>
 
-      <!-- Zone 6: Great Barrier Reef -->
-      <g class="zone-marker" id="zone-6" transform="translate(840, 396)">
-        <circle class="zone-pulse" r="14" stroke-width="1.5"/>
-        <circle class="zone-ring" r="14"/>
-        <circle class="zone-dot" r="3.5"/>
+      <!-- Zone 6: Nan Madol — Micronesia -->
+      <g class="zone-marker" id="zone-6" data-world="monuments" transform="translate(1020, 310)">
+        <circle class="zone-pulse" r="16" stroke-width="1.5"/>
+        <circle class="zone-ring" r="16"/>
+        <image class="zone-icon" href="../UNESCO_ICON_KNOWLEDGE.svg" x="-10" y="-10" width="20" height="20" opacity="0.7"/>
       </g>
 
-      <!-- Zone 7: Welsh Language Heartland -->
-      <g class="zone-marker" id="zone-7" transform="translate(430, 168)">
-        <circle class="zone-pulse" r="14" stroke-width="1.5"/>
-        <circle class="zone-ring" r="14"/>
-        <circle class="zone-dot" r="3.5"/>
+      <!-- NATURE (Green #9dd3b2) — UNESCO_ICON_NATURE.svg -->
+
+      <!-- Zone 7: Great Barrier Reef — Australia -->
+      <g class="zone-marker" id="zone-7" data-world="nature" transform="translate(1005, 418)">
+        <circle class="zone-pulse" r="16" stroke-width="1.5"/>
+        <circle class="zone-ring" r="16"/>
+        <image class="zone-icon" href="../UNESCO_ICON_NATURE.svg" x="-10" y="-10" width="20" height="20" opacity="0.7"/>
       </g>
 
-      <!-- Zone 8: Buenos Aires -->
-      <g class="zone-marker" id="zone-8" transform="translate(270, 444)">
-        <circle class="zone-pulse" r="14" stroke-width="1.5"/>
-        <circle class="zone-ring" r="14"/>
-        <circle class="zone-dot" r="3.5"/>
+      <!-- Zone 8: Serengeti — Tanzania -->
+      <g class="zone-marker" id="zone-8" data-world="nature" transform="translate(578, 358)">
+        <circle class="zone-pulse" r="16" stroke-width="1.5"/>
+        <circle class="zone-ring" r="16"/>
+        <image class="zone-icon" href="../UNESCO_ICON_NATURE.svg" x="-10" y="-10" width="20" height="20" opacity="0.7"/>
       </g>
 
-      <!-- Zone 9: Petra (Jordan) -->
-      <g class="zone-marker" id="zone-9" transform="translate(540, 228)">
-        <circle class="zone-pulse" r="14" stroke-width="1.5"/>
-        <circle class="zone-ring" r="14"/>
-        <circle class="zone-dot" r="3.5"/>
+      <!-- Zone 9: Socotra Archipelago — Yemen -->
+      <g class="zone-marker" id="zone-9" data-world="nature" transform="translate(648, 268)">
+        <circle class="zone-pulse" r="16" stroke-width="1.5"/>
+        <circle class="zone-ring" r="16"/>
+        <image class="zone-icon" href="../UNESCO_ICON_NATURE.svg" x="-10" y="-10" width="20" height="20" opacity="0.7"/>
       </g>
 
-      <!-- Zone 10: Serengeti (Tanzania) -->
-      <g class="zone-marker" id="zone-10" transform="translate(520, 336)">
-        <circle class="zone-pulse" r="14" stroke-width="1.5"/>
-        <circle class="zone-ring" r="14"/>
-        <circle class="zone-dot" r="3.5"/>
+      <!-- Zone 10: Wulingyuan — China -->
+      <g class="zone-marker" id="zone-10" data-world="nature" transform="translate(845, 198)">
+        <circle class="zone-pulse" r="16" stroke-width="1.5"/>
+        <circle class="zone-ring" r="16"/>
+        <image class="zone-icon" href="../UNESCO_ICON_NATURE.svg" x="-10" y="-10" width="20" height="20" opacity="0.7"/>
       </g>
+
+      <!-- Zone 11: Lake Turkana — Kenya -->
+      <g class="zone-marker" id="zone-11" data-world="nature" transform="translate(588, 322)">
+        <circle class="zone-pulse" r="16" stroke-width="1.5"/>
+        <circle class="zone-ring" r="16"/>
+        <image class="zone-icon" href="../UNESCO_ICON_NATURE.svg" x="-10" y="-10" width="20" height="20" opacity="0.7"/>
+      </g>
+
+      <!-- Zone 12: Grand Canyon — USA -->
+      <g class="zone-marker" id="zone-12" data-world="nature" transform="translate(175, 155)">
+        <circle class="zone-pulse" r="16" stroke-width="1.5"/>
+        <circle class="zone-ring" r="16"/>
+        <image class="zone-icon" href="../UNESCO_ICON_NATURE.svg" x="-10" y="-10" width="20" height="20" opacity="0.7"/>
+      </g>
+
+      <!-- INTANGIBLE HERITAGE (Brown #675d52) — UNESCO_ICON_HERITAGE.svg -->
+
+      <!-- Zone 13: Flamenco — Spain -->
+      <g class="zone-marker" id="zone-13" data-world="intangible" transform="translate(492, 118)">
+        <circle class="zone-pulse" r="16" stroke-width="1.5"/>
+        <circle class="zone-ring" r="16"/>
+        <image class="zone-icon" href="../UNESCO_ICON_HERITAGE.svg" x="-10" y="-10" width="20" height="20" opacity="0.7"/>
+      </g>
+
+      <!-- Zone 14: Jazz — New Orleans, USA -->
+      <g class="zone-marker" id="zone-14" data-world="intangible" transform="translate(215, 185)">
+        <circle class="zone-pulse" r="16" stroke-width="1.5"/>
+        <circle class="zone-ring" r="16"/>
+        <image class="zone-icon" href="../UNESCO_ICON_HERITAGE.svg" x="-10" y="-10" width="20" height="20" opacity="0.7"/>
+      </g>
+
+      <!-- Zone 15: Backstrap Loom Weaving — Guatemala -->
+      <g class="zone-marker" id="zone-15" data-world="intangible" transform="translate(210, 265)">
+        <circle class="zone-pulse" r="16" stroke-width="1.5"/>
+        <circle class="zone-ring" r="16"/>
+        <image class="zone-icon" href="../UNESCO_ICON_HERITAGE.svg" x="-10" y="-10" width="20" height="20" opacity="0.7"/>
+      </g>
+
+      <!-- Zone 16: Tango — Buenos Aires, Argentina -->
+      <g class="zone-marker" id="zone-16" data-world="intangible" transform="translate(305, 530)">
+        <circle class="zone-pulse" r="16" stroke-width="1.5"/>
+        <circle class="zone-ring" r="16"/>
+        <image class="zone-icon" href="../UNESCO_ICON_HERITAGE.svg" x="-10" y="-10" width="20" height="20" opacity="0.7"/>
+      </g>
+
+      <!-- LANGUAGES (Yellow #f8e166) — UNESCO_ICON_LANGUAGE.svg -->
+
+      <!-- Zone 17: ʻŌlelo Hawaiʻi — Hawaii, USA -->
+      <g class="zone-marker" id="zone-17" data-world="language" transform="translate(95, 248)">
+        <circle class="zone-pulse" r="16" stroke-width="1.5"/>
+        <circle class="zone-ring" r="16"/>
+        <image class="zone-icon" href="../UNESCO_ICON_LANGUAGE.svg" x="-10" y="-10" width="20" height="20" opacity="0.7"/>
+      </g>
+
+      <!-- Zone 18: Nüshu Script — China -->
+      <g class="zone-marker" id="zone-18" data-world="language" transform="translate(862, 228)">
+        <circle class="zone-pulse" r="16" stroke-width="1.5"/>
+        <circle class="zone-ring" r="16"/>
+        <image class="zone-icon" href="../UNESCO_ICON_LANGUAGE.svg" x="-10" y="-10" width="20" height="20" opacity="0.7"/>
+      </g>
+
+      <!-- Zone 19: Occitan — Southern France -->
+      <g class="zone-marker" id="zone-19" data-world="language" transform="translate(520, 98)">
+        <circle class="zone-pulse" r="16" stroke-width="1.5"/>
+        <circle class="zone-ring" r="16"/>
+        <image class="zone-icon" href="../UNESCO_ICON_LANGUAGE.svg" x="-10" y="-10" width="20" height="20" opacity="0.7"/>
+      </g>
+
+      <!-- Zone 20: Ainu — Hokkaido, Japan -->
+      <g class="zone-marker" id="zone-20" data-world="language" transform="translate(985, 85)">
+        <circle class="zone-pulse" r="16" stroke-width="1.5"/>
+        <circle class="zone-ring" r="16"/>
+        <image class="zone-icon" href="../UNESCO_ICON_LANGUAGE.svg" x="-10" y="-10" width="20" height="20" opacity="0.7"/>
+      </g>
+
     </svg>
   </div>
 

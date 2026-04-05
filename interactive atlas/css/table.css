@@ -40,36 +40,51 @@ html, body {
 
 /* Zone markers */
 .zone-marker {
-  cursor: none;
+  cursor: pointer;
   transition: all 0.5s ease;
 }
 
-.zone-dot {
-  fill: #3d3530;
-  transition: fill 0.5s ease, r 0.5s ease;
+.zone-icon {
+  transition: opacity 0.5s ease, transform 0.3s ease;
+  pointer-events: none;
 }
 
 .zone-ring {
   fill: none;
-  stroke: transparent;
+  stroke: rgba(231, 226, 222, 0.15);
   stroke-width: 1.5;
-  transition: stroke 0.5s ease, opacity 0.5s ease;
-  opacity: 0;
+  transition: stroke 0.5s ease, opacity 0.5s ease, stroke-width 0.5s ease;
 }
 
-.zone-marker.active .zone-dot {
-  r: 6;
+/* Hover effect */
+.zone-marker:hover .zone-icon {
+  opacity: 1 !important;
+}
+
+.zone-marker:hover .zone-ring {
+  stroke: rgba(231, 226, 222, 0.4);
+}
+
+/* Active state */
+.zone-marker.active .zone-icon {
+  opacity: 1 !important;
 }
 
 .zone-marker.active .zone-ring {
+  stroke-width: 2.5;
   opacity: 1;
-  stroke-width: 2;
 }
+
+/* World-specific active ring colors */
+.zone-marker.active.world-monuments .zone-ring { stroke: #2491d0; }
+.zone-marker.active.world-nature .zone-ring { stroke: #9dd3b2; }
+.zone-marker.active.world-intangible .zone-ring { stroke: #675d52; }
+.zone-marker.active.world-language .zone-ring { stroke: #f8e166; }
 
 /* Pulse animation on active zone */
 @keyframes zone-pulse {
-  0% { r: 14; opacity: 0.6; }
-  100% { r: 28; opacity: 0; }
+  0% { r: 16; opacity: 0.6; }
+  100% { r: 32; opacity: 0; }
 }
 
 .zone-pulse {
@@ -81,25 +96,31 @@ html, body {
   animation: zone-pulse 2s ease-out infinite;
 }
 
+.zone-marker.active.world-monuments .zone-pulse { stroke: #2491d0; }
+.zone-marker.active.world-nature .zone-pulse { stroke: #9dd3b2; }
+.zone-marker.active.world-intangible .zone-pulse { stroke: #675d52; }
+.zone-marker.active.world-language .zone-pulse { stroke: #f8e166; }
+
 /* Zone label */
 .zone-label {
   position: absolute;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
   font-size: 0.72rem;
   font-weight: 500;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  background: rgba(26, 20, 19, 0.85);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(26, 20, 19, 0.9);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-left: 3px solid rgba(255,255,255,0.08);
   opacity: 0;
   transform: translateY(6px);
   transition: opacity 0.4s ease, transform 0.4s ease;
   pointer-events: none;
   white-space: nowrap;
   z-index: 10;
+  line-height: 1.5;
 }
 
 .zone-label.visible {
@@ -108,10 +129,26 @@ html, body {
 }
 
 .zone-label .label-category {
-  font-size: 0.6rem;
+  font-size: 0.55rem;
   opacity: 0.5;
   display: block;
   margin-bottom: 2px;
+}
+
+.zone-label .label-location {
+  display: block;
+  font-weight: 600;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+}
+
+.zone-label .label-region {
+  display: block;
+  font-size: 0.6rem;
+  opacity: 0.45;
+  text-transform: none;
+  letter-spacing: 0.02em;
+  margin-top: 1px;
 }
 
 /* Status bar */
@@ -147,7 +184,7 @@ html, body {
 /* Sequence progress dots */
 .progress-dots {
   display: flex;
-  gap: 6px;
+  gap: 5px;
   align-items: center;
 }
 
@@ -172,17 +209,17 @@ html, body {
 .color-monuments { color: #2491d0; }
 .color-nature { color: #9dd3b2; }
 .color-language { color: #f8e166; }
-.color-intangible { color: #e7e2de; }
+.color-intangible { color: #675d52; }
 
 .fill-monuments { fill: #2491d0; }
 .fill-nature { fill: #9dd3b2; }
 .fill-language { fill: #f8e166; }
-.fill-intangible { fill: #e7e2de; }
+.fill-intangible { fill: #675d52; }
 
 .stroke-monuments { stroke: #2491d0; }
 .stroke-nature { stroke: #9dd3b2; }
 .stroke-language { stroke: #f8e166; }
-.stroke-intangible { stroke: #e7e2de; }
+.stroke-intangible { stroke: #675d52; }
 
 /* Grid overlay (subtle) */
 .grid-overlay {

@@ -6,21 +6,35 @@ var WORLDS = {
   monuments:  { name: 'The World Built Through Us',       color: '#2491d0', css: 'monuments'  },
   nature:     { name: 'The World That Sustains Us',        color: '#9dd3b2', css: 'nature'     },
   language:   { name: 'The World That Remembers Us',       color: '#f8e166', css: 'language'   },
-  intangible: { name: 'The World That Moves Within Us',    color: '#e7e2de', css: 'intangible' }
+  intangible: { name: 'The World That Moves Within Us',    color: '#675d52', css: 'intangible' }
 };
 
-// Demo activation sequence
+// Full 20-site activation sequence
 var SEQUENCE = [
-  { zone: 1,  world: 'monuments',  location: 'Angkor Wat',                 coords: { x: 74, y: 48 } },
-  { zone: 2,  world: 'nature',     location: 'Gal\u00e1pagos Islands',     coords: { x: 22, y: 55 } },
-  { zone: 3,  world: 'language',   location: 'Ainu Language Region',       coords: { x: 82, y: 32 } },
-  { zone: 4,  world: 'intangible', location: 'Djemaa el-Fna',              coords: { x: 44, y: 38 } },
-  { zone: 5,  world: 'monuments',  location: 'Machu Picchu',               coords: { x: 24, y: 60 } },
-  { zone: 6,  world: 'nature',     location: 'Great Barrier Reef',         coords: { x: 84, y: 66 } },
-  { zone: 7,  world: 'language',   location: 'Welsh Language Heartland',   coords: { x: 43, y: 28 } },
-  { zone: 8,  world: 'intangible', location: 'Tango of Buenos Aires',      coords: { x: 27, y: 74 } },
-  { zone: 9,  world: 'monuments',  location: 'Petra',                      coords: { x: 54, y: 38 } },
-  { zone: 10, world: 'nature',     location: 'Serengeti Plains',           coords: { x: 52, y: 56 } }
+  // Monuments (Blue)
+  { zone: 1,  world: 'monuments',  location: 'Machu Picchu',               region: 'Cusco Region, Peru' },
+  { zone: 2,  world: 'monuments',  location: 'Joya de Cer\u00e9n',         region: 'La Libertad, El Salvador' },
+  { zone: 3,  world: 'monuments',  location: 'Borobudur',                  region: 'Central Java, Indonesia' },
+  { zone: 4,  world: 'monuments',  location: 'Petra',                      region: "Ma'an Governorate, Jordan" },
+  { zone: 5,  world: 'monuments',  location: 'Timbuktu',                   region: 'Mali, West Africa' },
+  { zone: 6,  world: 'monuments',  location: 'Nan Madol',                  region: 'Pohnpei, Micronesia' },
+  // Nature (Green)
+  { zone: 7,  world: 'nature',     location: 'Great Barrier Reef',         region: 'Queensland, Australia' },
+  { zone: 8,  world: 'nature',     location: 'Serengeti National Park',    region: 'Northern Tanzania' },
+  { zone: 9,  world: 'nature',     location: 'Socotra Archipelago',        region: 'Arabian Sea, Yemen' },
+  { zone: 10, world: 'nature',     location: 'Wulingyuan Scenic Area',     region: 'Hunan Province, China' },
+  { zone: 11, world: 'nature',     location: 'Lake Turkana',               region: 'Northern Kenya' },
+  { zone: 12, world: 'nature',     location: 'Grand Canyon',               region: 'Arizona, United States' },
+  // Intangible Heritage (Brown)
+  { zone: 13, world: 'intangible', location: 'Flamenco',                   region: 'Andalusia, Spain' },
+  { zone: 14, world: 'intangible', location: 'Jazz',                       region: 'New Orleans, United States' },
+  { zone: 15, world: 'intangible', location: 'Backstrap Loom Weaving',     region: 'Guatemalan Highlands' },
+  { zone: 16, world: 'intangible', location: 'Tango',                      region: 'Buenos Aires, Argentina' },
+  // Languages (Yellow)
+  { zone: 17, world: 'language',   location: '\u02bbŌlelo Hawai\u02bbi',   region: 'Hawaii, United States' },
+  { zone: 18, world: 'language',   location: 'N\u00fcshu Script',          region: 'Hunan Province, China' },
+  { zone: 19, world: 'language',   location: 'Occitan',                    region: 'Southern France' },
+  { zone: 20, world: 'language',   location: 'Ainu',                       region: 'Hokkaido, Japan' }
 ];
 
 var currentIndex = -1;
@@ -45,7 +59,7 @@ function init() {
   });
 
   // Collect zone markers from SVG
-  SEQUENCE.forEach(function(entry, i) {
+  SEQUENCE.forEach(function(entry) {
     var marker = document.getElementById('zone-' + entry.zone);
     if (marker) markers.push(marker);
   });
@@ -59,6 +73,13 @@ function init() {
       e.preventDefault();
       activatePrev();
     }
+  });
+
+  // Click on zone markers
+  markers.forEach(function(marker, i) {
+    marker.addEventListener('click', function() {
+      activateZone(i);
+    });
   });
 }
 
@@ -83,41 +104,43 @@ function activateZone(index) {
   // Deactivate previous marker
   if (prev >= 0 && markers[prev]) {
     markers[prev].classList.remove('active');
-    var prevDot = markers[prev].querySelector('.zone-dot');
-    var prevRing = markers[prev].querySelector('.zone-ring');
-    var prevPulse = markers[prev].querySelector('.zone-pulse');
-    if (prevDot) { prevDot.classList.remove('fill-' + WORLDS[SEQUENCE[prev].world].css); }
-    if (prevRing) { prevRing.classList.remove('stroke-' + WORLDS[SEQUENCE[prev].world].css); }
-    if (prevPulse) { prevPulse.classList.remove('stroke-' + WORLDS[SEQUENCE[prev].world].css); }
+    markers[prev].classList.remove('world-' + WORLDS[SEQUENCE[prev].world].css);
   }
 
   // Activate current marker
   if (markers[index]) {
     markers[index].classList.add('active');
-    var dot = markers[index].querySelector('.zone-dot');
-    var ring = markers[index].querySelector('.zone-ring');
-    var pulse = markers[index].querySelector('.zone-pulse');
-    if (dot) { dot.classList.add('fill-' + world.css); }
-    if (ring) { ring.classList.add('stroke-' + world.css); }
-    if (pulse) { pulse.classList.add('stroke-' + world.css); }
+    markers[index].classList.add('world-' + world.css);
   }
 
-  // Position and show label
+  // Position and show label near the marker
   var svgEl = document.querySelector('.map-svg');
+  var markerEl = markers[index];
   var svgRect = svgEl.getBoundingClientRect();
-  var lx = svgRect.left + (entry.coords.x / 100) * svgRect.width;
-  var ly = svgRect.top + (entry.coords.y / 100) * svgRect.height;
+  var markerTransform = markerEl.getAttribute('transform');
+  var match = markerTransform.match(/translate\(\s*([\d.]+)\s*,\s*([\d.]+)\s*\)/);
+  if (match) {
+    var mx = parseFloat(match[1]);
+    var my = parseFloat(match[2]);
+    // Convert SVG coords to screen coords
+    var viewBox = svgEl.viewBox.baseVal;
+    var lx = svgRect.left + (mx / viewBox.width) * svgRect.width;
+    var ly = svgRect.top + (my / viewBox.height) * svgRect.height;
 
-  label.className = 'zone-label visible';
-  label.style.left = (lx + 16) + 'px';
-  label.style.top = (ly - 24) + 'px';
-  label.style.borderColor = world.color;
-  label.innerHTML = '<span class="label-category" style="color:' + world.color + '">' + world.name + '</span>' + entry.location;
+    label.className = 'zone-label visible';
+    label.style.left = (lx + 20) + 'px';
+    label.style.top = (ly - 28) + 'px';
+    label.style.borderColor = world.color;
+    label.innerHTML = '<span class="label-category" style="color:' + world.color + '">' + world.name + '</span>' +
+                      '<span class="label-location">' + entry.location + '</span>' +
+                      '<span class="label-region">' + entry.region + '</span>';
+  }
 
   // World indicator
   worldIndicator.className = 'world-indicator visible';
   worldIndicator.style.color = world.color;
-  worldIndicator.innerHTML = 'Zone ' + entry.zone + '<div class="world-name">' + entry.location + '</div>';
+  worldIndicator.innerHTML = 'Zone ' + entry.zone + ' of ' + SEQUENCE.length +
+    '<div class="world-name">' + entry.location + '</div>';
 
   // Status bar
   statusZone.textContent = 'Zone ' + entry.zone + ' \u2014 ' + entry.location;
@@ -142,6 +165,7 @@ function activateZone(index) {
     world: entry.world,
     worldName: world.name,
     location: entry.location,
+    region: entry.region,
     color: world.color,
     index: index,
     total: SEQUENCE.length
