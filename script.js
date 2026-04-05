@@ -27,17 +27,21 @@
 const menuToggle = document.querySelector('.menu-toggle');
 const navLinks = document.querySelector('.nav-links');
 
+// Create menu backdrop
+const menuBackdrop = document.createElement('div');
+menuBackdrop.className = 'menu-backdrop';
+document.body.appendChild(menuBackdrop);
+
 menuToggle.addEventListener('click', () => {
   navLinks.classList.toggle('open');
   menuToggle.classList.toggle('active');
+  menuBackdrop.classList.toggle('active');
 });
 
-// Close menu when tapping the backdrop
-navLinks.addEventListener('click', (e) => {
-  if (e.target === navLinks) {
-    navLinks.classList.remove('open');
-    menuToggle.classList.remove('active');
-  }
+menuBackdrop.addEventListener('click', () => {
+  navLinks.classList.remove('open');
+  menuToggle.classList.remove('active');
+  menuBackdrop.classList.remove('active');
 });
 
 // Hero slideshow with synced descriptions
