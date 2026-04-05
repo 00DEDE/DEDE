@@ -303,8 +303,8 @@ img { max-width: 100%; display: block; }
 
 .hero-icons {
   display: grid;
-  grid-template-columns: repeat(5, 54px);
-  gap: 1rem;
+  grid-template-columns: repeat(5, 67px);
+  gap: 1.2rem;
   margin-top: 2rem;
   justify-items: center;
   justify-content: start;
@@ -312,8 +312,8 @@ img { max-width: 100%; display: block; }
 
 .hero-icon {
   display: inline-block;
-  width: 54px;
-  height: 54px;
+  width: 67px;
+  height: 67px;
   -webkit-mask-size: contain;
   mask-size: contain;
   -webkit-mask-repeat: no-repeat;
@@ -1497,6 +1497,27 @@ img { max-width: 100%; display: block; }
     opacity: 1;
     padding: 1.5rem 2rem;
     gap: 1rem;
+  }
+
+  .nav-links::before {
+    content: '';
+    position: fixed;
+    top: 70px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+    z-index: -1;
+  }
+
+  .nav-links.open::before {
+    opacity: 1;
+    pointer-events: auto;
   }
 
   .menu-toggle.active span:nth-child(1) {

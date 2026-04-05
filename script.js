@@ -32,6 +32,14 @@ menuToggle.addEventListener('click', () => {
   menuToggle.classList.toggle('active');
 });
 
+// Close menu when tapping the backdrop
+navLinks.addEventListener('click', (e) => {
+  if (e.target === navLinks) {
+    navLinks.classList.remove('open');
+    menuToggle.classList.remove('active');
+  }
+});
+
 // Hero slideshow with synced descriptions
 const heroSlides = document.querySelectorAll('.hero-slide');
 const heroDescs = document.querySelectorAll('.hero-desc');
