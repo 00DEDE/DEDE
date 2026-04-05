@@ -361,37 +361,56 @@
 
     // Mobile draw toggle button
     var drawToggleBtn = document.getElementById('drawToggle');
+    var mobileDrawing = true;
+    var isMobileTouch = 'ontouchstart' in window;
+    var overlay = document.getElementById('postcard-layer');
+
     drawToggleBtn.addEventListener('click', function(e) {
       e.stopPropagation();
       frame.contentWindow.postMessage({ type: 'toggleDraw' }, '*');
       drawToggleBtn.classList.toggle('active');
+      mobileDrawing = !mobileDrawing;
+      // When drawing is off, let postcards receive clicks
+      if (isMobileTouch) {
+        overlay.style.pointerEvents = mobileDrawing ? 'auto' : 'none';
+      }
+    });
+
+    // Also listen for drawMode changes from iframe (e.g. D key)
+    window.addEventListener('message', function(e) {
+      if (e.data && e.data.type === 'drawMode') {
+        mobileDrawing = e.data.drawing;
+        if (isMobileTouch) {
+          overlay.style.pointerEvents = mobileDrawing ? 'auto' : 'none';
+        }
+      }
     });
 
     // Mobile: forward touch events from parent page to iframe
-    // Iframes don't reliably receive touch events on mobile
     (function() {
-      var overlay = document.getElementById('postcard-layer');
       var headerH = 70;
 
       overlay.addEventListener('touchstart', function(e) {
+        if (!mobileDrawing) return;
         var t = e.touches[0];
         frame.contentWindow.postMessage({ type: 'touchstart', x: t.clientX, y: t.clientY - headerH }, '*');
         e.preventDefault();
       }, { passive: false });
 
       overlay.addEventListener('touchmove', function(e) {
+        if (!mobileDrawing) return;
         var t = e.touches[0];
         frame.contentWindow.postMessage({ type: 'touchmove', x: t.clientX, y: t.clientY - headerH }, '*');
         e.preventDefault();
       }, { passive: false });
 
       overlay.addEventListener('touchend', function(e) {
+        if (!mobileDrawing) return;
         frame.contentWindow.postMessage({ type: 'touchend' }, '*');
         e.preventDefault();
       }, { passive: false });
 
-      // On mobile, enable pointer-events on overlay to capture touches for forwarding
-      if ('ontouchstart' in window) {
+      if (isMobileTouch) {
         overlay.style.pointerEvents = 'auto';
       }
     })();
