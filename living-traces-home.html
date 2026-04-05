@@ -99,21 +99,6 @@
     .tradition-card {
       position: relative;
     }
-    .culture-card::before,
-    .tradition-card::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border: 1px solid rgba(255,255,255,0);
-      border-radius: 4px;
-      transition: border-color 0.5s ease;
-      pointer-events: none;
-      z-index: 2;
-    }
-    .culture-card:hover::before,
-    .tradition-card:hover::before {
-      border-color: rgba(255,255,255,0.15);
-    }
     /* Subtle breathing glow on card images */
     @keyframes card-breathe {
       0%, 100% { opacity: 0; }
@@ -660,7 +645,7 @@
 
     /* ---- RESPONSIVE ---- */
     @media (max-width: 768px) {
-      .lt-hero { padding: 0 0 32px; }
+      .lt-hero { padding: 0 0 24px; justify-content: center; }
       .lt-hero-title { padding: 0 24px; font-size: clamp(64px, 18vw, 200px); }
       .lt-hero-intro { padding: 0 24px; }
       .lt-hero-actions { padding: 0 24px; flex-wrap: wrap; gap: 10px; }
@@ -671,8 +656,18 @@
       .lt-greetings { padding: 80px 24px; }
       .lt-ubuntu { padding: 100px 24px; }
       .lt-closing { padding: 80px 24px; }
-      .lt-language-visualizer { padding: 80px 16px 60px; }
-      .unesco-corner { top: 16px; right: 16px; }
+      .lt-language-visualizer { padding: 60px 0 60px; }
+      .lt-lang-orb-wrap { max-width: 100vw; }
+      /* UNESCO logo: centered at bottom, 25% smaller */
+      .unesco-corner {
+        top: auto;
+        right: auto;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      .unesco-corner svg { width: 60px; }
+      .unesco-corner { padding: 7px 9px; border-radius: 8px; }
     }
   </style>
 </head>
