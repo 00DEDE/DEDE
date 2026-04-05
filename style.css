@@ -222,7 +222,7 @@ img { max-width: 100%; display: block; }
 .hero-inner {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  align-items: center;
+  align-items: start;
   gap: 3rem;
   max-width: var(--max-width);
   margin: 0 auto;
@@ -256,10 +256,10 @@ img { max-width: 100%; display: block; }
 .hero h1 {
   font-family: var(--font-heading);
   font-weight: 700;
-  font-size: clamp(2.8rem, 6vw, 4.5rem);
-  line-height: 0.98;
-  letter-spacing: -0.02em;
-  margin-bottom: 1.2rem;
+  font-size: clamp(3.2rem, 4.8vw, 5.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  margin-bottom: 1.5rem;
 }
 
 .hero p {
@@ -280,13 +280,15 @@ img { max-width: 100%; display: block; }
   top: 0;
   left: 0;
   opacity: 0;
-  visibility: hidden;
-  transition: opacity 1.2s ease, visibility 1.2s ease;
+  filter: blur(8px);
+  transition: opacity 0.8s ease, filter 0.8s ease;
+  pointer-events: none;
 }
 .hero-desc.active {
   position: relative;
   opacity: 1;
-  visibility: visible;
+  filter: blur(0);
+  pointer-events: auto;
 }
 
 .hero-buttons {
@@ -698,13 +700,14 @@ img { max-width: 100%; display: block; }
 }
 
 .footer-tagline {
-  text-align: right;
+  text-align: left;
 }
 
 .footer-tagline span {
   font-size: clamp(2rem, 4vw, 3.5rem);
-  font-weight: 900;
-  line-height: 1.1;
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
 }
 
 .ft-blue { color: #2490cf; }

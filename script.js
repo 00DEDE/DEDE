@@ -17,7 +17,7 @@ if (heroSlides.length > 0) {
     slideIndex = (slideIndex + 1) % heroSlides.length;
     heroSlides[slideIndex].classList.add('active');
     if (heroDescs[slideIndex]) heroDescs[slideIndex].classList.add('active');
-  }, 5000);
+  }, 7500);
 }
 
 // Scroll fade-in animations
