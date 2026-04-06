@@ -81,20 +81,35 @@ function init() {
   };
 }
 
+var volumeFadeInterval = null;
+
 function gracefulClose() {
   if (videoFadeTimer) clearTimeout(videoFadeTimer);
   if (videoCutTimer) clearTimeout(videoCutTimer);
+  if (volumeFadeInterval) clearInterval(volumeFadeInterval);
 
   // Fade video to black
   if (videoFadeOverlay) videoFadeOverlay.classList.add('fading');
 
-  // After fade completes, pause and hide video
-  setTimeout(function() {
-    if (overheadVideo) {
-      overheadVideo.pause();
-      overheadVideo.classList.remove('visible');
-    }
-  }, 3000);
+  // Gradually lower volume over 3 seconds
+  if (overheadVideo) {
+    var startVolume = overheadVideo.volume;
+    var steps = 30;
+    var stepTime = 3000 / steps;
+    var stepAmount = startVolume / steps;
+
+    volumeFadeInterval = setInterval(function() {
+      if (overheadVideo.volume > stepAmount) {
+        overheadVideo.volume -= stepAmount;
+      } else {
+        overheadVideo.volume = 0;
+        clearInterval(volumeFadeInterval);
+        overheadVideo.pause();
+        overheadVideo.classList.remove('visible');
+        overheadVideo.volume = startVolume;
+      }
+    }, stepTime);
+  }
 }
 
 function showActivation(data) {
