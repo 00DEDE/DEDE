@@ -41,7 +41,7 @@ var SEQUENCE = [
   // Intangible Heritage (Cream) — pages 64, 66, 68, 70
   { zone: 13, world: 'intangible', location: 'Flamenco',                 region: 'Andalusia, Spain',           desc: 'A deeply expressive art form combining cante (singing), baile (dance), and toque (guitar), rooted in Andalusian culture.',                                    page: 64, left: 47, top: 30 },
   { zone: 14, world: 'intangible', location: 'Jazz',                     region: 'New Orleans, United States', desc: 'Born from African American communities, jazz is defined by improvisation, syncopated rhythms, and blues tonality.',                                          page: 66, left: 25, top: 33 },
-  { zone: 15, world: 'intangible', location: 'Backstrap Loom Weaving',   region: 'Guatemalan Highlands',       desc: 'An ancient Maya textile tradition using portable looms, producing vibrant handwoven fabrics that carry cultural identity.',                                    page: 68, left: 31, top: 52 },
+  { zone: 15, world: 'intangible', location: 'Backstrap Loom Weaving',   region: 'Guatemalan Highlands',       desc: 'An ancient Maya textile tradition using portable looms, producing vibrant handwoven fabrics that carry cultural identity.',                                    page: 68, left: 33, top: 56 },
   { zone: 16, world: 'intangible', location: 'Tango',                    region: 'Buenos Aires, Argentina',    desc: 'A passionate dance and musical genre born in the R\u00edo de la Plata region, blending European and African influences.',                                     page: 70, left: 38, top: 82 },
 
   // Languages (Yellow) — pages 76, 78, 80, 82
