@@ -101,39 +101,25 @@ function showActivation(data) {
     // Sequence counter
     sequenceCounter.textContent = (data.index + 1) + ' / ' + data.total;
 
-    // Play video on activation — smooth fade in, 4 min cutoff, fade to black
+    // Video — restart, 4 min cutoff with fade to black
     if (overheadVideo) {
-      // Clear any previous timers
       if (videoFadeTimer) clearTimeout(videoFadeTimer);
       if (videoCutTimer) clearTimeout(videoCutTimer);
 
-      // Reset video and overlay
       overheadVideo.currentTime = 0;
-      overheadVideo.classList.remove('playing');
+      overheadVideo.style.opacity = '';
       if (videoFadeOverlay) videoFadeOverlay.classList.remove('fading');
+      overheadVideo.play();
 
-      // Start playback — handle promise for autoplay policy
-      var playPromise = overheadVideo.play();
-      if (playPromise !== undefined) {
-        playPromise.then(function() {
-          overheadVideo.classList.add('playing');
-        }).catch(function() {
-          // Autoplay blocked — show video anyway as a still frame
-          overheadVideo.classList.add('playing');
-        });
-      } else {
-        overheadVideo.classList.add('playing');
-      }
-
-      // Start fade-to-black 10 seconds before the 4 min mark
+      // Fade to black starting 10s before the 4 min mark
       videoFadeTimer = setTimeout(function() {
         if (videoFadeOverlay) videoFadeOverlay.classList.add('fading');
       }, FADE_OUT_START * 1000);
 
-      // Pause video at 4 minutes
+      // Pause at 4 minutes
       videoCutTimer = setTimeout(function() {
+        overheadVideo.style.opacity = '0';
         overheadVideo.pause();
-        overheadVideo.classList.remove('playing');
       }, VIDEO_DURATION * 1000);
     }
   }, 150);
