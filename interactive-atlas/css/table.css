@@ -15,7 +15,9 @@ html, body {
   user-select: none;
 }
 
-/* Map container */
+/* ========================
+   MAP CONTAINER
+   ======================== */
 .map-wrap {
   position: relative;
   width: 100vw;
@@ -28,7 +30,7 @@ html, body {
 .map-svg {
   width: 88%;
   height: 82%;
-  opacity: 0.55;
+  opacity: 0.45;
 }
 
 .continent {
@@ -38,107 +40,229 @@ html, body {
   transition: fill 0.6s ease;
 }
 
-/* Zone markers */
-.zone-marker {
-  cursor: pointer;
-  transition: all 0.5s ease;
-}
-
-.zone-icon {
-  transition: opacity 0.5s ease, transform 0.3s ease;
+/* ========================
+   MARKERS LAYER
+   ======================== */
+.markers-layer {
+  position: absolute;
+  inset: 0;
   pointer-events: none;
 }
 
-.zone-ring {
-  fill: none;
-  stroke: rgba(231, 226, 222, 0.12);
-  stroke-width: 1.5;
-  transition: stroke 0.5s ease, opacity 0.5s ease, stroke-width 0.5s ease;
+/* ========================
+   INDIVIDUAL MARKER
+   ======================== */
+.marker {
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  transform: translate(-50%, -50%) scale(0);
+  cursor: pointer;
+  pointer-events: auto;
+  z-index: 5;
+  animation: marker-enter 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation-delay: var(--delay, 0s);
 }
 
-/* Hover effect */
-.zone-marker:hover .zone-icon {
-  opacity: 1 !important;
+@keyframes marker-enter {
+  0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+  100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
 }
 
-.zone-marker:hover .zone-ring {
-  stroke: rgba(231, 226, 222, 0.35);
+/* Subtle idle breathing */
+.marker:not(.active) {
+  animation: marker-enter 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards,
+             marker-breathe 4s ease-in-out infinite;
+  animation-delay: var(--delay, 0s), var(--float-delay, 0s);
 }
 
-/* Active state */
-.zone-marker.active .zone-icon {
-  opacity: 1 !important;
+@keyframes marker-breathe {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.2); }
 }
 
-.zone-marker.active .zone-ring {
-  stroke-width: 2.5;
-  opacity: 1;
+/* Icon — mask-based colorization */
+.marker-icon {
+  width: 100%;
+  height: 100%;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  background-color: #e7e2de;
+  transition: background-color 0.6s ease;
+  position: relative;
+  z-index: 3;
 }
 
-/* World-specific active ring colors — cream for intangible */
-.zone-marker.active.world-monuments .zone-ring { stroke: #2491d0; }
-.zone-marker.active.world-nature .zone-ring { stroke: #9dd3b2; }
-.zone-marker.active.world-intangible .zone-ring { stroke: #e7e2de; }
-.zone-marker.active.world-language .zone-ring { stroke: #f8e166; }
-
-/* Pulse animation on active zone */
-@keyframes zone-pulse {
-  0% { r: 22; opacity: 0.6; }
-  100% { r: 40; opacity: 0; }
+/* Ring around marker */
+.marker-ring {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(231, 226, 222, 0.1);
+  transition: border-color 0.6s ease, transform 0.6s ease, border-width 0.4s ease;
 }
 
-.zone-pulse {
-  fill: none;
+/* Pulse ring — hidden by default */
+.marker-pulse {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 2px solid transparent;
   opacity: 0;
+  pointer-events: none;
 }
 
-.zone-marker.active .zone-pulse {
-  animation: zone-pulse 2s ease-out infinite;
+/* Glow behind active marker */
+.marker-glow {
+  position: absolute;
+  inset: -20px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--world-color, #e7e2de) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.8s ease;
+  pointer-events: none;
+  z-index: 1;
 }
 
-.zone-marker.active.world-monuments .zone-pulse { stroke: #2491d0; }
-.zone-marker.active.world-nature .zone-pulse { stroke: #9dd3b2; }
-.zone-marker.active.world-intangible .zone-pulse { stroke: #e7e2de; }
-.zone-marker.active.world-language .zone-pulse { stroke: #f8e166; }
+/* ========================
+   HOVER STATE
+   ======================== */
+.marker:hover {
+  z-index: 8;
+}
 
-/* Bottom context panel */
+.marker:hover .marker-icon {
+  background-color: rgba(231, 226, 222, 1);
+}
+
+.marker:hover .marker-ring {
+  border-color: rgba(231, 226, 222, 0.35);
+  transform: scale(1.15);
+}
+
+/* ========================
+   ACTIVE STATE
+   ======================== */
+.marker.active {
+  transform: translate(-50%, -50%) scale(2) !important;
+  z-index: 10;
+  animation: none;
+  transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.marker.active .marker-icon {
+  background-color: var(--world-color);
+}
+
+.marker.active .marker-ring {
+  border-color: var(--world-color);
+  border-width: 2px;
+  transform: scale(1.2);
+}
+
+.marker.active .marker-pulse {
+  border-color: var(--world-color);
+  opacity: 1;
+  animation: pulse-ring 2s ease-out infinite;
+}
+
+.marker.active .marker-glow {
+  opacity: 0.15;
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(2.8); opacity: 0; }
+}
+
+/* ========================
+   VISITED STATE
+   ======================== */
+.marker.visited .marker-icon {
+  background-color: #e7e2de;
+  opacity: 0.5;
+}
+
+.marker.visited .marker-ring {
+  border-color: rgba(231, 226, 222, 0.06);
+}
+
+.marker.visited {
+  transform: translate(-50%, -50%) scale(1);
+  transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: none;
+}
+
+/* ========================
+   SCAN LINE
+   ======================== */
+.scan-line {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(231,226,222,0.08), transparent);
+  box-shadow: 0 0 15px 2px rgba(231,226,222,0.03);
+  animation: scan-sweep 8s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 2;
+}
+
+@keyframes scan-sweep {
+  0% { top: -2%; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { top: 102%; opacity: 0; }
+}
+
+/* ========================
+   BOTTOM CONTEXT PANEL
+   ======================== */
 .context-panel {
   position: fixed;
   bottom: 52px;
   left: 50%;
   transform: translateX(-50%);
   text-align: center;
-  padding: 1rem 2.5rem;
-  min-width: 360px;
+  padding: 1.2rem 2.5rem;
+  min-width: 380px;
   max-width: 600px;
-  background: rgba(26, 20, 19, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(26, 20, 19, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   border: 1px solid rgba(231, 226, 222, 0.06);
   border-radius: 10px;
   z-index: 15;
-  transition: opacity 0.4s ease, transform 0.4s ease;
+  transition: opacity 0.4s ease;
 }
 
 .context-icon-wrap {
   display: flex;
   justify-content: center;
-  margin-bottom: 0.6rem;
+  margin-bottom: 0.5rem;
 }
 
-.context-icon {
+.context-panel-icon {
   width: 28px;
   height: 28px;
-  opacity: 0.6;
-  transition: opacity 0.4s ease;
-}
-
-.context-icon[src=""] {
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  background-color: #e7e2de;
+  transition: background-color 0.4s ease;
   display: none;
 }
 
 .context-location {
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   font-weight: 600;
   letter-spacing: 0.02em;
   transition: color 0.4s ease;
@@ -153,22 +277,25 @@ html, body {
 }
 
 .context-world {
-  font-size: 0.6rem;
+  font-size: 0.58rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   opacity: 0.3;
   margin-top: 0.5rem;
+  transition: color 0.4s ease;
 }
 
 .context-desc {
-  font-size: 0.68rem;
-  line-height: 1.5;
-  opacity: 0.35;
-  margin-top: 0.5rem;
+  font-size: 0.7rem;
+  line-height: 1.55;
+  opacity: 0.4;
+  margin-top: 0.6rem;
   max-width: 480px;
 }
 
-/* Status bar */
+/* ========================
+   STATUS BAR
+   ======================== */
 .status-bar {
   position: fixed;
   bottom: 0;
@@ -198,7 +325,7 @@ html, body {
   opacity: 0.3;
 }
 
-/* Sequence progress dots */
+/* Progress dots */
 .progress-dots {
   display: flex;
   gap: 5px;
@@ -218,32 +345,17 @@ html, body {
 }
 
 .progress-dot.current {
-  background: rgba(231, 226, 222, 0.8);
   transform: scale(1.4);
 }
 
-/* Category color classes — cream for intangible */
-.color-monuments { color: #2491d0; }
-.color-nature { color: #9dd3b2; }
-.color-language { color: #f8e166; }
-.color-intangible { color: #e7e2de; }
-
-.fill-monuments { fill: #2491d0; }
-.fill-nature { fill: #9dd3b2; }
-.fill-language { fill: #f8e166; }
-.fill-intangible { fill: #e7e2de; }
-
-.stroke-monuments { stroke: #2491d0; }
-.stroke-nature { stroke: #9dd3b2; }
-.stroke-language { stroke: #f8e166; }
-.stroke-intangible { stroke: #e7e2de; }
-
-/* Grid overlay (subtle) */
+/* ========================
+   GRID OVERLAY
+   ======================== */
 .grid-overlay {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  opacity: 0.03;
+  opacity: 0.025;
   background-image:
     linear-gradient(rgba(231,226,222,0.3) 1px, transparent 1px),
     linear-gradient(90deg, rgba(231,226,222,0.3) 1px, transparent 1px);
@@ -251,7 +363,9 @@ html, body {
   z-index: 1;
 }
 
-/* World category indicator */
+/* ========================
+   WORLD INDICATOR
+   ======================== */
 .world-indicator {
   position: fixed;
   top: 2rem;
