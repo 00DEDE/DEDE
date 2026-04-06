@@ -21,6 +21,12 @@ var transitionFlash = null;
 var ambientGlow = null;
 var overheadVideo = null;
 var overheadIcon = null;
+var videoFadeOverlay = null;
+var videoFadeTimer = null;
+var videoCutTimer = null;
+
+var VIDEO_DURATION = 240; // 4 minutes in seconds
+var FADE_OUT_START = 230; // start fading 10 seconds before cut
 
 var CATEGORY_LABELS = {
   monuments:  'Monuments & Built Heritage',
@@ -42,6 +48,7 @@ function init() {
   ambientGlow      = document.getElementById('ambient-glow');
   overheadVideo    = document.getElementById('overhead-video');
   overheadIcon     = document.getElementById('overhead-icon');
+  videoFadeOverlay = document.getElementById('video-fade-overlay');
 
   // Listen for activations from table display
   channel.onmessage = function(e) {
@@ -94,9 +101,33 @@ function showActivation(data) {
     // Sequence counter
     sequenceCounter.textContent = (data.index + 1) + ' / ' + data.total;
 
-    // Play video on activation
+    // Play video on activation — smooth fade in, 4 min cutoff, fade to black
     if (overheadVideo) {
+      // Clear any previous timers
+      if (videoFadeTimer) clearTimeout(videoFadeTimer);
+      if (videoCutTimer) clearTimeout(videoCutTimer);
+
+      // Reset video and overlay
+      overheadVideo.currentTime = 0;
+      overheadVideo.classList.remove('playing');
+      videoFadeOverlay.classList.remove('fading');
+
+      // Start playback and fade in smoothly
       overheadVideo.play();
+      requestAnimationFrame(function() {
+        overheadVideo.classList.add('playing');
+      });
+
+      // Start fade-to-black 10 seconds before the 4 min mark
+      videoFadeTimer = setTimeout(function() {
+        videoFadeOverlay.classList.add('fading');
+      }, FADE_OUT_START * 1000);
+
+      // Pause video at 4 minutes
+      videoCutTimer = setTimeout(function() {
+        overheadVideo.pause();
+        overheadVideo.classList.remove('playing');
+      }, VIDEO_DURATION * 1000);
     }
   }, 150);
 }

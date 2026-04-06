@@ -20,15 +20,17 @@ var WORLDS = {
 // 20 heritage sites — positions based on atlas reference map
 // Coordinates as % of map-wrap (left, top)
 var SEQUENCE = [
-  // Monuments (Blue) — pages 30, 32, 34, 36, 38 + Machu Picchu
-  { zone: 1,  world: 'monuments',  location: 'Joya de Cer\u00e9n',       region: 'La Libertad, El Salvador',   desc: 'A pre-Columbian Maya farming village buried by volcanic ash around 600 CE, offering an extraordinary snapshot of daily life in Mesoamerica.',                  page: 30, left: 26, top: 43 },
-  { zone: 2,  world: 'monuments',  location: 'Borobudur',                region: 'Central Java, Indonesia',    desc: 'The world\u2019s largest Buddhist temple, built in the 9th century with over 2,600 relief panels and 504 Buddha statues across nine stacked platforms.',         page: 32, left: 81, top: 54 },
-  { zone: 3,  world: 'monuments',  location: 'Petra',                    region: "Ma'an Governorate, Jordan",  desc: 'An ancient Nabataean city carved into rose-red sandstone cliffs, blending Eastern and Hellenistic architectural traditions.',                                  page: 34, left: 60, top: 33 },
-  { zone: 4,  world: 'monuments',  location: 'Timbuktu',                 region: 'Mali, West Africa',          desc: 'A historic center of Islamic scholarship and trade, home to three great mosques and thousands of ancient manuscripts.',                                       page: 36, left: 49, top: 41 },
-  { zone: 5,  world: 'monuments',  location: 'Nan Madol',                region: 'Pohnpei, Micronesia',        desc: 'A ceremonial center built on artificial islands of basalt and coral, sometimes called the \u201cVenice of the Pacific.\u201d',                                 page: 38, left: 94, top: 46 },
-  { zone: 6,  world: 'monuments',  location: 'Machu Picchu',             region: 'Cusco Region, Peru',         desc: 'A 15th-century Inca citadel set high in the Andes Mountains, renowned for its sophisticated dry-stone construction and panoramic terraces.',                    page: 40, left: 34, top: 69 },
+  // Machu Picchu first
+  { zone: 1,  world: 'monuments',  location: 'Machu Picchu',             region: 'Cusco Region, Peru',         desc: 'A 15th-century Inca citadel set high in the Andes Mountains, renowned for its sophisticated dry-stone construction and panoramic terraces.',                    page: 40, left: 34, top: 69 },
 
-  // Nature (Green) — pages 46, 48, 50, 52, 54 + Great Barrier Reef
+  // Monuments (Blue) — pages 30, 32, 34, 36, 38
+  { zone: 2,  world: 'monuments',  location: 'Joya de Cer\u00e9n',       region: 'La Libertad, El Salvador',   desc: 'A pre-Columbian Maya farming village buried by volcanic ash around 600 CE, offering an extraordinary snapshot of daily life in Mesoamerica.',                  page: 30, left: 26, top: 43 },
+  { zone: 3,  world: 'monuments',  location: 'Borobudur',                region: 'Central Java, Indonesia',    desc: 'The world\u2019s largest Buddhist temple, built in the 9th century with over 2,600 relief panels and 504 Buddha statues across nine stacked platforms.',         page: 32, left: 81, top: 54 },
+  { zone: 4,  world: 'monuments',  location: 'Petra',                    region: "Ma'an Governorate, Jordan",  desc: 'An ancient Nabataean city carved into rose-red sandstone cliffs, blending Eastern and Hellenistic architectural traditions.',                                  page: 34, left: 60, top: 33 },
+  { zone: 5,  world: 'monuments',  location: 'Timbuktu',                 region: 'Mali, West Africa',          desc: 'A historic center of Islamic scholarship and trade, home to three great mosques and thousands of ancient manuscripts.',                                       page: 36, left: 49, top: 41 },
+  { zone: 6,  world: 'monuments',  location: 'Nan Madol',                region: 'Pohnpei, Micronesia',        desc: 'A ceremonial center built on artificial islands of basalt and coral, sometimes called the \u201cVenice of the Pacific.\u201d',                                 page: 38, left: 94, top: 46 },
+
+  // Nature (Green) — pages 46, 48, 50, 52, 54, 56
   { zone: 7,  world: 'nature',     location: 'Serengeti National Park',  region: 'Northern Tanzania',          desc: 'A vast ecosystem famous for the annual migration of over 1.5 million wildebeest and hundreds of thousands of zebra.',                                        page: 46, left: 62, top: 52 },
   { zone: 8,  world: 'nature',     location: 'Socotra Archipelago',      region: 'Arabian Sea, Yemen',         desc: 'An isolated archipelago with one of the most distinct floras on Earth, including the iconic dragon blood tree.',                                              page: 48, left: 65, top: 43 },
   { zone: 9,  world: 'nature',     location: 'Wulingyuan Scenic Area',   region: 'Hunan Province, China',      desc: 'Over 3,000 quartzite sandstone pillars and peaks rising above subtropical forest, shaped by millions of years of erosion.',                                   page: 50, left: 79, top: 33 },
