@@ -9,14 +9,6 @@ var ICON_MASKS = {
   language:   "url('assets/graphic/UNESCO_LANGUAGE.svg')"
 };
 
-// Icon paths for context panel
-var ICON_SRCS = {
-  monuments:  'assets/graphic/UNESCO_MONUMENT.svg',
-  nature:     'assets/graphic/UNESCO_NATURE.svg',
-  intangible: 'assets/graphic/UNESCO_INTANGIBLE.svg',
-  language:   'assets/graphic/UNESCO_LANGUAGE.svg'
-};
-
 // World categories — cream (#e7e2de) for intangible
 var WORLDS = {
   monuments:  { name: 'The World Built Through Us',    color: '#2491d0', css: 'monuments'  },
@@ -25,30 +17,36 @@ var WORLDS = {
   intangible: { name: 'The World That Moves Within Us', color: '#e7e2de', css: 'intangible' }
 };
 
-// 20 heritage sites — positioned on geographic grid
-// Grid columns (%): 13, 24, 37, 48, 57, 69, 81
-// Grid rows (%):    19, 34, 48, 63, 76
+// 20 heritage sites — positions based on atlas reference map
+// Coordinates as % of map-wrap (left, top)
 var SEQUENCE = [
-  { zone: 1,  world: 'monuments',  location: 'Machu Picchu',             region: 'Cusco Region, Peru',         desc: 'A 15th-century Inca citadel set high in the Andes Mountains, renowned for its sophisticated dry-stone construction and panoramic terraces.',                    left: 24, top: 63 },
-  { zone: 2,  world: 'monuments',  location: 'Joya de Cer\u00e9n',       region: 'La Libertad, El Salvador',   desc: 'A pre-Columbian Maya farming village buried by volcanic ash around 600 CE, offering an extraordinary snapshot of daily life in Mesoamerica.',                  left: 13, top: 48 },
-  { zone: 3,  world: 'monuments',  location: 'Borobudur',                region: 'Central Java, Indonesia',    desc: 'The world\u2019s largest Buddhist temple, built in the 9th century with over 2,600 relief panels and 504 Buddha statues across nine stacked platforms.',         left: 69, top: 48 },
-  { zone: 4,  world: 'monuments',  location: 'Petra',                    region: "Ma'an Governorate, Jordan",  desc: 'An ancient Nabataean city carved into rose-red sandstone cliffs, blending Eastern and Hellenistic architectural traditions.',                                  left: 57, top: 34 },
-  { zone: 5,  world: 'monuments',  location: 'Timbuktu',                 region: 'Mali, West Africa',          desc: 'A historic center of Islamic scholarship and trade, home to three great mosques and thousands of ancient manuscripts.',                                       left: 37, top: 48 },
-  { zone: 6,  world: 'monuments',  location: 'Nan Madol',                region: 'Pohnpei, Micronesia',        desc: 'A ceremonial center built on artificial islands of basalt and coral, sometimes called the \u201cVenice of the Pacific.\u201d',                                 left: 81, top: 48 },
-  { zone: 7,  world: 'nature',     location: 'Great Barrier Reef',       region: 'Queensland, Australia',      desc: 'The world\u2019s largest coral reef system, spanning over 2,300 kilometres and home to extraordinary marine biodiversity.',                                    left: 69, top: 63 },
-  { zone: 8,  world: 'nature',     location: 'Serengeti National Park',  region: 'Northern Tanzania',          desc: 'A vast ecosystem famous for the annual migration of over 1.5 million wildebeest and hundreds of thousands of zebra.',                                        left: 48, top: 63 },
-  { zone: 9,  world: 'nature',     location: 'Socotra Archipelago',      region: 'Arabian Sea, Yemen',         desc: 'An isolated archipelago with one of the most distinct floras on Earth, including the iconic dragon blood tree.',                                              left: 57, top: 48 },
-  { zone: 10, world: 'nature',     location: 'Wulingyuan Scenic Area',   region: 'Hunan Province, China',      desc: 'Over 3,000 quartzite sandstone pillars and peaks rising above subtropical forest, shaped by millions of years of erosion.',                                   left: 69, top: 19 },
-  { zone: 11, world: 'nature',     location: 'Lake Turkana',             region: 'Northern Kenya',             desc: 'The world\u2019s largest desert lake and a critical site for the study of human evolution, with major fossil discoveries.',                                   left: 48, top: 48 },
-  { zone: 12, world: 'nature',     location: 'Grand Canyon',             region: 'Arizona, United States',     desc: 'A steep-sided canyon carved by the Colorado River, revealing nearly two billion years of Earth\u2019s geological history.',                                   left: 24, top: 19 },
-  { zone: 13, world: 'intangible', location: 'Flamenco',                 region: 'Andalusia, Spain',           desc: 'A deeply expressive art form combining cante (singing), baile (dance), and toque (guitar), rooted in Andalusian culture.',                                    left: 48, top: 34 },
-  { zone: 14, world: 'intangible', location: 'Jazz',                     region: 'New Orleans, United States', desc: 'Born from African American communities, jazz is defined by improvisation, syncopated rhythms, and blues tonality.',                                          left: 24, top: 34 },
-  { zone: 15, world: 'intangible', location: 'Backstrap Loom Weaving',   region: 'Guatemalan Highlands',       desc: 'An ancient Maya textile tradition using portable looms, producing vibrant handwoven fabrics that carry cultural identity.',                                    left: 24, top: 48 },
-  { zone: 16, world: 'intangible', location: 'Tango',                    region: 'Buenos Aires, Argentina',    desc: 'A passionate dance and musical genre born in the R\u00edo de la Plata region, blending European and African influences.',                                     left: 37, top: 76 },
-  { zone: 17, world: 'language',   location: '\u02bbŌlelo Hawai\u02bbi', region: 'Hawaii, United States',      desc: 'The native language of Hawaii, nearly lost by the 1980s, now being revived through immersion schools and cultural programs.',                                   left: 13, top: 34 },
-  { zone: 18, world: 'language',   location: 'N\u00fcshu Script',        region: 'Hunan Province, China',      desc: 'The only known writing system created and used exclusively by women, a remarkable expression of female solidarity.',                                          left: 81, top: 34 },
-  { zone: 19, world: 'language',   location: 'Occitan',                  region: 'Southern France',            desc: 'A Romance language that was the literary language of medieval troubadours, now classified as severely endangered.',                                             left: 48, top: 19 },
-  { zone: 20, world: 'language',   location: 'Ainu',                     region: 'Hokkaido, Japan',            desc: 'A critically endangered language isolate of the indigenous Ainu people, known for its rich oral epic traditions.',                                              left: 81, top: 19 }
+  // Monuments (Blue) — pages 30, 32, 34, 36, 38 + Machu Picchu
+  { zone: 1,  world: 'monuments',  location: 'Joya de Cer\u00e9n',       region: 'La Libertad, El Salvador',   desc: 'A pre-Columbian Maya farming village buried by volcanic ash around 600 CE, offering an extraordinary snapshot of daily life in Mesoamerica.',                  page: 30, left: 22, top: 49 },
+  { zone: 2,  world: 'monuments',  location: 'Borobudur',                region: 'Central Java, Indonesia',    desc: 'The world\u2019s largest Buddhist temple, built in the 9th century with over 2,600 relief panels and 504 Buddha statues across nine stacked platforms.',         page: 32, left: 81, top: 56 },
+  { zone: 3,  world: 'monuments',  location: 'Petra',                    region: "Ma'an Governorate, Jordan",  desc: 'An ancient Nabataean city carved into rose-red sandstone cliffs, blending Eastern and Hellenistic architectural traditions.',                                  page: 34, left: 58, top: 32 },
+  { zone: 4,  world: 'monuments',  location: 'Timbuktu',                 region: 'Mali, West Africa',          desc: 'A historic center of Islamic scholarship and trade, home to three great mosques and thousands of ancient manuscripts.',                                       page: 36, left: 46, top: 39 },
+  { zone: 5,  world: 'monuments',  location: 'Nan Madol',                region: 'Pohnpei, Micronesia',        desc: 'A ceremonial center built on artificial islands of basalt and coral, sometimes called the \u201cVenice of the Pacific.\u201d',                                 page: 38, left: 90, top: 47 },
+  { zone: 6,  world: 'monuments',  location: 'Machu Picchu',             region: 'Cusco Region, Peru',         desc: 'A 15th-century Inca citadel set high in the Andes Mountains, renowned for its sophisticated dry-stone construction and panoramic terraces.',                    page: 40, left: 27, top: 57 },
+
+  // Nature (Green) — pages 46, 48, 50, 52, 54 + Great Barrier Reef
+  { zone: 7,  world: 'nature',     location: 'Serengeti National Park',  region: 'Northern Tanzania',          desc: 'A vast ecosystem famous for the annual migration of over 1.5 million wildebeest and hundreds of thousands of zebra.',                                        page: 46, left: 55, top: 49 },
+  { zone: 8,  world: 'nature',     location: 'Socotra Archipelago',      region: 'Arabian Sea, Yemen',         desc: 'An isolated archipelago with one of the most distinct floras on Earth, including the iconic dragon blood tree.',                                              page: 48, left: 58, top: 55 },
+  { zone: 9,  world: 'nature',     location: 'Wulingyuan Scenic Area',   region: 'Hunan Province, China',      desc: 'Over 3,000 quartzite sandstone pillars and peaks rising above subtropical forest, shaped by millions of years of erosion.',                                   page: 50, left: 68, top: 49 },
+  { zone: 10, world: 'nature',     location: 'Lake Turkana',             region: 'Northern Kenya',             desc: 'The world\u2019s largest desert lake and a critical site for the study of human evolution, with major fossil discoveries.',                                   page: 52, left: 75, top: 32 },
+  { zone: 11, world: 'nature',     location: 'Grand Canyon',             region: 'Arizona, United States',     desc: 'A steep-sided canyon carved by the Colorado River, revealing nearly two billion years of Earth\u2019s geological history.',                                   page: 54, left: 20, top: 35 },
+  { zone: 12, world: 'nature',     location: 'Great Barrier Reef',       region: 'Queensland, Australia',      desc: 'The world\u2019s largest coral reef system, spanning over 2,300 kilometres and home to extraordinary marine biodiversity.',                                    page: 56, left: 87, top: 69 },
+
+  // Intangible Heritage (Cream) — pages 64, 66, 68, 70
+  { zone: 13, world: 'intangible', location: 'Flamenco',                 region: 'Andalusia, Spain',           desc: 'A deeply expressive art form combining cante (singing), baile (dance), and toque (guitar), rooted in Andalusian culture.',                                    page: 64, left: 43, top: 32 },
+  { zone: 14, world: 'intangible', location: 'Jazz',                     region: 'New Orleans, United States', desc: 'Born from African American communities, jazz is defined by improvisation, syncopated rhythms, and blues tonality.',                                          page: 66, left: 25, top: 39 },
+  { zone: 15, world: 'intangible', location: 'Backstrap Loom Weaving',   region: 'Guatemalan Highlands',       desc: 'An ancient Maya textile tradition using portable looms, producing vibrant handwoven fabrics that carry cultural identity.',                                    page: 68, left: 31, top: 47 },
+  { zone: 16, world: 'intangible', location: 'Tango',                    region: 'Buenos Aires, Argentina',    desc: 'A passionate dance and musical genre born in the R\u00edo de la Plata region, blending European and African influences.',                                     page: 70, left: 32, top: 68 },
+
+  // Languages (Yellow) — pages 76, 78, 80, 82
+  { zone: 17, world: 'language',   location: '\u02bbŌlelo Hawai\u02bbi', region: 'Hawaii, United States',      desc: 'The native language of Hawaii, nearly lost by the 1980s, now being revived through immersion schools and cultural programs.',                                   page: 76, left: 10, top: 47 },
+  { zone: 18, world: 'language',   location: 'N\u00fcshu Script',        region: 'Hunan Province, China',      desc: 'The only known writing system created and used exclusively by women, a remarkable expression of female solidarity.',                                          page: 78, left: 68, top: 26 },
+  { zone: 19, world: 'language',   location: 'Occitan',                  region: 'Southern France',            desc: 'A Romance language that was the literary language of medieval troubadours, now classified as severely endangered.',                                             page: 80, left: 47, top: 22 },
+  { zone: 20, world: 'language',   location: 'Ainu',                     region: 'Hokkaido, Japan',            desc: 'A critically endangered language isolate of the indigenous Ainu people, known for its rich oral epic traditions.',                                              page: 82, left: 95, top: 26 }
 ];
 
 var currentIndex = -1;
@@ -214,6 +212,7 @@ function activateZone(index) {
     region: entry.region,
     color: world.color,
     desc: entry.desc,
+    page: entry.page,
     index: index,
     total: SEQUENCE.length
   });

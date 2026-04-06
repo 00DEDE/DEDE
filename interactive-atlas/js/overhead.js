@@ -19,7 +19,7 @@ var categoryDesc = null;
 var sequenceCounter = null;
 var transitionFlash = null;
 var ambientGlow = null;
-var videoPlaceholder = null;
+var overheadVideo = null;
 var overheadIcon = null;
 
 var CATEGORY_LABELS = {
@@ -40,7 +40,7 @@ function init() {
   sequenceCounter  = document.getElementById('sequence-counter');
   transitionFlash  = document.getElementById('transition-flash');
   ambientGlow      = document.getElementById('ambient-glow');
-  videoPlaceholder = document.getElementById('video-placeholder');
+  overheadVideo    = document.getElementById('overhead-video');
   overheadIcon     = document.getElementById('overhead-icon');
 
   // Listen for activations from table display
@@ -94,9 +94,10 @@ function showActivation(data) {
     // Sequence counter
     sequenceCounter.textContent = (data.index + 1) + ' / ' + data.total;
 
-    // Video placeholder
-    videoPlaceholder.textContent = 'Video \u2014 ' + data.location;
-    videoPlaceholder.style.borderColor = data.color + '20';
+    // Play video on activation
+    if (overheadVideo) {
+      overheadVideo.play();
+    }
   }, 150);
 }
 
