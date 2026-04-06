@@ -3,18 +3,18 @@ var channel = new BroadcastChannel('atlas-channel');
 
 // Icon SVG paths for CSS mask
 var ICON_MASKS = {
-  monuments:  "url('../UNESCO_ICON_KNOWLEDGE.svg')",
-  nature:     "url('../UNESCO_ICON_NATURE.svg')",
-  intangible: "url('../UNESCO_ICON_HERITAGE.svg')",
-  language:   "url('../UNESCO_ICON_LANGUAGE.svg')"
+  monuments:  "url('assets/graphic/UNESCO_MONUMENT.svg')",
+  nature:     "url('assets/graphic/UNESCO_NATURE.svg')",
+  intangible: "url('assets/graphic/UNESCO_INTANGIBLE.svg')",
+  language:   "url('assets/graphic/UNESCO_LANGUAGE.svg')"
 };
 
 // Icon paths for context panel
 var ICON_SRCS = {
-  monuments:  '../UNESCO_ICON_KNOWLEDGE.svg',
-  nature:     '../UNESCO_ICON_NATURE.svg',
-  intangible: '../UNESCO_ICON_HERITAGE.svg',
-  language:   '../UNESCO_ICON_LANGUAGE.svg'
+  monuments:  'assets/graphic/UNESCO_MONUMENT.svg',
+  nature:     'assets/graphic/UNESCO_NATURE.svg',
+  intangible: 'assets/graphic/UNESCO_INTANGIBLE.svg',
+  language:   'assets/graphic/UNESCO_LANGUAGE.svg'
 };
 
 // World categories — cream (#e7e2de) for intangible

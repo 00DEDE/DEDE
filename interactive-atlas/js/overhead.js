@@ -3,10 +3,10 @@ var channel = new BroadcastChannel('atlas-channel');
 
 // Icon map for each world category
 var ICONS = {
-  monuments:  '../UNESCO_ICON_KNOWLEDGE.svg',
-  nature:     '../UNESCO_ICON_NATURE.svg',
-  intangible: '../UNESCO_ICON_HERITAGE.svg',
-  language:   '../UNESCO_ICON_LANGUAGE.svg'
+  monuments:  'assets/graphic/UNESCO_MONUMENT.svg',
+  nature:     'assets/graphic/UNESCO_NATURE.svg',
+  intangible: 'assets/graphic/UNESCO_INTANGIBLE.svg',
+  language:   'assets/graphic/UNESCO_LANGUAGE.svg'
 };
 
 var idleState = null;
