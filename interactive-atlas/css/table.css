@@ -197,7 +197,7 @@ html, body {
 }
 
 /* ========================
-   VISITED STATE
+   VISITED STATE (dimmed, cream)
    ======================== */
 .marker.visited .marker-icon {
   background-color: #e7e2de;
@@ -209,6 +209,25 @@ html, body {
 }
 
 .marker.visited {
+  transform: translate(-50%, -50%) scale(1);
+  transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: none;
+}
+
+/* ========================
+   DEACTIVATED STATE (normal size, keeps world color)
+   ======================== */
+.marker.deactivated .marker-icon {
+  background-color: var(--world-color);
+  opacity: 0.7;
+}
+
+.marker.deactivated .marker-ring {
+  border-color: var(--world-color);
+  opacity: 0.3;
+}
+
+.marker.deactivated {
   transform: translate(-50%, -50%) scale(1);
   transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
   animation: none;
@@ -340,6 +359,38 @@ html, body {
 
 .status-hint {
   opacity: 0.3;
+}
+
+/* Media controls */
+.media-controls {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.media-btn {
+  background: rgba(231, 226, 222, 0.08);
+  border: 1px solid rgba(231, 226, 222, 0.12);
+  color: rgba(231, 226, 222, 0.5);
+  border-radius: 4px;
+  width: 30px;
+  height: 26px;
+  font-size: 0.6rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.media-btn:hover {
+  background: rgba(231, 226, 222, 0.15);
+  color: rgba(231, 226, 222, 0.8);
+}
+
+.media-btn.active-state {
+  background: rgba(231, 226, 222, 0.2);
+  color: #e7e2de;
 }
 
 /* Progress dots */

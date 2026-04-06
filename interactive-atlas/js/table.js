@@ -24,7 +24,7 @@ var SEQUENCE = [
   { zone: 1,  world: 'monuments',  location: 'Machu Picchu',             region: 'Cusco Region, Peru',         desc: 'A 15th-century Inca citadel set high in the Andes Mountains, renowned for its sophisticated dry-stone construction and panoramic terraces.',                    page: 40, left: 34, top: 69 },
 
   // Monuments (Blue) — pages 30, 32, 34, 36, 38
-  { zone: 2,  world: 'monuments',  location: 'Joya de Cer\u00e9n',       region: 'La Libertad, El Salvador',   desc: 'A pre-Columbian Maya farming village buried by volcanic ash around 600 CE, offering an extraordinary snapshot of daily life in Mesoamerica.',                  page: 30, left: 26, top: 43 },
+  { zone: 2,  world: 'monuments',  location: 'Joya de Cer\u00e9n',       region: 'La Libertad, El Salvador',   desc: 'A pre-Columbian Maya farming village buried by volcanic ash around 600 CE, offering an extraordinary snapshot of daily life in Mesoamerica.',                  page: 30, left: 30, top: 55 },
   { zone: 3,  world: 'monuments',  location: 'Borobudur',                region: 'Central Java, Indonesia',    desc: 'The world\u2019s largest Buddhist temple, built in the 9th century with over 2,600 relief panels and 504 Buddha statues across nine stacked platforms.',         page: 32, left: 81, top: 54 },
   { zone: 4,  world: 'monuments',  location: 'Petra',                    region: "Ma'an Governorate, Jordan",  desc: 'An ancient Nabataean city carved into rose-red sandstone cliffs, blending Eastern and Hellenistic architectural traditions.',                                  page: 34, left: 60, top: 33 },
   { zone: 5,  world: 'monuments',  location: 'Timbuktu',                 region: 'Mali, West Africa',          desc: 'A historic center of Islamic scholarship and trade, home to three great mosques and thousands of ancient manuscripts.',                                       page: 36, left: 49, top: 41 },
@@ -52,6 +52,7 @@ var SEQUENCE = [
 ];
 
 var currentIndex = -1;
+var isActive = false; // tracks whether current zone is active or deactivated
 var markerEls = [];
 var worldIndicator = null;
 var statusZone = null;
@@ -116,54 +117,101 @@ function init() {
     icon.style.maskImage = mask;
     marker.appendChild(icon);
 
-    // Click handler
+    // Click handler — toggle activate/deactivate
     marker.addEventListener('click', function() {
-      activateZone(i);
+      if (currentIndex === i && isActive) {
+        deactivateZone();
+      } else {
+        activateZone(i);
+      }
     });
 
     markersLayer.appendChild(marker);
     markerEls.push(marker);
   });
 
-  // Keyboard controls
+  // Keyboard controls — arrow right: activate next or deactivate first
   document.addEventListener('keydown', function(e) {
     if (e.key === 'ArrowRight') {
       e.preventDefault();
-      activateNext();
+      if (isActive) {
+        deactivateZone();
+      } else {
+        activateNext();
+      }
     } else if (e.key === 'ArrowLeft') {
       e.preventDefault();
-      activatePrev();
+      if (isActive) {
+        deactivateZone();
+      } else {
+        activatePrev();
+      }
     }
+  });
+
+  // Media controls
+  var btnMute = document.getElementById('btn-mute');
+  var btnPause = document.getElementById('btn-pause');
+  var btnPlay = document.getElementById('btn-play');
+
+  btnMute.addEventListener('click', function() {
+    channel.postMessage({ type: 'media-mute' });
+    btnMute.classList.toggle('active-state');
+  });
+  btnPause.addEventListener('click', function() {
+    channel.postMessage({ type: 'media-pause' });
+  });
+  btnPlay.addEventListener('click', function() {
+    channel.postMessage({ type: 'media-play' });
   });
 }
 
 function activateNext() {
-  if (currentIndex < SEQUENCE.length - 1) {
-    activateZone(currentIndex + 1);
+  var next = currentIndex + 1;
+  if (next < SEQUENCE.length) {
+    activateZone(next);
   }
 }
 
 function activatePrev() {
-  if (currentIndex > 0) {
-    activateZone(currentIndex - 1);
+  var prev = currentIndex - 1;
+  if (prev >= 0) {
+    activateZone(prev);
   }
+}
+
+function deactivateZone() {
+  if (currentIndex < 0 || !isActive) return;
+  isActive = false;
+
+  // Shrink marker back to normal size but keep world color
+  if (markerEls[currentIndex]) {
+    markerEls[currentIndex].classList.remove('active');
+    markerEls[currentIndex].classList.add('deactivated');
+  }
+
+  // Tell overhead to gracefully close the video
+  channel.postMessage({ type: 'zone-deactivate' });
 }
 
 function activateZone(index) {
   var prev = currentIndex;
   currentIndex = index;
+  isActive = true;
   var entry = SEQUENCE[index];
   var world = WORLDS[entry.world];
 
   // Deactivate previous marker
   if (prev >= 0 && markerEls[prev]) {
     markerEls[prev].classList.remove('active');
+    markerEls[prev].classList.remove('deactivated');
     markerEls[prev].classList.add('visited');
   }
 
   // Activate current marker
   if (markerEls[index]) {
     markerEls[index].classList.remove('visited');
+    markerEls[index].classList.remove('deactivated');
     markerEls[index].classList.add('active');
   }
 

@@ -65,12 +65,36 @@ function init() {
     }
   }, { once: true });
 
-  // Listen for activations from table display
+  // Listen for messages from table display
   channel.onmessage = function(e) {
     if (e.data.type === 'zone-activate') {
       showActivation(e.data);
+    } else if (e.data.type === 'zone-deactivate') {
+      gracefulClose();
+    } else if (e.data.type === 'media-mute') {
+      if (overheadVideo) overheadVideo.muted = !overheadVideo.muted;
+    } else if (e.data.type === 'media-pause') {
+      if (overheadVideo) overheadVideo.pause();
+    } else if (e.data.type === 'media-play') {
+      if (overheadVideo) overheadVideo.play();
     }
   };
+}
+
+function gracefulClose() {
+  if (videoFadeTimer) clearTimeout(videoFadeTimer);
+  if (videoCutTimer) clearTimeout(videoCutTimer);
+
+  // Fade video to black
+  if (videoFadeOverlay) videoFadeOverlay.classList.add('fading');
+
+  // After fade completes, pause and hide video
+  setTimeout(function() {
+    if (overheadVideo) {
+      overheadVideo.pause();
+      overheadVideo.classList.remove('visible');
+    }
+  }, 3000);
 }
 
 function showActivation(data) {
