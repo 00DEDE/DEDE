@@ -27,12 +27,20 @@ html, body {
   justify-content: center;
 }
 
+/* Shared container — locks SVG + markers to same 2:1 coordinate space */
+.map-container {
+  position: relative;
+  width: 90%;
+  max-height: 90%;
+  aspect-ratio: 2 / 1;
+}
+
 /* Continents SVG image */
 .map-continents {
   position: absolute;
-  width: 88%;
-  height: 82%;
-  object-fit: contain;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   opacity: 0.35;
   pointer-events: none;
 }
