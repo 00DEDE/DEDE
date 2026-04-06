@@ -110,17 +110,24 @@ function showActivation(data) {
       // Reset video and overlay
       overheadVideo.currentTime = 0;
       overheadVideo.classList.remove('playing');
-      videoFadeOverlay.classList.remove('fading');
+      if (videoFadeOverlay) videoFadeOverlay.classList.remove('fading');
 
-      // Start playback and fade in smoothly
-      overheadVideo.play();
-      requestAnimationFrame(function() {
+      // Start playback — handle promise for autoplay policy
+      var playPromise = overheadVideo.play();
+      if (playPromise !== undefined) {
+        playPromise.then(function() {
+          overheadVideo.classList.add('playing');
+        }).catch(function() {
+          // Autoplay blocked — show video anyway as a still frame
+          overheadVideo.classList.add('playing');
+        });
+      } else {
         overheadVideo.classList.add('playing');
-      });
+      }
 
       // Start fade-to-black 10 seconds before the 4 min mark
       videoFadeTimer = setTimeout(function() {
-        videoFadeOverlay.classList.add('fading');
+        if (videoFadeOverlay) videoFadeOverlay.classList.add('fading');
       }, FADE_OUT_START * 1000);
 
       // Pause video at 4 minutes

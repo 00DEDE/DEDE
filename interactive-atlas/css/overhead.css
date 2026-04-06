@@ -135,7 +135,7 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: -1;
+  z-index: 1;
 }
 
 .overhead-video {
@@ -148,7 +148,7 @@ html, body {
 }
 
 .overhead-video.playing {
-  opacity: 0.25;
+  opacity: 0.4;
 }
 
 .video-fade-overlay {
