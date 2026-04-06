@@ -50,6 +50,21 @@ function init() {
   overheadIcon     = document.getElementById('overhead-icon');
   videoFadeOverlay = document.getElementById('video-fade-overlay');
 
+  // One-time click to unlock audio for the session
+  var audioUnlocked = false;
+  document.addEventListener('click', function() {
+    if (!audioUnlocked) {
+      audioUnlocked = true;
+      // Play and immediately pause to unlock audio context
+      overheadVideo.muted = false;
+      overheadVideo.play().then(function() {
+        overheadVideo.pause();
+        overheadVideo.currentTime = 0;
+      }).catch(function() {});
+      idleState.querySelector('.idle-text').textContent = 'Waiting for activation';
+    }
+  }, { once: true });
+
   // Listen for activations from table display
   channel.onmessage = function(e) {
     if (e.data.type === 'zone-activate') {
@@ -101,15 +116,20 @@ function showActivation(data) {
     // Sequence counter
     sequenceCounter.textContent = (data.index + 1) + ' / ' + data.total;
 
-    // Video — restart, 4 min cutoff with fade to black
+    // Video — fade in, play, 4 min cutoff with fade to black
     if (overheadVideo) {
       if (videoFadeTimer) clearTimeout(videoFadeTimer);
       if (videoCutTimer) clearTimeout(videoCutTimer);
 
       overheadVideo.currentTime = 0;
-      overheadVideo.style.opacity = '';
+      overheadVideo.classList.remove('visible');
       if (videoFadeOverlay) videoFadeOverlay.classList.remove('fading');
-      overheadVideo.play();
+
+      overheadVideo.play().then(function() {
+        overheadVideo.classList.add('visible');
+      }).catch(function() {
+        overheadVideo.classList.add('visible');
+      });
 
       // Fade to black starting 10s before the 4 min mark
       videoFadeTimer = setTimeout(function() {
@@ -118,7 +138,7 @@ function showActivation(data) {
 
       // Pause at 4 minutes
       videoCutTimer = setTimeout(function() {
-        overheadVideo.style.opacity = '0';
+        overheadVideo.classList.remove('visible');
         overheadVideo.pause();
       }, VIDEO_DURATION * 1000);
     }

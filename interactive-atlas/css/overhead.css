@@ -143,8 +143,12 @@ html, body {
   aspect-ratio: 16 / 9;
   object-fit: cover;
   border-radius: 16px;
-  opacity: 0.4;
+  opacity: 0;
   transition: opacity 2s ease;
+}
+
+.overhead-video.visible {
+  opacity: 0.4;
 }
 
 .video-fade-overlay {
