@@ -27,17 +27,26 @@ html, body {
   justify-content: center;
 }
 
-.map-svg {
+/* Continents SVG image */
+.map-continents {
+  position: absolute;
   width: 88%;
   height: 82%;
-  opacity: 0.45;
+  object-fit: contain;
+  opacity: 0.35;
+  pointer-events: none;
 }
 
-.continent {
-  fill: #2a2320;
-  stroke: #3d3530;
-  stroke-width: 1;
-  transition: fill 0.6s ease;
+/* Grid SVG overlay */
+.map-grid {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.04;
+  pointer-events: none;
+  z-index: 1;
 }
 
 /* ========================
@@ -348,20 +357,6 @@ html, body {
   transform: scale(1.4);
 }
 
-/* ========================
-   GRID OVERLAY
-   ======================== */
-.grid-overlay {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.025;
-  background-image:
-    linear-gradient(rgba(231,226,222,0.3) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(231,226,222,0.3) 1px, transparent 1px);
-  background-size: 60px 60px;
-  z-index: 1;
-}
 
 /* ========================
    WORLD INDICATOR
