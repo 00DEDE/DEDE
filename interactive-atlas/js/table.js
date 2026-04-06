@@ -21,7 +21,7 @@ var WORLDS = {
 // Coordinates as % of map-wrap (left, top)
 var SEQUENCE = [
   // Monuments (Blue) — pages 30, 32, 34, 36, 38 + Machu Picchu
-  { zone: 1,  world: 'monuments',  location: 'Joya de Cer\u00e9n',       region: 'La Libertad, El Salvador',   desc: 'A pre-Columbian Maya farming village buried by volcanic ash around 600 CE, offering an extraordinary snapshot of daily life in Mesoamerica.',                  page: 30, left: 25, top: 48 },
+  { zone: 1,  world: 'monuments',  location: 'Joya de Cer\u00e9n',       region: 'La Libertad, El Salvador',   desc: 'A pre-Columbian Maya farming village buried by volcanic ash around 600 CE, offering an extraordinary snapshot of daily life in Mesoamerica.',                  page: 30, left: 22, top: 40 },
   { zone: 2,  world: 'monuments',  location: 'Borobudur',                region: 'Central Java, Indonesia',    desc: 'The world\u2019s largest Buddhist temple, built in the 9th century with over 2,600 relief panels and 504 Buddha statues across nine stacked platforms.',         page: 32, left: 76, top: 48 },
   { zone: 3,  world: 'monuments',  location: 'Petra',                    region: "Ma'an Governorate, Jordan",  desc: 'An ancient Nabataean city carved into rose-red sandstone cliffs, blending Eastern and Hellenistic architectural traditions.',                                  page: 34, left: 55, top: 30 },
   { zone: 4,  world: 'monuments',  location: 'Timbuktu',                 region: 'Mali, West Africa',          desc: 'A historic center of Islamic scholarship and trade, home to three great mosques and thousands of ancient manuscripts.',                                       page: 36, left: 45, top: 36 },
