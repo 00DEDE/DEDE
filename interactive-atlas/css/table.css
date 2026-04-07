@@ -28,10 +28,10 @@ html, body {
 
 .ocean-wave {
   position: absolute;
-  width: 200%;
-  height: 200%;
-  top: -50%;
-  left: -50%;
+  width: 120%;
+  height: 120%;
+  top: -10%;
+  left: -10%;
   background: radial-gradient(ellipse at center,
     rgba(36, 145, 208, 0.035) 0%,
     transparent 50%
@@ -41,20 +41,20 @@ html, body {
 }
 
 .ocean-wave-1 {
-  animation-duration: 25s;
+  animation-duration: 20s;
   animation-name: ocean-drift-1;
 }
 
 .ocean-wave-2 {
-  animation-duration: 30s;
-  animation-delay: -8s;
+  animation-duration: 24s;
+  animation-delay: -6s;
   animation-name: ocean-drift-2;
   opacity: 0.7;
 }
 
 .ocean-wave-3 {
-  animation-duration: 35s;
-  animation-delay: -15s;
+  animation-duration: 28s;
+  animation-delay: -12s;
   animation-name: ocean-drift-3;
   opacity: 0.5;
 }
