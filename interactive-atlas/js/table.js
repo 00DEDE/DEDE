@@ -21,9 +21,9 @@ var WORLDS = {
 // Coordinates as % of map-wrap (left, top)
 var SEQUENCE = [
   // 1. Machu Picchu
-  { zone: 1,  world: 'monuments',  location: 'Machu Picchu',             region: 'Cusco Region, Peru',         desc: 'High in the Andes Mountains, Machu Picchu stands as a remarkable expression of Inca ingenuity and environmental understanding. Built in the fifteenth century, the city was carefully integrated into steep mountain ridges, with agricultural terraces and precisely carved stone buildings shaping the landscape. Rather than dominating nature, the Inca worked in harmony with it, studying drainage, soil stability, and sacred geography.',                    page: 40, left: 34, top: 69 },
+  { zone: 1,  world: 'monuments',  location: 'Machu Picchu',             region: 'Cusco Region, Peru',         desc: 'High in the Andes Mountains, Machu Picchu stands as a remarkable expression of Inca ingenuity and environmental understanding. Built in the fifteenth century, the city was carefully integrated into steep mountain ridges, with agricultural terraces and precisely carved stone buildings shaping the landscape. Rather than dominating nature, the Inca worked in harmony with it, studying drainage, soil stability, and sacred geography.',                    page: 40, left: 34, top: 69, video: 'assets/videos/machu_picchu_video_1.mp4' },
   // 2. Nüshu Script
-  { zone: 2,  world: 'language',   location: 'N\u00fcshu Script',        region: 'Hunan Province, China',      desc: 'N\u00fcshu is one of the world\u2019s most unique writing systems, developed and used exclusively by women in rural China. For generations, women in Hunan Province created this delicate script to communicate through letters, poems, and songs. In societies where formal education for women was limited, N\u00fcshu became a space for emotional expression, friendship, and resistance \u2014 a remarkable testament to female solidarity and creativity.',                                          page: 78, left: 73, top: 32 },
+  { zone: 2,  world: 'language',   location: 'N\u00fcshu Script',        region: 'Hunan Province, China',      desc: 'N\u00fcshu is one of the world\u2019s most unique writing systems, developed and used exclusively by women in rural China. For generations, women in Hunan Province created this delicate script to communicate through letters, poems, and songs. In societies where formal education for women was limited, N\u00fcshu became a space for emotional expression, friendship, and resistance \u2014 a remarkable testament to female solidarity and creativity.',                                          page: 78, left: 73, top: 32, video: 'assets/videos/nushu_video%201.mp4' },
   // 3. Socotra
   { zone: 3,  world: 'nature',     location: 'Socotra Archipelago',      region: 'Arabian Sea, Yemen',         desc: 'Isolated in the Arabian Sea, the Socotra Archipelago contains one of the most unique ecosystems on Earth. Over millions of years, the islands evolved in isolation, allowing plants and animals to develop forms found nowhere else. The iconic dragon blood tree, with its umbrella-shaped canopy, stands as a symbol of this extraordinary biological heritage and the fragile beauty of island ecosystems.',                                              page: 48, left: 63, top: 51 },
   // 4. Backstrap Loom Weaving
@@ -106,10 +106,12 @@ function init() {
     marker.style.setProperty('--pulse-dur', (5 + Math.random() * 8) + 's');
     marker.style.setProperty('--pulse-delay', (Math.random() * 6) + 's');
 
-    // Pulse ring
-    var pulse = document.createElement('div');
-    pulse.className = 'marker-pulse';
-    marker.appendChild(pulse);
+    // Pulse rings (3 staggered)
+    for (var p = 0; p < 3; p++) {
+      var pulse = document.createElement('div');
+      pulse.className = 'marker-pulse marker-pulse-' + (p + 1);
+      marker.appendChild(pulse);
+    }
 
     // Glow
     var glow = document.createElement('div');
@@ -276,7 +278,8 @@ function activateZone(index) {
     desc: entry.desc,
     page: entry.page,
     index: index,
-    total: SEQUENCE.length
+    total: SEQUENCE.length,
+    video: entry.video || ''
   });
 }
 
