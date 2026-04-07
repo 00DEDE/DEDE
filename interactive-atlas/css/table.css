@@ -11,7 +11,7 @@ html, body {
   background: #1a1413;
   color: #e7e2de;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  cursor: none;
+  cursor: default;
   user-select: none;
 }
 
