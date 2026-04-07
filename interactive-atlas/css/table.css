@@ -34,7 +34,7 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
 }
 
 /* ========================
-   OCEAN WAVES
+   OCEAN CURRENTS
    ======================== */
 .ocean-layer {
   position: fixed;
@@ -44,68 +44,41 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   z-index: 0;
 }
 
-.ocean-wave {
+.ocean-current {
   position: absolute;
-  width: 60%;
-  height: 60%;
-  border-radius: 45%;
-  filter: blur(60px);
+  width: 180px;
+  height: 2px;
+  border-radius: 1px;
+  opacity: 0;
 }
 
-/* Blue wave — #2491d0 */
-.ocean-wave-1 {
-  background: radial-gradient(ellipse at center, rgba(36, 145, 208, 0.04) 0%, transparent 70%);
-  top: 10%;
-  left: -10%;
-  animation: wave-roam-1 18s ease-in-out infinite;
+/* Blue currents */
+.current-1 { background: linear-gradient(90deg, transparent, rgba(36,145,208,0.12), transparent); top: 35%; left: 10%; animation: drift-h 45s linear infinite; animation-delay: 0s; }
+.current-2 { background: linear-gradient(90deg, transparent, rgba(36,145,208,0.08), transparent); top: 55%; left: 60%; width: 140px; animation: drift-h-rev 50s linear infinite; animation-delay: -12s; }
+.current-3 { background: linear-gradient(90deg, transparent, rgba(36,145,208,0.1), transparent); top: 72%; left: 5%; width: 200px; animation: drift-h 55s linear infinite; animation-delay: -25s; }
+
+/* Green currents */
+.current-4 { background: linear-gradient(90deg, transparent, rgba(157,211,178,0.1), transparent); top: 25%; left: 40%; width: 160px; animation: drift-h 48s linear infinite; animation-delay: -8s; }
+.current-5 { background: linear-gradient(90deg, transparent, rgba(157,211,178,0.07), transparent); top: 65%; left: 25%; width: 120px; animation: drift-h-rev 52s linear infinite; animation-delay: -20s; }
+
+/* Yellow currents */
+.current-6 { background: linear-gradient(90deg, transparent, rgba(248,225,102,0.06), transparent); top: 45%; left: 50%; width: 150px; animation: drift-h 58s linear infinite; animation-delay: -15s; }
+.current-7 { background: linear-gradient(90deg, transparent, rgba(248,225,102,0.05), transparent); top: 80%; left: 70%; width: 130px; animation: drift-h-rev 60s linear infinite; animation-delay: -30s; }
+
+@keyframes drift-h {
+  0%   { transform: translateX(-100vw) translateY(0); opacity: 0; }
+  5%   { opacity: 1; }
+  50%  { transform: translateX(50vw) translateY(15px); }
+  95%  { opacity: 1; }
+  100% { transform: translateX(100vw) translateY(-10px); opacity: 0; }
 }
 
-/* Green wave — #9dd3b2 */
-.ocean-wave-2 {
-  background: radial-gradient(ellipse at center, rgba(157, 211, 178, 0.035) 0%, transparent 70%);
-  top: 50%;
-  left: 60%;
-  animation: wave-roam-2 22s ease-in-out infinite;
-  animation-delay: -7s;
-}
-
-/* Yellow wave — #f8e166 */
-.ocean-wave-3 {
-  background: radial-gradient(ellipse at center, rgba(248, 225, 102, 0.025) 0%, transparent 70%);
-  top: -10%;
-  left: 30%;
-  animation: wave-roam-3 26s ease-in-out infinite;
-  animation-delay: -14s;
-}
-
-@keyframes wave-roam-1 {
-  0%   { transform: translate(0, 0) scale(1); }
-  15%  { transform: translate(30%, 15%) scale(1.1); }
-  35%  { transform: translate(60%, -5%) scale(0.9); }
-  50%  { transform: translate(80%, 25%) scale(1.05); }
-  65%  { transform: translate(50%, 40%) scale(0.95); }
-  80%  { transform: translate(15%, 20%) scale(1.1); }
-  100% { transform: translate(0, 0) scale(1); }
-}
-
-@keyframes wave-roam-2 {
-  0%   { transform: translate(0, 0) scale(1); }
-  15%  { transform: translate(-40%, -20%) scale(1.05); }
-  30%  { transform: translate(-70%, 10%) scale(0.9); }
-  50%  { transform: translate(-30%, -35%) scale(1.1); }
-  70%  { transform: translate(10%, -10%) scale(0.95); }
-  85%  { transform: translate(-15%, 15%) scale(1.05); }
-  100% { transform: translate(0, 0) scale(1); }
-}
-
-@keyframes wave-roam-3 {
-  0%   { transform: translate(0, 0) scale(1); }
-  20%  { transform: translate(20%, 35%) scale(1.1); }
-  40%  { transform: translate(-20%, 50%) scale(0.9); }
-  55%  { transform: translate(-40%, 20%) scale(1.05); }
-  75%  { transform: translate(10%, 45%) scale(0.95); }
-  90%  { transform: translate(35%, 10%) scale(1.1); }
-  100% { transform: translate(0, 0) scale(1); }
+@keyframes drift-h-rev {
+  0%   { transform: translateX(100vw) translateY(0); opacity: 0; }
+  5%   { opacity: 1; }
+  50%  { transform: translateX(-50vw) translateY(-12px); }
+  95%  { opacity: 1; }
+  100% { transform: translateX(-100vw) translateY(8px); opacity: 0; }
 }
 
 /* ========================
@@ -123,8 +96,8 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
 /* Shared container — locks SVG + markers to same 2:1 coordinate space */
 .map-container {
   position: relative;
-  width: 90%;
-  max-height: 90%;
+  width: 100%;
+  max-height: 100%;
   aspect-ratio: 2 / 1;
 }
 
@@ -185,16 +158,18 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
 }
 
-/* Subtle idle breathing */
-.marker:not(.active) {
-  animation: marker-enter 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards,
-             marker-breathe 4s ease-in-out infinite;
-  animation-delay: var(--delay, 0s), var(--float-delay, 0s);
+/* Idle invite pulse — subtle ring pulse to entice clicking */
+.marker:not(.active):not(.visited):not(.deactivated) .marker-pulse {
+  border-color: var(--world-color);
+  opacity: 0.3;
+  animation: invite-pulse var(--pulse-dur, 6s) ease-out infinite;
+  animation-delay: var(--pulse-delay, 0s);
 }
 
-@keyframes marker-breathe {
-  0%, 100% { filter: brightness(1); }
-  50% { filter: brightness(1.2); }
+@keyframes invite-pulse {
+  0%, 70% { transform: scale(1); opacity: 0; }
+  75% { opacity: 0.3; }
+  100% { transform: scale(2); opacity: 0; }
 }
 
 /* Icon — mask-based colorization */
@@ -332,41 +307,23 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   animation: none;
 }
 
-/* ========================
-   SCAN LINE
-   ======================== */
-.scan-line {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(231,226,222,0.08), transparent);
-  box-shadow: 0 0 15px 2px rgba(231,226,222,0.03);
-  animation: scan-sweep 8s ease-in-out infinite;
-  pointer-events: none;
-  z-index: 2;
-}
-
-@keyframes scan-sweep {
-  0% { top: -2%; opacity: 0; }
-  10% { opacity: 1; }
-  90% { opacity: 1; }
-  100% { top: 102%; opacity: 0; }
-}
+/* Scan line removed */
+.scan-line { display: none; }
 
 /* ========================
-   BOTTOM CONTEXT PANEL
+   BOTTOM CONTEXT PANEL — horizontal layout
    ======================== */
 .context-panel {
   position: fixed;
   bottom: 52px;
   left: 50%;
   transform: translateX(-50%);
-  text-align: center;
-  padding: 1.2rem 2.5rem;
-  min-width: 380px;
-  max-width: 600px;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1rem 2rem;
+  max-width: 900px;
+  width: 90%;
   background: rgba(26, 20, 19, 0.88);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
@@ -377,14 +334,15 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
 }
 
 .context-icon-wrap {
+  flex-shrink: 0;
   display: flex;
+  align-items: center;
   justify-content: center;
-  margin-bottom: 0.5rem;
 }
 
 .context-panel-icon {
-  width: 28px;
-  height: 28px;
+  width: 42px;
+  height: 42px;
   -webkit-mask-size: contain;
   mask-size: contain;
   -webkit-mask-repeat: no-repeat;
@@ -396,36 +354,45 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   display: none;
 }
 
+.context-world {
+  flex-shrink: 0;
+  font-size: 0.55rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.3;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+  transition: color 0.4s ease;
+  border-right: 1px solid rgba(231, 226, 222, 0.1);
+  padding-right: 1rem;
+}
+
+.context-text {
+  flex: 1;
+  min-width: 0;
+}
+
 .context-location {
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   font-weight: 600;
   letter-spacing: 0.02em;
   transition: color 0.4s ease;
 }
 
 .context-region {
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   opacity: 0.4;
-  margin-top: 0.2rem;
-}
-
-.context-world {
-  font-size: 0.58rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  opacity: 0.3;
-  margin-top: 0.5rem;
-  transition: color 0.4s ease;
+  margin-top: 0.15rem;
 }
 
 .context-desc {
-  font-size: 0.7rem;
-  line-height: 1.55;
+  font-size: 0.65rem;
+  line-height: 1.5;
   opacity: 0.4;
-  margin-top: 0.6rem;
-  max-width: 480px;
+  margin-top: 0.4rem;
 }
 
 /* ========================

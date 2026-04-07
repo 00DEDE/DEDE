@@ -91,8 +91,9 @@ function init() {
     marker.style.left = entry.left + '%';
     marker.style.top = entry.top + '%';
     marker.style.setProperty('--delay', (i * 0.08) + 's');
-    marker.style.setProperty('--float-delay', (Math.random() * 4) + 's');
     marker.style.setProperty('--world-color', WORLDS[entry.world].color);
+    marker.style.setProperty('--pulse-dur', (5 + Math.random() * 8) + 's');
+    marker.style.setProperty('--pulse-delay', (Math.random() * 6) + 's');
 
     // Pulse ring
     var pulse = document.createElement('div');
