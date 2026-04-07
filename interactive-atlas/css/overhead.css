@@ -382,14 +382,12 @@ html, body {
   opacity: 0.4;
 }
 
-.intro-title {
+.intro-title-svg {
   margin-top: 3.5rem;
-  font-family: 'Inter Tight', 'Helvetica Neue', sans-serif;
-  font-size: 2rem;
-  font-weight: 600;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
+  width: clamp(300px, 40vw, 600px);
+  height: auto;
   opacity: 0;
+  filter: brightness(0) invert(0.91) sepia(0.05) saturate(0.3);
   animation: intro-title-enter 1s ease forwards;
   animation-delay: 1.2s;
 }

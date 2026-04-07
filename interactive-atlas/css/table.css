@@ -719,14 +719,12 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   opacity: 0.4;
 }
 
-.intro-title {
+.intro-title-svg {
   margin-top: 3.5rem;
-  font-family: 'Inter Tight', 'Helvetica Neue', sans-serif;
-  font-size: 2rem;
-  font-weight: 600;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
+  width: clamp(300px, 40vw, 600px);
+  height: auto;
   opacity: 0;
+  filter: brightness(0) invert(0.91) sepia(0.05) saturate(0.3);
   animation: intro-title-enter 1s ease forwards;
   animation-delay: 1.2s;
 }
@@ -734,4 +732,28 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
 @keyframes intro-title-enter {
   0% { opacity: 0; transform: translateY(8px); }
   100% { opacity: 0.5; transform: translateY(0); }
+}
+
+/* Corner title — top left */
+.corner-title {
+  position: fixed;
+  top: 1.5rem;
+  left: 2rem;
+  height: 28px;
+  width: auto;
+  filter: brightness(0) invert(0.91) sepia(0.05) saturate(0.3);
+  opacity: 0.5;
+  z-index: 10;
+}
+
+/* Corner logo — top right */
+.corner-logo {
+  position: fixed;
+  top: 1.5rem;
+  right: 2rem;
+  height: 40px;
+  width: auto;
+  filter: brightness(0) invert(0.91) sepia(0.05) saturate(0.3);
+  opacity: 0.5;
+  z-index: 10;
 }
