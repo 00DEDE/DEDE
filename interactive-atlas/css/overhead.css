@@ -204,17 +204,47 @@ html, body {
   width: 70%;
   aspect-ratio: 1400 / 780;
   clip-path: inset(0 50%);
-  transition: clip-path 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: clip-path 1.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .video-frame.expanded {
   clip-path: inset(0 0);
-  transition: clip-path 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: clip-path 1.6s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: frame-breathe 6s ease-in-out 1.6s infinite;
 }
 
 .video-frame.contracting {
   clip-path: inset(0 50%);
-  transition: clip-path 0.8s cubic-bezier(0.55, 0, 1, 0.45);
+  transition: clip-path 0.9s cubic-bezier(0.55, 0, 1, 0.45);
+  animation: none;
+}
+
+@keyframes frame-breathe {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.008); }
+}
+
+/* Glow layer behind video frame */
+.video-frame::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 16px;
+  box-shadow: 0 0 30px 8px var(--frame-glow, rgba(231, 226, 222, 0.06)),
+              0 0 60px 20px var(--frame-glow-wide, rgba(231, 226, 222, 0.03));
+  opacity: 0;
+  transition: opacity 1.6s ease;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.video-frame.expanded::after {
+  opacity: 1;
+}
+
+.video-frame.contracting::after {
+  opacity: 0;
+  transition: opacity 0.6s ease;
 }
 
 /* Monument frame mask */
@@ -251,7 +281,7 @@ html, body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0.4;
+  opacity: 0.65;
 }
 
 .video-fade-overlay {

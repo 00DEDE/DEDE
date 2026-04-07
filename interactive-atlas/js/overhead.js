@@ -175,7 +175,7 @@ function showActivation(data) {
   }
   if (videoFadeOverlay) videoFadeOverlay.classList.remove('fading');
 
-  // Set world-specific video frame mask
+  // Set world-specific video frame mask and glow color
   if (videoFrame) {
     videoFrame.className = 'video-frame';
     if (data.world === 'monuments') {
@@ -183,6 +183,9 @@ function showActivation(data) {
     } else if (data.world === 'language') {
       videoFrame.classList.add('frame-language');
     }
+    var c = data.color;
+    videoFrame.style.setProperty('--frame-glow', c + '18');
+    videoFrame.style.setProperty('--frame-glow-wide', c + '0a');
   }
 
   // --- Phase 1: Show title, icon, context ---
