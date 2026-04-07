@@ -739,7 +739,7 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   position: fixed;
   top: 1.5rem;
   left: 2rem;
-  height: 55px;
+  height: 72px;
   width: auto;
   filter: brightness(0) invert(0.91) sepia(0.05) saturate(0.3);
   opacity: 0.5;
