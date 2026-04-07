@@ -74,6 +74,7 @@ var contextLocation = null;
 var contextRegion = null;
 var contextWorld = null;
 var contextDesc = null;
+var legend = null;
 
 function init() {
   worldIndicator = document.getElementById('world-indicator');
@@ -84,6 +85,7 @@ function init() {
   contextRegion = document.getElementById('context-region');
   contextWorld = document.getElementById('context-world');
   contextDesc = document.getElementById('context-desc');
+  legend = document.getElementById('legend');
 
   var markersLayer = document.getElementById('markers-layer');
 
@@ -245,6 +247,9 @@ function deactivateZone() {
     contextPanel.classList.add('exit');
   }
 
+  // Show legend labels again
+  if (legend) legend.classList.remove('labels-hidden');
+
   // Tell overhead to gracefully close the video
   channel.postMessage({ type: 'zone-deactivate' });
 }
@@ -284,6 +289,9 @@ function activateZone(index) {
   contextWorld.textContent = world.name;
   contextWorld.style.color = world.color;
   contextDesc.textContent = entry.desc;
+
+  // Hide legend labels
+  if (legend) legend.classList.add('labels-hidden');
 
   // Animate context panel border accent
   contextPanel.style.borderColor = world.color + '18';
