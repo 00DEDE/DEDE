@@ -720,7 +720,7 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
 }
 
 .intro-title-svg {
-  margin-top: 3.5rem;
+  margin-bottom: 3.5rem;
   width: clamp(300px, 40vw, 600px);
   height: auto;
   opacity: 0;
@@ -735,7 +735,7 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
 }
 
 .intro-logo {
-  margin-top: 6rem;
+  margin-top: 3.5rem;
   height: 150px;
   width: auto;
   filter: brightness(0) invert(0.91) sepia(0.05) saturate(0.3);
