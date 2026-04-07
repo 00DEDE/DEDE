@@ -11,10 +11,33 @@
   <div class="ambient-glow" id="ambient-glow"></div>
   <div class="transition-flash" id="transition-flash"></div>
 
+  <!-- Intro overlay — stays until first icon activation -->
+  <div class="intro-overlay" id="intro-overlay">
+    <div class="intro-icons">
+      <div class="intro-icon-item">
+        <div class="intro-icon" style="-webkit-mask-image: url('assets/graphic/UNESCO_MONUMENT.svg'); mask-image: url('assets/graphic/UNESCO_MONUMENT.svg'); -webkit-mask-size: contain; mask-size: contain; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: center; mask-position: center; background-color: #2491d0;"></div>
+        <span class="intro-icon-label" style="color: #2491d0;">Monuments</span>
+      </div>
+      <div class="intro-icon-item">
+        <div class="intro-icon" style="-webkit-mask-image: url('assets/graphic/UNESCO_NATURE.svg'); mask-image: url('assets/graphic/UNESCO_NATURE.svg'); -webkit-mask-size: contain; mask-size: contain; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: center; mask-position: center; background-color: #9dd3b2;"></div>
+        <span class="intro-icon-label" style="color: #9dd3b2;">Nature</span>
+      </div>
+      <div class="intro-icon-item">
+        <div class="intro-icon" style="-webkit-mask-image: url('assets/graphic/UNESCO_LANGUAGE.svg'); mask-image: url('assets/graphic/UNESCO_LANGUAGE.svg'); -webkit-mask-size: contain; mask-size: contain; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: center; mask-position: center; background-color: #f8e166;"></div>
+        <span class="intro-icon-label" style="color: #f8e166;">Language</span>
+      </div>
+      <div class="intro-icon-item">
+        <div class="intro-icon" style="-webkit-mask-image: url('assets/graphic/UNESCO_INTANGIBLE.svg'); mask-image: url('assets/graphic/UNESCO_INTANGIBLE.svg'); -webkit-mask-size: contain; mask-size: contain; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: center; mask-position: center; background-color: #e7e2de;"></div>
+        <span class="intro-icon-label" style="color: #e7e2de;">Intangible</span>
+      </div>
+    </div>
+    <div class="intro-title">UNESCO Interactive Atlas</div>
+  </div>
+
   <div class="overhead-wrap">
 
     <!-- Idle state — click unlocks audio for the session -->
-    <div class="idle-state" id="idle-state">
+    <div class="idle-state" id="idle-state" style="display:none;">
       <div class="idle-logo">A</div>
       <div class="idle-text">Click anywhere to begin</div>
     </div>

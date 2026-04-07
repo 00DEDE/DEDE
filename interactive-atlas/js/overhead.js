@@ -9,7 +9,7 @@ var ICONS = {
   language:   'assets/graphic/UNESCO_LANGUAGE.svg'
 };
 
-var idleState = null;
+var introOverlay = null;
 var activeContent = null;
 var introLayer = null;
 var worldBar = null;
@@ -31,8 +31,8 @@ var videoCutTimer = null;
 var introTimer = null;
 var videoStartTimer = null;
 
-var VIDEO_DURATION = 240; // 4 minutes in seconds
-var FADE_OUT_START = 230; // start fading 10 seconds before cut
+var VIDEO_DURATION = 240;
+var FADE_OUT_START = 230;
 
 var CATEGORY_LABELS = {
   monuments:  'Monuments & Built Heritage',
@@ -42,7 +42,7 @@ var CATEGORY_LABELS = {
 };
 
 function init() {
-  idleState        = document.getElementById('idle-state');
+  introOverlay     = document.getElementById('intro-overlay');
   activeContent    = document.getElementById('active-content');
   introLayer       = document.getElementById('intro-layer');
   worldBar         = document.getElementById('world-bar');
@@ -60,23 +60,25 @@ function init() {
   videoFadeOverlay = document.getElementById('video-fade-overlay');
   videoFrame       = document.getElementById('video-frame');
 
-  // One-time click to unlock audio for the session
+  // Click on intro overlay unlocks audio
   var audioUnlocked = false;
-  document.addEventListener('click', function() {
-    if (!audioUnlocked) {
-      audioUnlocked = true;
-      overheadVideo.muted = false;
-      overheadVideo.play().then(function() {
-        overheadVideo.pause();
-        overheadVideo.currentTime = 0;
-      }).catch(function() {});
-      idleState.querySelector('.idle-text').textContent = 'Waiting for activation';
-    }
-  }, { once: true });
+  if (introOverlay) {
+    introOverlay.addEventListener('click', function() {
+      if (!audioUnlocked) {
+        audioUnlocked = true;
+        overheadVideo.muted = false;
+        overheadVideo.play().then(function() {
+          overheadVideo.pause();
+          overheadVideo.currentTime = 0;
+        }).catch(function() {});
+      }
+    });
+  }
 
   // Listen for messages from table display
   channel.onmessage = function(e) {
     if (e.data.type === 'zone-activate') {
+      dismissIntro();
       showActivation(e.data);
     } else if (e.data.type === 'zone-deactivate') {
       gracefulClose();
@@ -88,6 +90,16 @@ function init() {
       if (overheadVideo) overheadVideo.play();
     }
   };
+}
+
+function dismissIntro() {
+  if (introOverlay && !introOverlay.classList.contains('fade-out')) {
+    introOverlay.classList.add('fade-out');
+    setTimeout(function() {
+      introOverlay.remove();
+      introOverlay = null;
+    }, 1300);
+  }
 }
 
 var volumeFadeInterval = null;
@@ -136,8 +148,7 @@ function showActivation(data) {
   void transitionFlash.offsetWidth;
   transitionFlash.classList.add('flash');
 
-  // Hide idle, show active
-  idleState.classList.add('hidden');
+  // Show active content
   activeContent.classList.add('visible');
 
   // Set ambient glow
@@ -156,46 +167,36 @@ function showActivation(data) {
     videoFrame.className = 'video-frame';
     if (data.world === 'monuments') {
       videoFrame.classList.add('frame-monuments');
+    } else if (data.world === 'language') {
+      videoFrame.classList.add('frame-language');
     }
   }
 
   // --- Phase 1: Show title, icon, context ---
-  // World icon in intro layer
   if (overheadIcon && ICONS[data.world]) {
     overheadIcon.src = ICONS[data.world];
   }
 
-  // Location title
   locationTitle.textContent = data.location;
   locationTitle.style.color = data.color;
-
-  // Accent line
   accentLine.style.background = data.color;
-
-  // Category description
   categoryDesc.textContent = CATEGORY_LABELS[data.world] || '';
 
-  // World bar (persistent)
   worldBarText.textContent = data.worldName;
   worldBar.style.color = data.color;
 
-  // World bar icon (hidden initially, shown after intro fades)
   if (ICONS[data.world]) {
     worldBarIcon.src = ICONS[data.world];
   }
 
-  // Zone number
   zoneNumber.textContent = String(data.zone).padStart(2, '0');
   zoneNumber.style.color = data.color;
-
-  // Sequence counter
   sequenceCounter.textContent = (data.index + 1) + ' / ' + data.total;
 
   // --- Phase 2: After 3s, fade out intro, show icon above world bar ---
   introTimer = setTimeout(function() {
     introLayer.classList.add('fade-out');
 
-    // After intro fades (1s transition), show icon above world bar
     setTimeout(function() {
       worldBarIcon.classList.add('visible');
     }, 600);
@@ -214,12 +215,10 @@ function showActivation(data) {
         overheadVideo.classList.add('visible');
       });
 
-      // Fade to black starting 10s before the 4 min mark
       videoFadeTimer = setTimeout(function() {
         if (videoFadeOverlay) videoFadeOverlay.classList.add('fading');
       }, FADE_OUT_START * 1000);
 
-      // Pause at 4 minutes
       videoCutTimer = setTimeout(function() {
         overheadVideo.classList.remove('visible');
         overheadVideo.pause();

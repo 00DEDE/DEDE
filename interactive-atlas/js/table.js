@@ -63,11 +63,12 @@ var SEQUENCE = [
 ];
 
 var currentIndex = -1;
-var isActive = false; // tracks whether current zone is active or deactivated
+var isActive = false;
 var markerEls = [];
 var worldIndicator = null;
 var statusZone = null;
 var progressDots = [];
+var contextPanel = null;
 var contextPanelIcon = null;
 var contextLocation = null;
 var contextRegion = null;
@@ -77,6 +78,7 @@ var contextDesc = null;
 function init() {
   worldIndicator = document.getElementById('world-indicator');
   statusZone = document.getElementById('status-zone');
+  contextPanel = document.getElementById('context-panel');
   contextPanelIcon = document.getElementById('context-panel-icon');
   contextLocation = document.getElementById('context-location');
   contextRegion = document.getElementById('context-region');
@@ -84,6 +86,39 @@ function init() {
   contextDesc = document.getElementById('context-desc');
 
   var markersLayer = document.getElementById('markers-layer');
+
+  // Set legend icon masks
+  var legendKeys = ['monuments', 'nature', 'language', 'intangible'];
+  legendKeys.forEach(function(key) {
+    var el = document.getElementById('legend-icon-' + key);
+    if (el) {
+      el.style.webkitMaskImage = ICON_MASKS[key];
+      el.style.maskImage = ICON_MASKS[key];
+    }
+  });
+
+  // Set intro icon masks
+  legendKeys.forEach(function(key) {
+    var el = document.getElementById('intro-icon-' + key);
+    if (el) {
+      el.style.webkitMaskImage = ICON_MASKS[key];
+      el.style.maskImage = ICON_MASKS[key];
+    }
+  });
+
+  // Intro overlay — fade out after 4 seconds, then remove
+  var introOverlay = document.getElementById('intro-overlay');
+  if (introOverlay) {
+    // Tell overhead to show intro
+    channel.postMessage({ type: 'intro-show' });
+
+    setTimeout(function() {
+      introOverlay.classList.add('fade-out');
+      setTimeout(function() {
+        introOverlay.remove();
+      }, 1300);
+    }, 4000);
+  }
 
   // Create progress dots
   var dotsContainer = document.getElementById('progress-dots');
@@ -144,7 +179,7 @@ function init() {
     markerEls.push(marker);
   });
 
-  // Keyboard controls — arrow right: activate next or deactivate first
+  // Keyboard controls
   document.addEventListener('keydown', function(e) {
     if (e.key === 'ArrowRight') {
       e.preventDefault();
@@ -204,6 +239,12 @@ function deactivateZone() {
     markerEls[currentIndex].classList.add('deactivated');
   }
 
+  // Animate context panel out
+  if (contextPanel) {
+    contextPanel.classList.remove('active');
+    contextPanel.classList.add('exit');
+  }
+
   // Tell overhead to gracefully close the video
   channel.postMessage({ type: 'zone-deactivate' });
 }
@@ -243,6 +284,15 @@ function activateZone(index) {
   contextWorld.textContent = world.name;
   contextWorld.style.color = world.color;
   contextDesc.textContent = entry.desc;
+
+  // Animate context panel border accent
+  contextPanel.style.borderColor = world.color + '18';
+
+  // Animate context panel in
+  contextPanel.classList.remove('exit');
+  // Force reflow for re-triggering animation if already active
+  void contextPanel.offsetWidth;
+  contextPanel.classList.add('active');
 
   // World indicator
   worldIndicator.className = 'world-indicator visible';
