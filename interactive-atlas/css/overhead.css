@@ -1,3 +1,17 @@
+@font-face {
+  font-family: 'Inter Tight';
+  src: url('../../INTER TIGHT/InterTight-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'ABCDiatype';
+  src: url('../../DIATYPE/ABCDiatype-Regular-Trial.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}
+
 *, *::before, *::after {
   margin: 0;
   padding: 0;
@@ -10,8 +24,12 @@ html, body {
   overflow: hidden;
   background: #1a1413;
   color: #e7e2de;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: 'ABCDiatype', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   user-select: none;
+}
+
+.location-title, .zone-number {
+  font-family: 'Inter Tight', 'Helvetica Neue', sans-serif;
 }
 
 /* Main layout */
