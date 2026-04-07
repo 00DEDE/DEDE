@@ -203,18 +203,18 @@ html, body {
   position: relative;
   width: 70%;
   aspect-ratio: 1400 / 780;
-  transform: scale(0);
-  transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+  clip-path: inset(0 50%);
+  transition: clip-path 1.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .video-frame.expanded {
-  transform: scale(1);
-  transition: transform 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+  clip-path: inset(0 0);
+  transition: clip-path 1.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .video-frame.contracting {
-  transform: scale(0);
-  transition: transform 0.8s cubic-bezier(0.55, 0, 1, 0.45);
+  clip-path: inset(0 50%);
+  transition: clip-path 0.8s cubic-bezier(0.55, 0, 1, 0.45);
 }
 
 /* Monument frame mask */
