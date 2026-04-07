@@ -34,7 +34,7 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
 }
 
 /* ========================
-   OCEAN CURRENTS — behind map, no taper, fish-wiggle
+   OCEAN CURRENTS — wavy SVG shapes, behind map
    ======================== */
 .ocean-layer {
   position: fixed;
@@ -46,184 +46,79 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
 
 .ocean-current {
   position: absolute;
-  height: 2px;
-  border-radius: 0;
-  opacity: 0;
+  height: 20px;
+  background: none;
+  background-repeat: repeat-x;
+  background-position: left center;
 }
 
-/* Blue currents */
+/* Blue — 3 waves with different wave shapes */
 .current-1 {
-  background: rgba(36,145,208,0.10);
-  top: 38%; left: 0; width: 440px; height: 2px;
-  animation: current-flow-1 38s ease-in-out infinite;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='20'%3E%3Cpath d='M0,10 Q20,2 40,10 Q60,18 80,10 Q100,2 120,10 Q140,18 160,10' stroke='rgba(36,145,208,0.12)' fill='none' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-size: 160px 20px;
+  top: 36%; width: 480px;
+  animation: drift-right 42s linear infinite;
 }
 .current-2 {
-  background: rgba(36,145,208,0.08);
-  top: 58%; left: 0; width: 360px; height: 2px;
-  animation: current-flow-2 44s ease-in-out infinite;
-  animation-delay: -8s;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='20'%3E%3Cpath d='M0,10 Q15,3 30,10 Q45,17 60,10 Q75,3 90,10 Q105,17 120,10' stroke='rgba(36,145,208,0.09)' fill='none' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-size: 120px 20px;
+  top: 56%; width: 400px;
+  animation: drift-left 48s linear infinite; animation-delay: -10s;
 }
 .current-3 {
-  background: rgba(36,145,208,0.09);
-  top: 74%; left: 0; width: 520px; height: 2px;
-  animation: current-flow-3 52s ease-in-out infinite;
-  animation-delay: -20s;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='20'%3E%3Cpath d='M0,10 Q25,1 50,10 Q75,19 100,10 Q125,1 150,10 Q175,19 200,10' stroke='rgba(36,145,208,0.10)' fill='none' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-size: 200px 20px;
+  top: 72%; width: 520px;
+  animation: drift-right 55s linear infinite; animation-delay: -22s;
 }
 
-/* Green currents */
+/* Green — 2 waves */
 .current-4 {
-  background: rgba(157,211,178,0.09);
-  top: 28%; left: 0; width: 400px; height: 2px;
-  animation: current-flow-4 42s ease-in-out infinite;
-  animation-delay: -5s;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='20'%3E%3Cpath d='M0,10 Q18,3 35,10 Q52,17 70,10 Q88,3 105,10 Q122,17 140,10' stroke='rgba(157,211,178,0.10)' fill='none' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-size: 140px 20px;
+  top: 26%; width: 440px;
+  animation: drift-left 45s linear infinite; animation-delay: -6s;
 }
 .current-5 {
-  background: rgba(157,211,178,0.07);
-  top: 66%; left: 0; width: 340px; height: 2px;
-  animation: current-flow-5 48s ease-in-out infinite;
-  animation-delay: -18s;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='20'%3E%3Cpath d='M0,10 Q22,2 45,10 Q68,18 90,10 Q112,2 135,10 Q158,18 180,10' stroke='rgba(157,211,178,0.08)' fill='none' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-size: 180px 20px;
+  top: 64%; width: 380px;
+  animation: drift-right 50s linear infinite; animation-delay: -18s;
 }
 
-/* Yellow currents */
+/* Yellow — 2 waves */
 .current-6 {
-  background: rgba(248,225,102,0.06);
-  top: 46%; left: 0; width: 380px; height: 2px;
-  animation: current-flow-6 50s ease-in-out infinite;
-  animation-delay: -12s;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='20'%3E%3Cpath d='M0,10 Q19,4 38,10 Q56,16 75,10 Q94,4 112,10 Q131,16 150,10' stroke='rgba(248,225,102,0.07)' fill='none' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-size: 150px 20px;
+  top: 44%; width: 420px;
+  animation: drift-left 52s linear infinite; animation-delay: -14s;
 }
 .current-7 {
-  background: rgba(248,225,102,0.05);
-  top: 82%; left: 0; width: 300px; height: 2px;
-  animation: current-flow-7 55s ease-in-out infinite;
-  animation-delay: -28s;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='170' height='20'%3E%3Cpath d='M0,10 Q21,3 42,10 Q64,17 85,10 Q106,3 128,10 Q149,17 170,10' stroke='rgba(248,225,102,0.06)' fill='none' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-size: 170px 20px;
+  top: 80%; width: 360px;
+  animation: drift-right 58s linear infinite; animation-delay: -30s;
 }
 
-/* Fish-swim wiggle — many tight vertical oscillations */
-@keyframes current-flow-1 {
-  0%   { transform: translateX(-15vw) translateY(0); opacity: 0; }
+/* Smooth horizontal drift with gentle vertical sway */
+@keyframes drift-right {
+  0%   { transform: translateX(-30vw) translateY(0); opacity: 0; }
   3%   { opacity: 0.8; }
-  8%   { transform: translateX(2vw) translateY(-25px); }
-  14%  { transform: translateX(10vw) translateY(20px); }
-  20%  { transform: translateX(18vw) translateY(-28px); }
-  26%  { transform: translateX(26vw) translateY(18px); }
-  32%  { transform: translateX(34vw) translateY(-22px); }
-  38%  { transform: translateX(42vw) translateY(26px); }
-  44%  { transform: translateX(50vw) translateY(-18px); }
-  50%  { transform: translateX(56vw) translateY(22px); }
-  56%  { transform: translateX(62vw) translateY(-26px); }
-  62%  { transform: translateX(68vw) translateY(16px); }
-  68%  { transform: translateX(74vw) translateY(-24px); }
-  74%  { transform: translateX(80vw) translateY(20px); }
-  80%  { transform: translateX(86vw) translateY(-16px); }
-  86%  { transform: translateX(92vw) translateY(12px); }
-  92%  { transform: translateX(98vw) translateY(-8px); }
+  25%  { transform: translateX(15vw) translateY(-6px); }
+  50%  { transform: translateX(50vw) translateY(5px); }
+  75%  { transform: translateX(80vw) translateY(-4px); }
   97%  { opacity: 0.8; }
-  100% { transform: translateX(105vw) translateY(4px); opacity: 0; }
+  100% { transform: translateX(110vw) translateY(2px); opacity: 0; }
 }
 
-@keyframes current-flow-2 {
-  0%   { transform: translateX(105vw) translateY(0); opacity: 0; }
-  3%   { opacity: 0.7; }
-  9%   { transform: translateX(95vw) translateY(22px); }
-  15%  { transform: translateX(86vw) translateY(-18px); }
-  21%  { transform: translateX(77vw) translateY(26px); }
-  27%  { transform: translateX(68vw) translateY(-20px); }
-  33%  { transform: translateX(60vw) translateY(24px); }
-  39%  { transform: translateX(52vw) translateY(-16px); }
-  45%  { transform: translateX(44vw) translateY(22px); }
-  51%  { transform: translateX(36vw) translateY(-24px); }
-  57%  { transform: translateX(28vw) translateY(18px); }
-  63%  { transform: translateX(20vw) translateY(-22px); }
-  69%  { transform: translateX(14vw) translateY(16px); }
-  75%  { transform: translateX(8vw) translateY(-12px); }
-  81%  { transform: translateX(2vw) translateY(10px); }
-  97%  { opacity: 0.7; }
-  100% { transform: translateX(-15vw) translateY(-6px); opacity: 0; }
-}
-
-@keyframes current-flow-3 {
-  0%   { transform: translateX(-20vw) translateY(0); opacity: 0; }
-  3%   { opacity: 0.6; }
-  9%   { transform: translateX(-6vw) translateY(30px); }
-  16%  { transform: translateX(8vw) translateY(-22px); }
-  23%  { transform: translateX(20vw) translateY(28px); }
-  30%  { transform: translateX(32vw) translateY(-18px); }
-  37%  { transform: translateX(44vw) translateY(24px); }
-  44%  { transform: translateX(54vw) translateY(-26px); }
-  51%  { transform: translateX(64vw) translateY(20px); }
-  58%  { transform: translateX(72vw) translateY(-24px); }
-  65%  { transform: translateX(80vw) translateY(16px); }
-  72%  { transform: translateX(88vw) translateY(-20px); }
-  79%  { transform: translateX(94vw) translateY(12px); }
-  97%  { opacity: 0.6; }
-  100% { transform: translateX(110vw) translateY(-8px); opacity: 0; }
-}
-
-@keyframes current-flow-4 {
+@keyframes drift-left {
   0%   { transform: translateX(110vw) translateY(0); opacity: 0; }
-  4%   { opacity: 0.7; }
-  10%  { transform: translateX(98vw) translateY(-24px); }
-  17%  { transform: translateX(88vw) translateY(20px); }
-  24%  { transform: translateX(76vw) translateY(-28px); }
-  31%  { transform: translateX(66vw) translateY(22px); }
-  38%  { transform: translateX(56vw) translateY(-18px); }
-  45%  { transform: translateX(46vw) translateY(26px); }
-  52%  { transform: translateX(36vw) translateY(-22px); }
-  59%  { transform: translateX(28vw) translateY(18px); }
-  66%  { transform: translateX(20vw) translateY(-24px); }
-  73%  { transform: translateX(12vw) translateY(14px); }
-  80%  { transform: translateX(4vw) translateY(-10px); }
-  96%  { opacity: 0.7; }
-  100% { transform: translateX(-18vw) translateY(6px); opacity: 0; }
-}
-
-@keyframes current-flow-5 {
-  0%   { transform: translateX(-12vw) translateY(0); opacity: 0; }
-  4%   { opacity: 0.6; }
-  10%  { transform: translateX(0vw) translateY(18px); }
-  18%  { transform: translateX(12vw) translateY(-22px); }
-  26%  { transform: translateX(24vw) translateY(26px); }
-  34%  { transform: translateX(36vw) translateY(-20px); }
-  42%  { transform: translateX(48vw) translateY(24px); }
-  50%  { transform: translateX(58vw) translateY(-16px); }
-  58%  { transform: translateX(66vw) translateY(20px); }
-  66%  { transform: translateX(76vw) translateY(-24px); }
-  74%  { transform: translateX(84vw) translateY(14px); }
-  82%  { transform: translateX(92vw) translateY(-10px); }
-  96%  { opacity: 0.6; }
-  100% { transform: translateX(108vw) translateY(6px); opacity: 0; }
-}
-
-@keyframes current-flow-6 {
-  0%   { transform: translateX(108vw) translateY(0); opacity: 0; }
-  4%   { opacity: 0.5; }
-  11%  { transform: translateX(96vw) translateY(20px); }
-  19%  { transform: translateX(84vw) translateY(-16px); }
-  27%  { transform: translateX(72vw) translateY(24px); }
-  35%  { transform: translateX(60vw) translateY(-20px); }
-  43%  { transform: translateX(50vw) translateY(18px); }
-  51%  { transform: translateX(40vw) translateY(-22px); }
-  59%  { transform: translateX(30vw) translateY(16px); }
-  67%  { transform: translateX(20vw) translateY(-18px); }
-  75%  { transform: translateX(10vw) translateY(12px); }
-  96%  { opacity: 0.5; }
-  100% { transform: translateX(-14vw) translateY(-6px); opacity: 0; }
-}
-
-@keyframes current-flow-7 {
-  0%   { transform: translateX(-18vw) translateY(0); opacity: 0; }
-  4%   { opacity: 0.5; }
-  12%  { transform: translateX(-4vw) translateY(-16px); }
-  20%  { transform: translateX(10vw) translateY(22px); }
-  28%  { transform: translateX(24vw) translateY(-20px); }
-  36%  { transform: translateX(36vw) translateY(18px); }
-  44%  { transform: translateX(48vw) translateY(-24px); }
-  52%  { transform: translateX(60vw) translateY(16px); }
-  60%  { transform: translateX(70vw) translateY(-18px); }
-  68%  { transform: translateX(80vw) translateY(14px); }
-  76%  { transform: translateX(90vw) translateY(-10px); }
-  96%  { opacity: 0.5; }
-  100% { transform: translateX(112vw) translateY(6px); opacity: 0; }
+  3%   { opacity: 0.7; }
+  25%  { transform: translateX(75vw) translateY(5px); }
+  50%  { transform: translateX(45vw) translateY(-6px); }
+  75%  { transform: translateX(15vw) translateY(4px); }
+  97%  { opacity: 0.7; }
+  100% { transform: translateX(-30vw) translateY(-3px); opacity: 0; }
 }
 
 /* ========================
@@ -253,15 +148,15 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   inset: 0;
   width: 100%;
   height: 100%;
-  opacity: 0.22;
+  opacity: 1;
   pointer-events: none;
-  filter: sepia(1) saturate(0.4) brightness(0.7);
+  filter: brightness(0.22) sepia(0.3) saturate(0.6);
   animation: map-breathe 8s ease-in-out infinite;
 }
 
 @keyframes map-breathe {
-  0%, 100% { opacity: 0.22; }
-  50%      { opacity: 0.26; }
+  0%, 100% { filter: brightness(0.22) sepia(0.3) saturate(0.6); }
+  50%      { filter: brightness(0.25) sepia(0.3) saturate(0.6); }
 }
 
 /* Grid SVG overlay */
