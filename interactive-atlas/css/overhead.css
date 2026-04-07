@@ -347,14 +347,14 @@ html, body {
 .intro-icons {
   display: flex;
   align-items: center;
-  gap: 3rem;
+  gap: 5rem;
 }
 
 .intro-icon-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.8rem;
+  gap: 1.2rem;
   opacity: 0;
   transform: translateY(12px);
   animation: intro-icon-enter 0.8s ease forwards;
@@ -371,21 +371,21 @@ html, body {
 }
 
 .intro-icon {
-  width: 56px;
-  height: 56px;
+  width: 120px;
+  height: 120px;
 }
 
 .intro-icon-label {
-  font-size: 0.55rem;
+  font-size: 0.75rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   opacity: 0.4;
 }
 
 .intro-title {
-  margin-top: 3rem;
+  margin-top: 3.5rem;
   font-family: 'Inter Tight', 'Helvetica Neue', sans-serif;
-  font-size: 1.6rem;
+  font-size: 2rem;
   font-weight: 600;
   letter-spacing: 0.15em;
   text-transform: uppercase;

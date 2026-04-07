@@ -93,12 +93,14 @@ function init() {
 }
 
 function dismissIntro() {
-  if (introOverlay && !introOverlay.classList.contains('fade-out')) {
+  if (introOverlay) {
     introOverlay.classList.add('fade-out');
-    setTimeout(function() {
-      introOverlay.remove();
-      introOverlay = null;
-    }, 1300);
+  }
+}
+
+function showIntro() {
+  if (introOverlay) {
+    introOverlay.classList.remove('fade-out');
   }
 }
 
@@ -133,6 +135,13 @@ function gracefulClose() {
       }
     }, stepTime);
   }
+
+  // Fade out all active content after 2s, then show intro
+  setTimeout(function() {
+    activeContent.classList.remove('visible');
+    ambientGlow.classList.remove('active');
+    showIntro();
+  }, 2000);
 }
 
 function showActivation(data) {
