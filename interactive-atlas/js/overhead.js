@@ -113,8 +113,11 @@ function gracefulClose() {
   if (videoStartTimer) clearTimeout(videoStartTimer);
   if (volumeFadeInterval) clearInterval(volumeFadeInterval);
 
-  // Fade video to black
-  if (videoFadeOverlay) videoFadeOverlay.classList.add('fading');
+  // Contract video frame
+  if (videoFrame) {
+    videoFrame.classList.remove('expanded');
+    videoFrame.classList.add('contracting');
+  }
 
   // Gradually lower volume over 3 seconds
   if (overheadVideo) {
@@ -130,7 +133,6 @@ function gracefulClose() {
         overheadVideo.volume = 0;
         clearInterval(volumeFadeInterval);
         overheadVideo.pause();
-        overheadVideo.classList.remove('visible');
         overheadVideo.volume = startVolume;
       }
     }, stepTime);
@@ -168,7 +170,9 @@ function showActivation(data) {
   introLayer.classList.remove('fade-out');
   introLayer.classList.add('visible');
   worldBarIcon.classList.remove('visible');
-  overheadVideo.classList.remove('visible');
+  if (videoFrame) {
+    videoFrame.classList.remove('expanded', 'contracting');
+  }
   if (videoFadeOverlay) videoFadeOverlay.classList.remove('fading');
 
   // Set world-specific video frame mask
@@ -219,9 +223,9 @@ function showActivation(data) {
     videoStartTimer = setTimeout(function() {
       overheadVideo.currentTime = 0;
       overheadVideo.play().then(function() {
-        overheadVideo.classList.add('visible');
+        if (videoFrame) videoFrame.classList.add('expanded');
       }).catch(function() {
-        overheadVideo.classList.add('visible');
+        if (videoFrame) videoFrame.classList.add('expanded');
       });
 
       videoFadeTimer = setTimeout(function() {
@@ -229,8 +233,13 @@ function showActivation(data) {
       }, FADE_OUT_START * 1000);
 
       videoCutTimer = setTimeout(function() {
-        overheadVideo.classList.remove('visible');
-        overheadVideo.pause();
+        if (videoFrame) {
+          videoFrame.classList.remove('expanded');
+          videoFrame.classList.add('contracting');
+        }
+        setTimeout(function() {
+          overheadVideo.pause();
+        }, 800);
       }, VIDEO_DURATION * 1000);
     }, 4200);
   }

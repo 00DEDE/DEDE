@@ -203,6 +203,18 @@ html, body {
   position: relative;
   width: 70%;
   aspect-ratio: 1400 / 780;
+  transform: scale(0);
+  transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.video-frame.expanded {
+  transform: scale(1);
+  transition: transform 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.video-frame.contracting {
+  transform: scale(0);
+  transition: transform 0.8s cubic-bezier(0.55, 0, 1, 0.45);
 }
 
 /* Monument frame mask */
@@ -239,11 +251,6 @@ html, body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0;
-  transition: opacity 2s ease;
-}
-
-.overhead-video.visible {
   opacity: 0.4;
 }
 
@@ -395,4 +402,14 @@ html, body {
 @keyframes intro-title-enter {
   0% { opacity: 0; transform: translateY(8px); }
   100% { opacity: 0.5; transform: translateY(0); }
+}
+
+.intro-logo {
+  margin-top: 2rem;
+  height: 50px;
+  width: auto;
+  filter: brightness(0) invert(0.91) sepia(0.05) saturate(0.3);
+  opacity: 0;
+  animation: intro-title-enter 1s ease forwards;
+  animation-delay: 1.5s;
 }
