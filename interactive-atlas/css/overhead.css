@@ -405,8 +405,8 @@ html, body {
 }
 
 .intro-logo {
-  margin-top: 2rem;
-  height: 50px;
+  margin-top: 6rem;
+  height: 150px;
   width: auto;
   filter: brightness(0) invert(0.91) sepia(0.05) saturate(0.3);
   opacity: 0;
