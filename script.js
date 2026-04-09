@@ -234,16 +234,6 @@ if (document.body.dataset.page !== 'living-traces')
   let cursorIndex = 0;
   let colorIndex = 0;
 
-  // Fetch all cursor SVGs at startup
-  const fetches = [];
-  for (let i = 1; i <= totalIcons; i++) {
-    fetches.push(
-      fetch('cursors/icon-' + i + '.svg')
-        .then(r => r.text())
-        .then(svg => { cachedSVGs[i - 1] = svg; })
-    );
-  }
-
   function applyCursor(iconIdx, clrIdx) {
     const svg = cachedSVGs[iconIdx];
     if (!svg) return;
@@ -251,16 +241,37 @@ if (document.body.dataset.page !== 'living-traces')
     // Replace the fill color in the SVG style
     const colored = svg.replace(/fill:\s*#[0-9a-fA-F]{6}/, 'fill: ' + color);
     const encoded = 'data:image/svg+xml,' + encodeURIComponent(colored);
-    document.body.style.cursor = 'url("' + encoded + '") 24 24, auto';
-    // Also apply to all interactive elements
-    document.documentElement.style.setProperty('--custom-cursor', 'url("' + encoded + '") 24 24, auto');
+    const cursorValue = 'url("' + encoded + '") 24 24, pointer';
+    document.body.style.cursor = cursorValue;
+    document.documentElement.style.setProperty('--custom-cursor', cursorValue);
+  }
+
+  // Fetch all cursor SVGs at startup; apply the first as soon as it loads
+  let firstApplied = false;
+  const fetches = [];
+  for (let i = 1; i <= totalIcons; i++) {
+    fetches.push(
+      fetch('cursors/icon-' + i + '.svg')
+        .then(r => r.text())
+        .then(svg => {
+          cachedSVGs[i - 1] = svg;
+          // Apply the very first icon as soon as it's ready, don't wait for the rest
+          if (!firstApplied && cachedSVGs[0]) {
+            firstApplied = true;
+            applyCursor(0, 0);
+          }
+        })
+    );
   }
 
   Promise.all(fetches).then(function() {
-    // Apply first cursor immediately
-    applyCursor(cursorIndex, colorIndex);
+    // Ensure first cursor is applied (in case icon-1 loaded last)
+    if (!firstApplied) {
+      firstApplied = true;
+      applyCursor(0, 0);
+    }
 
-    // Rotate every 10 seconds
+    // Rotate every 5 seconds
     setInterval(function() {
       cursorIndex = (cursorIndex + 1) % totalIcons;
       colorIndex = (colorIndex + 1) % brandColors.length;

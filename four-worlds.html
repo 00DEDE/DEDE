@@ -239,11 +239,18 @@
   </section>
 
   <!-- CTA -->
-  <section class="about-cta">
-    <div class="about-cta-inner">
-      <h2>Explore Living&nbsp;Heritage</h2>
-      <p>Discover Living Traces — an immersive experience exploring endangered languages and traditions that still breathe at the edge of&nbsp;disappearance.</p>
-      <a href="living-traces.html" class="btn btn-primary">Enter Living Traces <span>&rarr;</span></a>
+  <section class="lt-cta">
+    <div class="lt-cta-grain"></div>
+    <div class="lt-cta-inner">
+      <span class="lt-cta-label">— An Immersive Experience</span>
+      <h2 class="lt-cta-title">Explore<br>Living<br>Heritage</h2>
+      <div class="lt-cta-divider"></div>
+      <p class="lt-cta-text">Discover Living Traces — an immersive experience exploring endangered languages and traditions that still breathe despite being at the edge of&nbsp;disappearance.</p>
+      <a href="living-traces.html" class="lt-cta-btn">
+        <span>Enter Living Traces</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+      <span class="lt-cta-meta">Endangered Languages · Vanishing Traditions · Sound · Story</span>
     </div>
   </section>
 
@@ -279,7 +286,7 @@
             <li><a href="#">Publications</a></li>
             <li><a href="#">Multimedia</a></li>
             <li><a href="#">News &amp; Events</a></li>
-            <li><a href="living-traces.html" class="footer-highlight">LIVING TRACES</a></li>
+            <li><a href="living-traces-home.html" class="footer-highlight">LIVING TRACES</a></li>
           </ul>
         </div>
       </div>
@@ -304,6 +311,12 @@
       var counter = stack.querySelector('.fw-stack-counter');
       var total = imgs.length;
       var current = 0;
+
+      // Inject click-hint badge to signal interactivity
+      var hint = document.createElement('div');
+      hint.className = 'fw-stack-hint';
+      hint.innerHTML = '<span class="fw-stack-hint-dot"></span>Tap to explore';
+      stack.appendChild(hint);
 
       // Find the info panel in the sibling content area
       var world = stack.closest('.fw-world');
@@ -338,6 +351,15 @@
       updateCounter();
 
       stack.addEventListener('click', function() {
+        // Mark as interacted to silence the click hint
+        stack.classList.add('interacted');
+
+        // First click: show context for the current image without advancing
+        if (infoPanel && !infoPanel.classList.contains('expanded')) {
+          updateInfo();
+          return;
+        }
+        // Subsequent clicks: advance to next image
         imgs[current].classList.remove('active');
         current = (current + 1) % total;
         imgs[current].classList.add('active');

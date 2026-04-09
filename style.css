@@ -720,10 +720,14 @@ img { max-width: 100%; display: block; }
 .footer-col a:hover { color: var(--dark); }
 
 .footer-highlight {
-  color: var(--yellow-dark) !important;
+  color: #808080 !important;
   font-weight: 700 !important;
   text-transform: uppercase;
   letter-spacing: 0.06em;
+}
+
+.footer-highlight:hover {
+  color: #a8a8a8 !important;
 }
 
 .footer-tagline {
@@ -1070,6 +1074,170 @@ img { max-width: 100%; display: block; }
 }
 
 /* ========================
+   LIVING TRACES CTA
+   Styled to feel like the Living Traces experience
+   ======================== */
+@font-face {
+  font-family: 'RuderPlakat';
+  src: url('MICRO/RuderPlakatLLTrial-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'PPTelegraf';
+  src: url('MICRO/PPTelegraf-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'PPTelegrafLight';
+  src: url('MICRO/PPTelegraf-Ultralight.otf') format('opentype');
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'ABCMonumentGroteskMono';
+  src: url('MICRO/ABCMonumentGroteskMono-Regular-Trial.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+.lt-cta {
+  background: #000;
+  color: #fff;
+  padding: clamp(5rem, 10vw, 10rem) clamp(1.5rem, 5vw, 4rem);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle grain / vignette overlay */
+.lt-cta-grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 80% 20%, rgba(255,255,255,0.04) 0%, transparent 55%),
+    radial-gradient(ellipse at 10% 90%, rgba(255,255,255,0.025) 0%, transparent 60%);
+  z-index: 1;
+}
+
+.lt-cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size: 100% 6px;
+  mix-blend-mode: overlay;
+  opacity: 0.4;
+  z-index: 1;
+}
+
+.lt-cta-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+  text-align: left;
+}
+
+.lt-cta-label {
+  display: block;
+  font-family: 'ABCMonumentGroteskMono', 'Courier New', monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 2.5rem;
+}
+
+.lt-cta-title {
+  font-family: 'RuderPlakat', Impact, 'Haettenschweiler', 'Arial Narrow Bold', sans-serif;
+  font-size: clamp(72px, 14vw, 220px);
+  line-height: 0.86;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #fff;
+  margin: 0 0 2.5rem;
+  font-weight: 400;
+  word-break: break-word;
+}
+
+.lt-cta-divider {
+  width: 100%;
+  height: 1px;
+  background: rgba(255,255,255,0.15);
+  margin: 0 0 2.5rem;
+}
+
+.lt-cta-text {
+  font-family: 'PPTelegraf', 'ABC Diatype', sans-serif;
+  font-size: clamp(15px, 1.4vw, 19px);
+  line-height: 1.75;
+  color: rgba(255,255,255,0.7);
+  max-width: 620px;
+  margin: 0 0 3rem;
+  font-weight: 400;
+}
+
+.lt-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 32px;
+  background: #fff;
+  color: #000;
+  font-family: 'PPTelegraf', 'ABC Diatype', sans-serif;
+  font-size: 15px;
+  letter-spacing: 0.02em;
+  border-radius: 14px;
+  text-decoration: none;
+  transition: transform 0.25s ease, box-shadow 0.3s ease;
+  margin-bottom: 3rem;
+}
+
+.lt-cta-btn svg {
+  transition: transform 0.3s ease;
+}
+
+.lt-cta-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 40px rgba(255,255,255,0.18);
+}
+
+.lt-cta-btn:hover svg {
+  transform: translateX(4px);
+}
+
+.lt-cta-btn:active {
+  transform: scale(0.97);
+}
+
+.lt-cta-meta {
+  display: block;
+  font-family: 'ABCMonumentGroteskMono', 'Courier New', monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+}
+
+@media (max-width: 700px) {
+  .lt-cta-title {
+    font-size: clamp(56px, 16vw, 96px);
+  }
+  .lt-cta-meta {
+    font-size: 9px;
+    letter-spacing: 0.12em;
+  }
+}
+
+/* ========================
    FOUR WORLDS PAGE
    ======================== */
 /* Large title section */
@@ -1123,6 +1291,30 @@ img { max-width: 100%; display: block; }
   cursor: pointer;
 }
 
+/* Soft pulsing aura around the stack — fades after first interaction */
+.fw-stack::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 16px;
+  pointer-events: none;
+  box-shadow: 0 0 0 0 rgba(36, 145, 208, 0.35);
+  animation: fw-stack-pulse 2.6s ease-out infinite;
+  z-index: 3;
+  transition: opacity 0.6s ease;
+}
+
+@keyframes fw-stack-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(36, 145, 208, 0.35); }
+  70%  { box-shadow: 0 0 0 14px rgba(36, 145, 208, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(36, 145, 208, 0); }
+}
+
+.fw-stack.interacted::after {
+  opacity: 0;
+  animation: none;
+}
+
 .fw-stack-img {
   position: absolute;
   inset: 0;
@@ -1133,6 +1325,16 @@ img { max-width: 100%; display: block; }
 
 .fw-stack-img.active {
   opacity: 1;
+  animation: fw-stack-breathe 5s ease-in-out infinite;
+}
+
+.fw-stack.interacted .fw-stack-img.active {
+  animation: none;
+}
+
+@keyframes fw-stack-breathe {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.012); }
 }
 
 .fw-stack-counter {
@@ -1148,6 +1350,58 @@ img { max-width: 100%; display: block; }
   border-radius: 20px;
   z-index: 2;
   pointer-events: none;
+}
+
+/* Click hint badge — bottom-center, gently bouncing */
+.fw-stack-hint {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(26, 20, 19, 0.78);
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 8px 14px;
+  border-radius: 999px;
+  z-index: 4;
+  pointer-events: none;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25);
+  animation: fw-hint-bounce 2.4s ease-in-out infinite;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+@keyframes fw-hint-bounce {
+  0%, 100% { transform: translate(-50%, 0); }
+  50%      { transform: translate(-50%, -6px); }
+}
+
+.fw-stack-hint-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #2491d0;
+  box-shadow: 0 0 0 0 rgba(36, 145, 208, 0.6);
+  animation: fw-hint-dot-pulse 1.6s ease-out infinite;
+}
+
+@keyframes fw-hint-dot-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(36, 145, 208, 0.6); }
+  70%  { box-shadow: 0 0 0 8px rgba(36, 145, 208, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(36, 145, 208, 0); }
+}
+
+.fw-stack.interacted .fw-stack-hint {
+  opacity: 0;
+  transform: translate(-50%, 8px);
+  animation: none;
 }
 
 /* Expandable image info panel */
