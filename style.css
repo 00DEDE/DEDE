@@ -1256,10 +1256,13 @@ img { max-width: 100%; display: block; }
   font-size: clamp(5rem, 14vw, 17rem);
   font-weight: 900;
   line-height: 0.86;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.012em;
   color: var(--dark);
   margin-bottom: 2.5rem;
   width: 100%;
+  font-kerning: normal;
+  font-feature-settings: "kern" 1, "calt" 1;
+  text-rendering: optimizeLegibility;
 }
 
 .fw-title-sub {

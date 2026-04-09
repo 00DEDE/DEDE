@@ -151,8 +151,12 @@ function sizeFwTitle() {
   var fontFamily = headingStyle.fontFamily;
   var fontWeight = headingStyle.fontWeight || '900';
 
-  // Letter-spacing is set in em on the rule (-0.035em). Compute it per font-size.
-  var letterSpacingEm = -0.035;
+  // Letter-spacing is set in em on the rule. Read the resolved px value
+  // at the heading's current font-size and convert back to em so it scales
+  // with whatever size we're testing.
+  var currentFontSizePx = parseFloat(headingStyle.fontSize) || 16;
+  var letterSpacingPx = parseFloat(headingStyle.letterSpacing) || 0;
+  var letterSpacingEm = letterSpacingPx / currentFontSizePx;
 
   // Pull the longest line from the heading (split on <br>)
   var lines = (heading.innerHTML || '').split(/<br\s*\/?>/i)
