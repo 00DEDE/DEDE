@@ -317,8 +317,7 @@ if (document.body.dataset.page !== 'living-traces') {
   var currentPage = window.location.pathname.split('/').pop() || 'home.html';
   document.querySelectorAll('.nav-links a:not(.btn-nav)').forEach(function(link) {
     if (link.getAttribute('href') === currentPage) {
-      link.style.color = '#2491d0';
-      link.style.fontWeight = '700';
+      link.classList.add('is-active');
     }
   });
 }
@@ -426,7 +425,7 @@ if (document.body.dataset.page !== 'living-traces')
     friend.style.setProperty('--flee-y', fleeY.toFixed(0) + 'vh');
     friend.classList.add('caught');
 
-    // After the flee transition, relocate to a fresh section + spot
+    // After the flee animation completes, relocate to a fresh section + spot
     setTimeout(function() {
       const hosts = Array.from(document.querySelectorAll(HOST_SELECTORS));
       const current = friend.parentElement;
@@ -441,10 +440,10 @@ if (document.body.dataset.page !== 'living-traces')
         requestAnimationFrame(function() {
           friend.classList.remove('caught');
           friend.classList.add('arriving');
-          setTimeout(() => friend.classList.remove('arriving'), 650);
+          setTimeout(() => friend.classList.remove('arriving'), 980);
         });
       });
-    }, 720);
+    }, 1160);
   }
 
   function init() {
