@@ -131,38 +131,12 @@ function sizeStatNumbers() {
   });
 }
 
-// Auto-size the Four Worlds title to fill the page padding edges
-function sizeFwTitle() {
-  var heading = document.querySelector('.fw-title-heading');
-  if (!heading) return;
-  var section = heading.parentElement;
-  if (!section) return;
-
-  var canvas = document.createElement('canvas');
+// Shared canvas-based fitter — measures the largest font-size that fits
+// `lines` inside `targetWidth` for the given font properties. Used by both
+// the page title and section headings.
+function _measureFitSize(lines, targetWidth, fontFamily, fontWeight, letterSpacingEm) {
+  var canvas = _measureFitSize._canvas || (_measureFitSize._canvas = document.createElement('canvas'));
   var ctx = canvas.getContext('2d');
-
-  var sectionStyle = getComputedStyle(section);
-  var targetWidth = section.clientWidth -
-    parseFloat(sectionStyle.paddingLeft) -
-    parseFloat(sectionStyle.paddingRight);
-  if (targetWidth <= 0) return;
-
-  var headingStyle = getComputedStyle(heading);
-  var fontFamily = headingStyle.fontFamily;
-  var fontWeight = headingStyle.fontWeight || '900';
-
-  // Letter-spacing is set in em on the rule. Read the resolved px value
-  // at the heading's current font-size and convert back to em so it scales
-  // with whatever size we're testing.
-  var currentFontSizePx = parseFloat(headingStyle.fontSize) || 16;
-  var letterSpacingPx = parseFloat(headingStyle.letterSpacing) || 0;
-  var letterSpacingEm = letterSpacingPx / currentFontSizePx;
-
-  // Pull the longest line from the heading (split on <br>)
-  var lines = (heading.innerHTML || '').split(/<br\s*\/?>/i)
-    .map(function(s) { return s.replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').trim(); })
-    .filter(Boolean);
-  if (lines.length === 0) return;
 
   function lineFits(text, size) {
     ctx.font = fontWeight + ' ' + size + 'px ' + fontFamily;
@@ -171,8 +145,7 @@ function sizeFwTitle() {
     return (w + spacing) <= targetWidth;
   }
 
-  // Binary search for the largest size that fits every line
-  var lo = 40, hi = 2000, best = 40;
+  var lo = 20, hi = 2400, best = 20;
   while (lo <= hi) {
     var mid = Math.floor((lo + hi) / 2);
     var fits = true;
@@ -182,35 +155,102 @@ function sizeFwTitle() {
     if (fits) { best = mid; lo = mid + 1; }
     else { hi = mid - 1; }
   }
+  return best;
+}
+
+function _extractLines(el) {
+  return (el.innerHTML || '').split(/<br\s*\/?>/i)
+    .map(function(s) { return s.replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').trim(); })
+    .filter(Boolean);
+}
+
+function _availableWidth(section) {
+  var s = getComputedStyle(section);
+  return section.clientWidth - parseFloat(s.paddingLeft) - parseFloat(s.paddingRight);
+}
+
+// Auto-size the Four Worlds / Who We Are title to fill the page-padding edges
+function sizeFwTitle() {
+  var heading = document.querySelector('.fw-title-heading');
+  if (!heading) return;
+  var section = heading.parentElement;
+  if (!section) return;
+
+  // Reset any previously-set inline size so we can re-measure on resize
+  heading.style.fontSize = '';
+
+  var targetWidth = _availableWidth(section);
+  if (targetWidth <= 0) return;
+
+  var hs = getComputedStyle(heading);
+  var currentSize = parseFloat(hs.fontSize) || 16;
+  var letterSpacingEm = (parseFloat(hs.letterSpacing) || 0) / currentSize;
+
+  var lines = _extractLines(heading);
+  if (lines.length === 0) return;
+
+  var best = _measureFitSize(lines, targetWidth, hs.fontFamily, hs.fontWeight || '900', letterSpacingEm);
   heading.style.fontSize = best + 'px';
+}
+
+// Auto-size matched section headings — every heading in the same data-fit-group
+// is sized to the smallest fitting size across the group, so they share a size.
+function sizeFwSectionHeadings() {
+  var groups = {};
+  document.querySelectorAll('.fw-section-heading').forEach(function(el) {
+    el.style.fontSize = '';
+    var key = el.dataset.fitGroup || '__solo__' + Math.random();
+    (groups[key] = groups[key] || []).push(el);
+  });
+
+  Object.keys(groups).forEach(function(key) {
+    var els = groups[key];
+    var minSize = Infinity;
+    els.forEach(function(el) {
+      var section = el.parentElement;
+      if (!section) return;
+      var targetWidth = _availableWidth(section);
+      if (targetWidth <= 0) return;
+      var hs = getComputedStyle(el);
+      var currentSize = parseFloat(hs.fontSize) || 16;
+      var letterSpacingEm = (parseFloat(hs.letterSpacing) || 0) / currentSize;
+      var lines = _extractLines(el);
+      if (lines.length === 0) return;
+      var best = _measureFitSize(lines, targetWidth, hs.fontFamily, hs.fontWeight || '900', letterSpacingEm);
+      if (best < minSize) minSize = best;
+    });
+    if (minSize !== Infinity) {
+      els.forEach(function(el) { el.style.fontSize = minSize + 'px'; });
+    }
+  });
+}
+
+function _runSizers() {
+  sizeStatNumbers();
+  sizeFwTitle();
+  sizeFwSectionHeadings();
 }
 
 // Run after fonts have loaded
 if (document.fonts && document.fonts.ready) {
-  document.fonts.ready.then(function() {
-    sizeStatNumbers();
-    sizeFwTitle();
-  });
+  document.fonts.ready.then(_runSizers);
 } else {
-  window.addEventListener('load', function() {
-    sizeStatNumbers();
-    sizeFwTitle();
-  });
+  window.addEventListener('load', _runSizers);
 }
-window.addEventListener('resize', function() {
-  sizeStatNumbers();
-  sizeFwTitle();
-});
+window.addEventListener('resize', _runSizers);
 
-// Header background on scroll
+// Header scroll state — translucent + cream contents while scrolled,
+// reverts to the default opaque header at the top of the page.
 const header = document.querySelector('.header');
-window.addEventListener('scroll', () => {
-  if (window.scrollY > 50) {
-    header.style.boxShadow = '0 2px 20px rgba(0,0,0,0.08)';
-  } else {
-    header.style.boxShadow = 'none';
-  }
-});
+if (header) {
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 50) {
+      header.classList.add('scrolled');
+    } else {
+      header.classList.remove('scrolled');
+    }
+  }, { passive: true });
+}
 
 // ---- ANIMATIONS (UNESCO pages only) ----
 if (document.body.dataset.page !== 'living-traces') {

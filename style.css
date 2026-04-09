@@ -93,6 +93,12 @@ body {
   100% { background-position: 100% 100%; }
 }
 
+/* Universal paragraph spacing — every <p> following another <p> gets a gap.
+   Living Traces pages opt out via data-page="living-traces". */
+body:not([data-page="living-traces"]) p + p {
+  margin-top: 1.2em;
+}
+
 /* Custom cursor applied via JS */
 :root {
   --custom-cursor: auto;
@@ -132,7 +138,61 @@ img { max-width: 100%; display: block; }
   z-index: 100;
   background: rgba(255,255,255,0.95);
   backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(0,0,0,0.06);
+  transition:
+    background 0.45s ease,
+    backdrop-filter 0.45s ease,
+    -webkit-backdrop-filter 0.45s ease,
+    border-color 0.45s ease,
+    box-shadow 0.45s ease;
+}
+
+/* Scrolled state — translucent dark, darkens background, cream contents */
+.header.scrolled {
+  background: rgba(26, 20, 19, 0.25);
+  backdrop-filter: blur(20px) brightness(0.45) saturate(1.1);
+  -webkit-backdrop-filter: blur(20px) brightness(0.45) saturate(1.1);
+  border-bottom-color: rgba(231, 226, 222, 0.08);
+}
+
+.header .logo-img,
+.header .nav-links a,
+.header .nav-search,
+.header .menu-toggle span,
+.header .btn-nav {
+  transition:
+    color 0.45s ease,
+    filter 0.45s ease,
+    background 0.45s ease,
+    border-color 0.45s ease;
+}
+
+.header.scrolled .logo-img {
+  filter: brightness(0) invert(0.91) sepia(0.06) saturate(0.4);
+}
+
+.header.scrolled .nav-links a:not(.btn-nav),
+.header.scrolled .nav-search {
+  color: #e7e2de;
+}
+
+.header.scrolled .nav-links a:not(.btn-nav):hover {
+  color: #fff;
+}
+
+.header.scrolled .menu-toggle span {
+  background: #e7e2de;
+}
+
+.header.scrolled .btn-nav {
+  background: transparent !important;
+  color: #e7e2de !important;
+  border: 1px solid rgba(231, 226, 222, 0.5);
+}
+
+.header.scrolled .btn-nav:hover {
+  background: rgba(231, 226, 222, 0.12) !important;
 }
 
 .header-inner {
@@ -975,12 +1035,13 @@ img { max-width: 100%; display: block; }
   max-height: 0;
   overflow: hidden;
   opacity: 0;
-  transition: max-height 0.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease 0.1s;
+  transition: max-height 0.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease 0.1s, padding-top 0.5s ease;
 }
 
 .expandable-card.expanded .card-expanded {
-  max-height: 300px;
+  max-height: 320px;
   opacity: 1;
+  padding-top: 1.4rem;
 }
 
 .expandable-card {
@@ -1266,10 +1327,48 @@ img { max-width: 100%; display: block; }
 }
 
 .fw-title-sub {
+  max-width: 100%;
+  width: 100%;
+}
+
+.fw-title-sub p {
   font-size: clamp(1rem, 1.1vw, 1.2rem);
   line-height: 1.6;
   color: var(--gray-700);
-  max-width: 100%;
+}
+
+.fw-title-sub p + p {
+  margin-top: 1.4em;
+}
+
+/* Blue color modifier — used by Who We Are page */
+.fw-title-blue .fw-title-heading {
+  color: #2491d0;
+}
+
+/* Section heading — same display treatment as the title, slightly smaller scale.
+   Repeated class boosts specificity to win over .about-section h2. */
+h2.fw-section-heading,
+.fw-section-heading.fw-section-heading {
+  font-family: var(--font-heading);
+  font-size: clamp(3rem, 9vw, 11rem);
+  font-weight: 900;
+  line-height: 0.9;
+  letter-spacing: -0.012em;
+  color: var(--dark);
+  margin: 0 0 3rem;
+  width: 100%;
+  text-align: left;
+  font-kerning: normal;
+  font-feature-settings: "kern" 1, "calt" 1;
+  text-rendering: optimizeLegibility;
+}
+
+/* Section wrappers that host fw-section-heading match the page-padding edges */
+.fw-section {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 6rem 2rem;
 }
 
 /* Closing statement (replaces gallery) */
