@@ -238,11 +238,11 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   z-index: 3;
 }
 
-/* Ring around marker */
+/* Ring around marker — rounded square to mirror brand icon containers */
 .marker-ring {
   position: absolute;
   inset: -6px;
-  border-radius: 50%;
+  border-radius: 8px;
   border: 1.5px solid rgba(231, 226, 222, 0.1);
   transition: border-color 0.6s ease, transform 0.6s ease, border-width 0.4s ease;
 }
@@ -251,7 +251,7 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
 .marker-pulse {
   position: absolute;
   inset: -6px;
-  border-radius: 50%;
+  border-radius: 8px;
   border: 2px solid transparent;
   opacity: 0;
   pointer-events: none;
@@ -261,7 +261,7 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
 .marker-glow {
   position: absolute;
   inset: -20px;
-  border-radius: 50%;
+  border-radius: 14px;
   background: radial-gradient(circle, var(--world-color, #e7e2de) 0%, transparent 70%);
   opacity: 0;
   transition: opacity 0.8s ease;
@@ -563,7 +563,7 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
 .progress-dot {
   width: 5px;
   height: 5px;
-  border-radius: 50%;
+  border-radius: 1.5px;
   background: rgba(231, 226, 222, 0.15);
   transition: background 0.4s ease, transform 0.4s ease;
 }

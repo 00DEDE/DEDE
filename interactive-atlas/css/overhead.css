@@ -59,7 +59,7 @@ html, body {
   height: 80px;
   margin: 0 auto 1.5rem;
   border: 1.5px solid rgba(231,226,222,0.2);
-  border-radius: 50%;
+  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
