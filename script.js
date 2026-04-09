@@ -131,13 +131,72 @@ function sizeStatNumbers() {
   });
 }
 
+// Auto-size the Four Worlds title to fill the page padding edges
+function sizeFwTitle() {
+  var heading = document.querySelector('.fw-title-heading');
+  if (!heading) return;
+  var section = heading.parentElement;
+  if (!section) return;
+
+  var canvas = document.createElement('canvas');
+  var ctx = canvas.getContext('2d');
+
+  var sectionStyle = getComputedStyle(section);
+  var targetWidth = section.clientWidth -
+    parseFloat(sectionStyle.paddingLeft) -
+    parseFloat(sectionStyle.paddingRight);
+  if (targetWidth <= 0) return;
+
+  var headingStyle = getComputedStyle(heading);
+  var fontFamily = headingStyle.fontFamily;
+  var fontWeight = headingStyle.fontWeight || '900';
+
+  // Letter-spacing is set in em on the rule (-0.035em). Compute it per font-size.
+  var letterSpacingEm = -0.035;
+
+  // Pull the longest line from the heading (split on <br>)
+  var lines = (heading.innerHTML || '').split(/<br\s*\/?>/i)
+    .map(function(s) { return s.replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').trim(); })
+    .filter(Boolean);
+  if (lines.length === 0) return;
+
+  function lineFits(text, size) {
+    ctx.font = fontWeight + ' ' + size + 'px ' + fontFamily;
+    var w = ctx.measureText(text).width;
+    var spacing = letterSpacingEm * size * Math.max(0, text.length - 1);
+    return (w + spacing) <= targetWidth;
+  }
+
+  // Binary search for the largest size that fits every line
+  var lo = 40, hi = 2000, best = 40;
+  while (lo <= hi) {
+    var mid = Math.floor((lo + hi) / 2);
+    var fits = true;
+    for (var i = 0; i < lines.length; i++) {
+      if (!lineFits(lines[i], mid)) { fits = false; break; }
+    }
+    if (fits) { best = mid; lo = mid + 1; }
+    else { hi = mid - 1; }
+  }
+  heading.style.fontSize = best + 'px';
+}
+
 // Run after fonts have loaded
 if (document.fonts && document.fonts.ready) {
-  document.fonts.ready.then(sizeStatNumbers);
+  document.fonts.ready.then(function() {
+    sizeStatNumbers();
+    sizeFwTitle();
+  });
 } else {
-  window.addEventListener('load', sizeStatNumbers);
+  window.addEventListener('load', function() {
+    sizeStatNumbers();
+    sizeFwTitle();
+  });
 }
-window.addEventListener('resize', sizeStatNumbers);
+window.addEventListener('resize', function() {
+  sizeStatNumbers();
+  sizeFwTitle();
+});
 
 // Header background on scroll
 const header = document.querySelector('.header');

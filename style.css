@@ -739,7 +739,7 @@ img { max-width: 100%; display: block; }
   font-size: clamp(2rem, 4vw, 3.5rem);
   font-weight: 900;
   line-height: 0.95;
-  letter-spacing: -0.03em;
+  letter-spacing: 0.01em;
 }
 
 .ft-blue { color: #2490cf; }
@@ -1241,11 +1241,11 @@ img { max-width: 100%; display: block; }
 /* ========================
    FOUR WORLDS PAGE
    ======================== */
-/* Large title section */
+/* Large title section — full bleed, fills page padding edges */
 .fw-title {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: 10rem 2rem 5rem;
+  max-width: none;
+  margin: 0;
+  padding: 9rem clamp(1.5rem, 3vw, 3rem) 5rem;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -1253,19 +1253,20 @@ img { max-width: 100%; display: block; }
 
 .fw-title-heading {
   font-family: var(--font-heading);
-  font-size: clamp(5rem, 12vw, 12rem);
+  font-size: clamp(5rem, 22vw, 22rem);
   font-weight: 900;
-  line-height: 0.9;
-  letter-spacing: -0.02em;
+  line-height: 0.86;
+  letter-spacing: -0.035em;
   color: var(--dark);
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
+  width: 100%;
 }
 
 .fw-title-sub {
-  font-size: 1.05rem;
-  line-height: 1.85;
+  font-size: clamp(1rem, 1.15vw, 1.25rem);
+  line-height: 1.6;
   color: var(--gray-700);
-  max-width: 600px;
+  max-width: 1320px;
 }
 
 /* Closing statement (replaces gallery) */
