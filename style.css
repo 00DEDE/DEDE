@@ -735,6 +735,7 @@ img { max-width: 100%; display: block; }
 }
 
 .footer-tagline span {
+  font-family: var(--font-heading);
   font-size: clamp(2rem, 4vw, 3.5rem);
   font-weight: 900;
   line-height: 0.95;
