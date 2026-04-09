@@ -520,6 +520,8 @@ img { max-width: 100%; display: block; }
   text-align: left;
   margin-bottom: 0;
   flex-shrink: 0;
+  /* Lock the title column so the body text starts at the same x across all cards */
+  width: clamp(280px, 28vw, 380px);
 }
 
 .about-stats .stat-card-text {
@@ -1015,6 +1017,8 @@ img { max-width: 100%; display: block; }
   line-height: 1;
   flex-shrink: 0;
   white-space: nowrap;
+  /* Lock the year column so body text starts at the same x across all cards */
+  width: clamp(200px, 20vw, 260px);
 }
 
 .stat-bg-blue .journey-year { color: #f8e166; }
