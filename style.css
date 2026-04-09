@@ -1241,11 +1241,11 @@ img { max-width: 100%; display: block; }
 /* ========================
    FOUR WORLDS PAGE
    ======================== */
-/* Large title section — full bleed, fills page padding edges */
+/* Large title section — fills the page content container (matches header margins) */
 .fw-title {
-  max-width: none;
-  margin: 0;
-  padding: 9rem clamp(1.5rem, 3vw, 3rem) 5rem;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 9rem 2rem 5rem;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -1253,7 +1253,7 @@ img { max-width: 100%; display: block; }
 
 .fw-title-heading {
   font-family: var(--font-heading);
-  font-size: clamp(5rem, 22vw, 22rem);
+  font-size: clamp(5rem, 14vw, 17rem);
   font-weight: 900;
   line-height: 0.86;
   letter-spacing: -0.035em;
@@ -1263,10 +1263,10 @@ img { max-width: 100%; display: block; }
 }
 
 .fw-title-sub {
-  font-size: clamp(1rem, 1.15vw, 1.25rem);
+  font-size: clamp(1rem, 1.1vw, 1.2rem);
   line-height: 1.6;
   color: var(--gray-700);
-  max-width: 1320px;
+  max-width: 100%;
 }
 
 /* Closing statement (replaces gallery) */
