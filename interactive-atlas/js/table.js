@@ -17,6 +17,34 @@ var WORLDS = {
   intangible: { name: 'The World That Moves Within Us', color: '#e7e2de', css: 'intangible' }
 };
 
+// World phase — runs before the site phase as a guided intro to the legend.
+// Order is intentional: built → natural → intangible → endangered
+var WORLD_PHASE_ORDER = ['monuments', 'nature', 'intangible', 'language'];
+
+// Copy shown in the world context panel during the world phase
+var WORLD_INFO = {
+  monuments: {
+    eyebrow: 'World One',
+    title:   'Built Monuments',
+    desc:    'Stone, brick, and ambition. The places we shaped to outlast us — temples, citadels, and ruined cities still keeping watch over the people who built them.'
+  },
+  nature: {
+    eyebrow: 'World Two',
+    title:   'Natural Sites',
+    desc:    'Forests, reefs, deserts, and rivers. The living systems that hold us up — landscapes shaped by deep time, and the species woven into them.'
+  },
+  intangible: {
+    eyebrow: 'World Three',
+    title:   'Intangible Traditions',
+    desc:    'Songs, dances, ceremonies, and crafts. Heritage carried in the body and passed down by repetition — the parts of culture that exist only when someone is doing them.'
+  },
+  language: {
+    eyebrow: 'World Four',
+    title:   'Endangered Languages',
+    desc:    'Words and tongues at the edge of memory. Each language is a way of seeing the world — and when one falls silent, an entire perspective on being human goes with it.'
+  }
+};
+
 // 20 heritage sites — positions based on atlas reference map
 // Coordinates as % of map-wrap (left, top)
 var SEQUENCE = [
@@ -68,24 +96,46 @@ var markerEls = [];
 var worldIndicator = null;
 var statusZone = null;
 var progressDots = [];
-var contextPanel = null;
-var contextPanelIcon = null;
-var contextLocation = null;
-var contextRegion = null;
-var contextWorld = null;
-var contextDesc = null;
 var legend = null;
+
+// World phase state
+var phase = 'world';            // 'world' | 'sites'
+var worldPhaseIndex = -1;       // index into WORLD_PHASE_ORDER
+var isWorldActive = false;
+var worldMarkerIndices = {};    // { monuments: [0,7,...], nature: [...], ... }
+var legendItemEls = {};         // { monuments: el, nature: el, ... }
+
+// World context panel refs
+var worldContextPanel = null;
+var wcpIcon = null;
+var wcpEyebrow = null;
+var wcpTitle = null;
+var wcpDesc = null;
+var wcpMeta = null;
 
 function init() {
   worldIndicator = document.getElementById('world-indicator');
   statusZone = document.getElementById('status-zone');
-  contextPanel = document.getElementById('context-panel');
-  contextPanelIcon = document.getElementById('context-panel-icon');
-  contextLocation = document.getElementById('context-location');
-  contextRegion = document.getElementById('context-region');
-  contextWorld = document.getElementById('context-world');
-  contextDesc = document.getElementById('context-desc');
   legend = document.getElementById('legend');
+
+  // World context panel refs
+  worldContextPanel = document.getElementById('world-context-panel');
+  wcpIcon    = document.getElementById('wcp-icon');
+  wcpEyebrow = document.getElementById('wcp-eyebrow');
+  wcpTitle   = document.getElementById('wcp-title');
+  wcpDesc    = document.getElementById('wcp-desc');
+  wcpMeta    = document.getElementById('wcp-meta');
+
+  // Cache legend item elements + build site-index lookup per world
+  WORLD_PHASE_ORDER.forEach(function(key) {
+    legendItemEls[key] = document.getElementById('legend-item-' + key);
+    worldMarkerIndices[key] = [];
+  });
+  SEQUENCE.forEach(function(entry, i) {
+    if (worldMarkerIndices[entry.world]) {
+      worldMarkerIndices[entry.world].push(i);
+    }
+  });
 
   var markersLayer = document.getElementById('markers-layer');
 
@@ -168,8 +218,9 @@ function init() {
     icon.style.maskImage = mask;
     marker.appendChild(icon);
 
-    // Click handler — toggle activate/deactivate
+    // Click handler — toggle activate/deactivate (sites phase only)
     marker.addEventListener('click', function() {
+      if (phase !== 'sites') return;
       if (currentIndex === i && isActive) {
         deactivateZone();
       } else {
@@ -181,22 +232,14 @@ function init() {
     markerEls.push(marker);
   });
 
-  // Keyboard controls
+  // Keyboard controls — dispatched by phase
   document.addEventListener('keydown', function(e) {
     if (e.key === 'ArrowRight') {
       e.preventDefault();
-      if (isActive) {
-        deactivateZone();
-      } else {
-        activateNext();
-      }
+      handleAdvance();
     } else if (e.key === 'ArrowLeft') {
       e.preventDefault();
-      if (isActive) {
-        deactivateZone();
-      } else {
-        activatePrev();
-      }
+      handleRetreat();
     }
   });
 
@@ -217,6 +260,198 @@ function init() {
   });
 }
 
+// ==========================================================================
+// PHASE DISPATCHERS — every clicker press routes through here
+// ==========================================================================
+function handleAdvance() {
+  if (phase === 'world') {
+    if (isWorldActive) {
+      // Currently showing a world — close it. If it was the last world, hand off
+      // to the sites phase; otherwise just wait for the next press to open the next world.
+      var wasLast = (worldPhaseIndex >= WORLD_PHASE_ORDER.length - 1);
+      deactivateWorld();
+      if (wasLast) {
+        transitionToSitesPhase();
+      }
+    } else {
+      // Not currently showing a world — open the next one
+      var next = worldPhaseIndex + 1;
+      if (next < WORLD_PHASE_ORDER.length) {
+        activateWorld(next);
+      } else {
+        // Safety net: shouldn't be reachable, but if we run off the end, advance phases.
+        transitionToSitesPhase();
+      }
+    }
+    return;
+  }
+
+  // Sites phase — original behavior
+  if (isActive) {
+    deactivateZone();
+  } else {
+    activateNext();
+  }
+}
+
+function handleRetreat() {
+  if (phase === 'world') {
+    if (isWorldActive) {
+      deactivateWorld();
+    } else if (worldPhaseIndex > 0) {
+      activateWorld(worldPhaseIndex - 1);
+    }
+    return;
+  }
+
+  // Sites phase — original behavior
+  if (isActive) {
+    deactivateZone();
+  } else {
+    activatePrev();
+  }
+}
+
+// ==========================================================================
+// WORLD PHASE — guided introduction to the four legend categories
+// ==========================================================================
+function activateWorld(phaseIndex) {
+  // If a different world is currently active, tear it down quietly first
+  if (isWorldActive && phaseIndex !== worldPhaseIndex) {
+    quietlyClearWorld(WORLD_PHASE_ORDER[worldPhaseIndex]);
+  }
+
+  worldPhaseIndex = phaseIndex;
+  isWorldActive = true;
+
+  var key = WORLD_PHASE_ORDER[phaseIndex];
+  var world = WORLDS[key];
+  var info = WORLD_INFO[key];
+  var indices = worldMarkerIndices[key] || [];
+
+  // Highlight every marker that belongs to this world
+  indices.forEach(function(i) {
+    if (markerEls[i]) {
+      markerEls[i].classList.add('world-highlight');
+    }
+  });
+
+  // Update legend states — current world goes 'active', already-shown worlds go 'shown'
+  WORLD_PHASE_ORDER.forEach(function(k, i) {
+    var el = legendItemEls[k];
+    if (!el) return;
+    el.classList.remove('world-active', 'world-shown');
+    if (i === phaseIndex) {
+      el.classList.add('world-active');
+    } else if (i < phaseIndex) {
+      el.classList.add('world-shown');
+    }
+  });
+
+  // Populate world context panel
+  if (worldContextPanel) {
+    var maskUrl = ICON_MASKS[key];
+    if (maskUrl && wcpIcon) {
+      wcpIcon.style.webkitMaskImage = maskUrl;
+      wcpIcon.style.maskImage = maskUrl;
+      wcpIcon.style.backgroundColor = world.color;
+    }
+    if (wcpEyebrow) {
+      wcpEyebrow.textContent = info.eyebrow + ' \u2014 ' + world.name;
+      wcpEyebrow.style.color = world.color;
+    }
+    if (wcpTitle) {
+      wcpTitle.textContent = info.title;
+      wcpTitle.style.color = world.color;
+    }
+    if (wcpDesc) {
+      wcpDesc.textContent = info.desc;
+    }
+    if (wcpMeta) {
+      var count = indices.length;
+      wcpMeta.textContent = count + ' ' + (count === 1 ? 'site' : 'sites') + ' on this map';
+    }
+
+    worldContextPanel.style.borderColor = world.color + '22';
+    worldContextPanel.classList.remove('exit');
+    void worldContextPanel.offsetWidth;
+    worldContextPanel.classList.add('active');
+  }
+
+  // World indicator (top center)
+  if (worldIndicator) {
+    worldIndicator.className = 'world-indicator visible';
+    worldIndicator.style.color = world.color;
+    worldIndicator.innerHTML = info.eyebrow +
+      '<div class="world-name">' + info.title + '</div>';
+  }
+
+  // Status bar
+  if (statusZone) {
+    statusZone.textContent = info.eyebrow + ' \u2014 ' + info.title;
+    statusZone.style.color = world.color;
+  }
+
+  // Broadcast to overhead — handler will be wired in a follow-up round
+  channel.postMessage({
+    type: 'world-activate',
+    world: key,
+    worldName: world.name,
+    color: world.color,
+    eyebrow: info.eyebrow,
+    title: info.title,
+    desc: info.desc,
+    siteCount: indices.length,
+    phaseIndex: phaseIndex,
+    phaseTotal: WORLD_PHASE_ORDER.length
+  });
+}
+
+function deactivateWorld() {
+  if (!isWorldActive) return;
+  isWorldActive = false;
+
+  var key = WORLD_PHASE_ORDER[worldPhaseIndex];
+  quietlyClearWorld(key);
+
+  // Hide world context panel
+  if (worldContextPanel) {
+    worldContextPanel.classList.remove('active');
+    worldContextPanel.classList.add('exit');
+  }
+
+  // Mark this world as 'shown' (no longer 'active') in the legend
+  if (legendItemEls[key]) {
+    legendItemEls[key].classList.remove('world-active');
+    legendItemEls[key].classList.add('world-shown');
+  }
+
+  channel.postMessage({ type: 'world-deactivate', world: key });
+}
+
+// Strip world-highlight from all markers belonging to a given world
+function quietlyClearWorld(key) {
+  var indices = worldMarkerIndices[key] || [];
+  indices.forEach(function(i) {
+    if (markerEls[i]) {
+      markerEls[i].classList.remove('world-highlight');
+    }
+  });
+}
+
+function transitionToSitesPhase() {
+  phase = 'sites';
+
+  // Push the legend into its quiet "reference" state
+  if (legend) legend.classList.add('sites-phase');
+
+  // Make sure no stray world-highlight survives into the sites phase
+  WORLD_PHASE_ORDER.forEach(quietlyClearWorld);
+}
+
+// ==========================================================================
+// SITE PHASE — original 20-site flow
+// ==========================================================================
 function activateNext() {
   var next = currentIndex + 1;
   if (next < SEQUENCE.length) {
@@ -241,16 +476,7 @@ function deactivateZone() {
     markerEls[currentIndex].classList.add('deactivated');
   }
 
-  // Animate context panel out
-  if (contextPanel) {
-    contextPanel.classList.remove('active');
-    contextPanel.classList.add('exit');
-  }
-
-  // Show legend labels again
-  if (legend) legend.classList.remove('labels-hidden');
-
-  // Tell overhead to gracefully close the video
+  // Tell overhead to gracefully close the video and dismiss its context panel
   channel.postMessage({ type: 'zone-deactivate' });
 }
 
@@ -268,39 +494,13 @@ function activateZone(index) {
     markerEls[prev].classList.add('visited');
   }
 
-  // Activate current marker
+  // Strip any leftover world-highlight from this marker — the active state takes over
   if (markerEls[index]) {
     markerEls[index].classList.remove('visited');
     markerEls[index].classList.remove('deactivated');
+    markerEls[index].classList.remove('world-highlight');
     markerEls[index].classList.add('active');
   }
-
-  // Update context panel icon mask
-  var panelMask = ICON_MASKS[entry.world];
-  contextPanelIcon.style.webkitMaskImage = panelMask;
-  contextPanelIcon.style.maskImage = panelMask;
-  contextPanelIcon.style.backgroundColor = world.color;
-  contextPanelIcon.style.display = 'block';
-
-  // Update context panel text
-  contextLocation.textContent = entry.location;
-  contextLocation.style.color = world.color;
-  contextRegion.textContent = entry.region;
-  contextWorld.textContent = world.name;
-  contextWorld.style.color = world.color;
-  contextDesc.textContent = entry.desc;
-
-  // Hide legend labels
-  if (legend) legend.classList.add('labels-hidden');
-
-  // Animate context panel border accent
-  contextPanel.style.borderColor = world.color + '18';
-
-  // Animate context panel in
-  contextPanel.classList.remove('exit');
-  // Force reflow for re-triggering animation if already active
-  void contextPanel.offsetWidth;
-  contextPanel.classList.add('active');
 
   // World indicator
   worldIndicator.className = 'world-indicator visible';

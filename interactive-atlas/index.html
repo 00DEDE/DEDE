@@ -31,36 +31,36 @@
     </div>
   </div>
 
-  <!-- Bottom context panel — horizontal: icon | world | text -->
-  <div class="context-panel" id="context-panel">
-    <div class="context-icon-wrap" id="context-icon-wrap">
-      <div class="context-panel-icon" id="context-panel-icon"></div>
+  <!-- World context panel — shown during world phase (Round 1) -->
+  <div class="world-context-panel" id="world-context-panel">
+    <div class="wcp-icon-wrap">
+      <div class="wcp-icon" id="wcp-icon"></div>
     </div>
-    <div class="context-world" id="context-world"></div>
-    <div class="context-text">
-      <div class="context-location" id="context-location"></div>
-      <div class="context-region" id="context-region"></div>
-      <div class="context-desc" id="context-desc"></div>
+    <div class="wcp-text">
+      <div class="wcp-eyebrow" id="wcp-eyebrow"></div>
+      <div class="wcp-title" id="wcp-title"></div>
+      <div class="wcp-desc" id="wcp-desc"></div>
+      <div class="wcp-meta" id="wcp-meta"></div>
     </div>
   </div>
 
-  <!-- Legend — bottom left -->
+  <!-- Legend — bottom right, phase-ordered: monuments → nature → intangible → language -->
   <div class="legend" id="legend">
-    <div class="legend-item">
+    <div class="legend-item" id="legend-item-monuments">
       <div class="legend-icon" id="legend-icon-monuments" style="background-color: #2491d0;"></div>
-      <span class="legend-label" style="color: #2491d0;">Monuments</span>
+      <span class="legend-label" style="color: #2491d0;">Built<br>Monuments</span>
     </div>
-    <div class="legend-item">
+    <div class="legend-item" id="legend-item-nature">
       <div class="legend-icon" id="legend-icon-nature" style="background-color: #9dd3b2;"></div>
-      <span class="legend-label" style="color: #9dd3b2;">Nature</span>
+      <span class="legend-label" style="color: #9dd3b2;">Natural<br>Sites</span>
     </div>
-    <div class="legend-item">
-      <div class="legend-icon" id="legend-icon-language" style="background-color: #f8e166;"></div>
-      <span class="legend-label" style="color: #f8e166;">Language</span>
-    </div>
-    <div class="legend-item">
+    <div class="legend-item" id="legend-item-intangible">
       <div class="legend-icon" id="legend-icon-intangible" style="background-color: #e7e2de;"></div>
-      <span class="legend-label" style="color: #e7e2de;">Intangible</span>
+      <span class="legend-label" style="color: #e7e2de;">Intangible<br>Traditions</span>
+    </div>
+    <div class="legend-item" id="legend-item-language">
+      <div class="legend-icon" id="legend-icon-language" style="background-color: #f8e166;"></div>
+      <span class="legend-label" style="color: #f8e166;">Endangered<br>Languages</span>
     </div>
   </div>
 
@@ -70,19 +70,19 @@
     <div class="intro-icons">
       <div class="intro-icon-item">
         <div class="intro-icon" id="intro-icon-monuments" style="background-color: #2491d0;"></div>
-        <span class="intro-icon-label" style="color: #2491d0;">Monuments</span>
+        <span class="intro-icon-label" style="color: #2491d0;">Built Monuments</span>
       </div>
       <div class="intro-icon-item">
         <div class="intro-icon" id="intro-icon-nature" style="background-color: #9dd3b2;"></div>
-        <span class="intro-icon-label" style="color: #9dd3b2;">Nature</span>
-      </div>
-      <div class="intro-icon-item">
-        <div class="intro-icon" id="intro-icon-language" style="background-color: #f8e166;"></div>
-        <span class="intro-icon-label" style="color: #f8e166;">Language</span>
+        <span class="intro-icon-label" style="color: #9dd3b2;">Natural Sites</span>
       </div>
       <div class="intro-icon-item">
         <div class="intro-icon" id="intro-icon-intangible" style="background-color: #e7e2de;"></div>
-        <span class="intro-icon-label" style="color: #e7e2de;">Intangible</span>
+        <span class="intro-icon-label" style="color: #e7e2de;">Intangible Traditions</span>
+      </div>
+      <div class="intro-icon-item">
+        <div class="intro-icon" id="intro-icon-language" style="background-color: #f8e166;"></div>
+        <span class="intro-icon-label" style="color: #f8e166;">Endangered Languages</span>
       </div>
     </div>
     <img class="intro-logo" src="assets/graphic/UNESCO_LOGO.svg" alt="UNESCO">

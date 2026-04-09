@@ -9,6 +9,22 @@ var ICONS = {
   language:   'assets/graphic/UNESCO_LANGUAGE.svg'
 };
 
+// CSS mask url() forms for the migrated context panel icon
+var ICON_MASKS = {
+  monuments:  "url('assets/graphic/UNESCO_MONUMENT.svg')",
+  nature:     "url('assets/graphic/UNESCO_NATURE.svg')",
+  intangible: "url('assets/graphic/UNESCO_INTANGIBLE.svg')",
+  language:   "url('assets/graphic/UNESCO_LANGUAGE.svg')"
+};
+
+// World names — for the migrated site context panel "world" label
+var WORLD_NAMES = {
+  monuments:  'The World Built Through Us',
+  nature:     'The World That Sustains Us',
+  intangible: 'The World That Moves Within Us',
+  language:   'The World That Remembers Us'
+};
+
 var introOverlay = null;
 var activeContent = null;
 var introLayer = null;
@@ -30,6 +46,14 @@ var videoFadeTimer = null;
 var videoCutTimer = null;
 var introTimer = null;
 var videoStartTimer = null;
+
+// Migrated site context panel refs
+var contextPanel = null;
+var contextPanelIcon = null;
+var contextLocation = null;
+var contextRegion = null;
+var contextWorld = null;
+var contextDesc = null;
 
 var VIDEO_DURATION = 240;
 var FADE_OUT_START = 230;
@@ -59,6 +83,14 @@ function init() {
   overheadIcon     = document.getElementById('overhead-icon');
   videoFadeOverlay = document.getElementById('video-fade-overlay');
   videoFrame       = document.getElementById('video-frame');
+
+  // Migrated site context panel
+  contextPanel       = document.getElementById('context-panel');
+  contextPanelIcon   = document.getElementById('context-panel-icon');
+  contextLocation    = document.getElementById('context-location');
+  contextRegion      = document.getElementById('context-region');
+  contextWorld       = document.getElementById('context-world');
+  contextDesc        = document.getElementById('context-desc');
 
   // Click on intro overlay unlocks audio
   var audioUnlocked = false;
@@ -112,6 +144,12 @@ function gracefulClose() {
   if (introTimer) clearTimeout(introTimer);
   if (videoStartTimer) clearTimeout(videoStartTimer);
   if (volumeFadeInterval) clearInterval(volumeFadeInterval);
+
+  // Animate site context panel out
+  if (contextPanel) {
+    contextPanel.classList.remove('active');
+    contextPanel.classList.add('exit');
+  }
 
   // Contract video frame
   if (videoFrame) {
@@ -208,6 +246,29 @@ function showActivation(data) {
   zoneNumber.textContent = String(data.zone).padStart(2, '0');
   zoneNumber.style.color = data.color;
   sequenceCounter.textContent = (data.index + 1) + ' / ' + data.total;
+
+  // --- Migrated site context panel: populate exactly as table.js used to ---
+  if (contextPanel && contextPanelIcon) {
+    var panelMask = ICON_MASKS[data.world];
+    if (panelMask) {
+      contextPanelIcon.style.webkitMaskImage = panelMask;
+      contextPanelIcon.style.maskImage = panelMask;
+    }
+    contextPanelIcon.style.backgroundColor = data.color;
+    contextPanelIcon.style.display = 'block';
+
+    contextLocation.textContent = data.location;
+    contextLocation.style.color = data.color;
+    contextRegion.textContent = data.region;
+    contextWorld.textContent = data.worldName || WORLD_NAMES[data.world] || '';
+    contextWorld.style.color = data.color;
+    contextDesc.textContent = data.desc;
+
+    contextPanel.style.borderColor = data.color + '18';
+    contextPanel.classList.remove('exit');
+    void contextPanel.offsetWidth;
+    contextPanel.classList.add('active');
+  }
 
   // --- Phase 2: After 3s, fade out intro, show icon above world bar ---
   introTimer = setTimeout(function() {
