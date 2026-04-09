@@ -382,3 +382,86 @@ if (document.body.dataset.page !== 'living-traces')
     }, 5000);
   });
 })();
+
+/* ========================================================================
+   BRAND FRIENDS — catch & flee
+   Click a brand-friend → it dashes off-screen and reappears in a fresh
+   spot inside a different section on the same page. They are never lost.
+   ======================================================================== */
+(function() {
+  const HOST_SELECTORS = [
+    '.hero', '.stats-section', '.worlds-section',
+    '.fw-title', '.fw-section', '.about-section',
+    '.fw-world', '.fw-intro', '.atlas-cta'
+  ].join(',');
+
+  const rand = (min, max) => Math.random() * (max - min) + min;
+  const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+
+  // Pick a fresh edge-spot inside whatever new host the friend lands in
+  function newSpot() {
+    const spotMakers = [
+      () => ({ top: rand(1.5, 7).toFixed(1)+'rem', left: rand(8, 88).toFixed(0)+'%',  right: 'auto', bottom: 'auto' }),
+      () => ({ bottom: rand(2, 7).toFixed(1)+'rem', left: rand(8, 88).toFixed(0)+'%', right: 'auto', top: 'auto' }),
+      () => ({ top: rand(20, 70).toFixed(0)+'%',    left: rand(1, 4).toFixed(1)+'rem', right: 'auto', bottom: 'auto' }),
+      () => ({ top: rand(20, 70).toFixed(0)+'%',    right: rand(1, 4).toFixed(1)+'rem', left: 'auto', bottom: 'auto' }),
+    ];
+    return pick(spotMakers)();
+  }
+
+  function applySpot(el, spot) {
+    el.style.top    = spot.top;
+    el.style.right  = spot.right;
+    el.style.bottom = spot.bottom;
+    el.style.left   = spot.left;
+  }
+
+  function flee(friend) {
+    if (friend.classList.contains('caught')) return;
+
+    // Random escape vector — far enough off-screen in any direction
+    const fleeX = pick([rand(80, 140), rand(-140, -80)]);
+    const fleeY = pick([rand(-90, -35), rand(35, 90)]);
+    friend.style.setProperty('--flee-x', fleeX.toFixed(0) + 'vw');
+    friend.style.setProperty('--flee-y', fleeY.toFixed(0) + 'vh');
+    friend.classList.add('caught');
+
+    // After the flee transition, relocate to a fresh section + spot
+    setTimeout(function() {
+      const hosts = Array.from(document.querySelectorAll(HOST_SELECTORS));
+      const current = friend.parentElement;
+      const others = hosts.filter(h => h !== current && !h.contains(friend));
+      const newHost = others.length ? pick(others) : current;
+
+      if (newHost !== current) newHost.appendChild(friend);
+      applySpot(friend, newSpot());
+
+      // Two RAFs so the new position is committed before the arrival anim
+      requestAnimationFrame(function() {
+        requestAnimationFrame(function() {
+          friend.classList.remove('caught');
+          friend.classList.add('arriving');
+          setTimeout(() => friend.classList.remove('arriving'), 650);
+        });
+      });
+    }, 720);
+  }
+
+  function init() {
+    document.querySelectorAll('.brand-friend').forEach(function(friend) {
+      // Skip friends that are intentionally non-interactive (e.g. uncover.html)
+      if (getComputedStyle(friend).pointerEvents === 'none') return;
+      friend.style.cursor = 'pointer';
+      friend.addEventListener('click', function(e) {
+        e.stopPropagation();
+        flee(friend);
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
