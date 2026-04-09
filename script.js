@@ -385,7 +385,9 @@ if (document.body.dataset.page !== 'living-traces')
 /* ========================================================================
    BRAND FRIENDS — catch & flee
    Click a brand-friend → it dashes off-screen and reappears in a fresh
-   spot inside a different section on the same page. They are never lost.
+   spot inside a different section on the same page. Every friend has a
+   unique personality, and every click randomizes the escape further so
+   no two flees feel identical.
    ======================================================================== */
 (function() {
   const HOST_SELECTORS = [
@@ -393,6 +395,9 @@ if (document.body.dataset.page !== 'living-traces')
     '.fw-title', '.fw-section', '.about-section',
     '.fw-world', '.fw-intro', '.atlas-cta'
   ].join(',');
+
+  const PERSONALITIES = ['sprinter', 'spinner', 'bouncer', 'zigzagger', 'jumper', 'tumbler', 'driller'];
+  const REST_OPACITY = 0.24;
 
   const rand = (min, max) => Math.random() * (max - min) + min;
   const pick = arr => arr[Math.floor(Math.random() * arr.length)];
@@ -415,35 +420,187 @@ if (document.body.dataset.page !== 'living-traces')
     el.style.left   = spot.left;
   }
 
+  // Build flee keyframes for a personality, with per-click randomization
+  function fleeKeyframes(personality, x, y, spin) {
+    const t = (xx, yy) => `translate(${xx}vw, ${yy}vh)`;
+
+    switch (personality) {
+      case 'sprinter':
+        // Tiny startle, then a sharp dash. Low spin.
+        return [
+          { transform: 'scale(1) rotate(0deg)',                              opacity: REST_OPACITY, offset: 0 },
+          { transform: `scale(${rand(1.25, 1.5).toFixed(2)}) rotate(${rand(-12,-6).toFixed(0)}deg)`, opacity: 0.65, offset: 0.10 },
+          { transform: `scale(0.85) rotate(${rand(8,16).toFixed(0)}deg) translateY(4px)`, opacity: 0.5, offset: 0.20 },
+          { transform: `${t(x, y)} scale(0.18) rotate(${(spin*0.4).toFixed(0)}deg)`, opacity: 0,             offset: 1 }
+        ];
+
+      case 'spinner':
+        // Whirlwind exit — heavy rotation and a wide spiral
+        return [
+          { transform: 'scale(1) rotate(0deg)',                                  opacity: REST_OPACITY, offset: 0 },
+          { transform: `scale(${rand(1.4,1.6).toFixed(2)}) rotate(${rand(-25,-15).toFixed(0)}deg)`, opacity: 0.7, offset: 0.10 },
+          { transform: `scale(1.2) rotate(${(spin*0.25).toFixed(0)}deg) translate(${rand(-8,8).toFixed(0)}px, ${rand(-10,0).toFixed(0)}px)`, opacity: 0.6, offset: 0.30 },
+          { transform: `scale(0.9) rotate(${(spin*0.55).toFixed(0)}deg)`,        opacity: 0.5,         offset: 0.50 },
+          { transform: `${t(x, y)} scale(0.18) rotate(${(spin*1.6).toFixed(0)}deg)`, opacity: 0,         offset: 1 }
+        ];
+
+      case 'bouncer':
+        // Three pogo hops then springs off-screen
+        return [
+          { transform: 'scale(1) translate(0,0)',                                opacity: REST_OPACITY, offset: 0 },
+          { transform: `scale(1.35) translateY(-${rand(14,22).toFixed(0)}px)`,   opacity: 0.65,        offset: 0.10 },
+          { transform: 'scale(1.05) translateY(2px)',                            opacity: 0.55,        offset: 0.18 },
+          { transform: `scale(1.45) translateY(-${rand(18,26).toFixed(0)}px)`,   opacity: 0.6,         offset: 0.28 },
+          { transform: 'scale(1.1) translateY(0)',                               opacity: 0.5,         offset: 0.36 },
+          { transform: `scale(1.5) translateY(-${rand(20,30).toFixed(0)}px) rotate(${rand(-15,15).toFixed(0)}deg)`, opacity: 0.5, offset: 0.46 },
+          { transform: `${t(x, y)} scale(0.18) rotate(${spin.toFixed(0)}deg)`,   opacity: 0,           offset: 1 }
+        ];
+
+      case 'zigzagger':
+        // Panicked side-to-side wobble, then bolts off
+        return [
+          { transform: 'scale(1) rotate(0deg) translateX(0)',                    opacity: REST_OPACITY, offset: 0 },
+          { transform: `scale(1.25) rotate(-18deg) translateX(-${rand(10,16).toFixed(0)}px)`, opacity: 0.6, offset: 0.10 },
+          { transform: `scale(1.25) rotate(18deg)  translateX(${rand(10,16).toFixed(0)}px)`,  opacity: 0.6, offset: 0.20 },
+          { transform: `scale(1.3)  rotate(-22deg) translateX(-${rand(12,18).toFixed(0)}px)`, opacity: 0.55,offset: 0.30 },
+          { transform: `scale(1.3)  rotate(22deg)  translateX(${rand(12,18).toFixed(0)}px)`,  opacity: 0.5, offset: 0.40 },
+          { transform: `${t(x, y)} scale(0.18) rotate(${spin.toFixed(0)}deg)`,   opacity: 0,           offset: 1 }
+        ];
+
+      case 'jumper':
+        // Deep crouch, single huge leap
+        return [
+          { transform: 'scale(1)',                                               opacity: REST_OPACITY, offset: 0 },
+          { transform: `scale(0.65) translateY(${rand(8,14).toFixed(0)}px) rotate(${rand(-8,8).toFixed(0)}deg)`, opacity: 0.55, offset: 0.18 },
+          { transform: `scale(1.4) translateY(-${rand(28,40).toFixed(0)}px) rotate(${rand(-10,10).toFixed(0)}deg)`, opacity: 0.65, offset: 0.34 },
+          { transform: `${t(x, y)} scale(0.15) rotate(${spin.toFixed(0)}deg)`,   opacity: 0,           offset: 1 }
+        ];
+
+      case 'driller':
+        // Coils tightly then drills off-screen with extreme spin
+        return [
+          { transform: 'scale(1) rotate(0deg)',                                  opacity: REST_OPACITY, offset: 0 },
+          { transform: `scale(0.55) rotate(${(spin*0.15).toFixed(0)}deg)`,       opacity: 0.5,         offset: 0.18 },
+          { transform: `scale(0.7)  rotate(${(spin*0.45).toFixed(0)}deg)`,       opacity: 0.55,        offset: 0.34 },
+          { transform: `${t(x, y)} scale(0.12) rotate(${(spin*2.2).toFixed(0)}deg)`, opacity: 0,       offset: 1 }
+        ];
+
+      case 'tumbler':
+      default:
+        // Original 6-stage flee with randomized magnitudes
+        return [
+          { transform: 'scale(1) rotate(0deg)',                                  opacity: REST_OPACITY, offset: 0 },
+          { transform: `scale(${rand(1.45,1.65).toFixed(2)}) rotate(-14deg) translateY(-${rand(6,10).toFixed(0)}px)`, opacity: 0.7, offset: 0.09 },
+          { transform: `scale(1.35) rotate(${rand(14,22).toFixed(0)}deg)`,       opacity: 0.65,        offset: 0.17 },
+          { transform: `scale(1.5)  rotate(${rand(-26,-18).toFixed(0)}deg) translateY(-${rand(8,12).toFixed(0)}px)`, opacity: 0.6, offset: 0.25 },
+          { transform: `scale(0.78) rotate(${rand(24,32).toFixed(0)}deg) translateY(${rand(4,8).toFixed(0)}px)`, opacity: 0.55, offset: 0.34 },
+          { transform: `scale(1.1)  rotate(${rand(-18,-12).toFixed(0)}deg) translateY(-${rand(10,14).toFixed(0)}px)`, opacity: 0.5, offset: 0.44 },
+          { transform: `${t(x, y)} scale(0.22) rotate(${spin.toFixed(0)}deg)`,   opacity: 0,           offset: 1 }
+        ];
+    }
+  }
+
+  // Build arrival keyframes — also personality-flavored
+  function arriveKeyframes(personality) {
+    switch (personality) {
+      case 'sprinter':
+        return [
+          { opacity: 0,      transform: `translateX(${pick([-1,1]) * rand(35,55).toFixed(0)}px) scale(0.55)` },
+          { opacity: 0.34,   transform: 'translateX(0) scale(1.15)', offset: 0.7 },
+          { opacity: REST_OPACITY, transform: 'scale(1)' }
+        ];
+      case 'spinner':
+        return [
+          { opacity: 0,      transform: `rotate(${pick([-1,1]) * rand(360,540).toFixed(0)}deg) scale(0.4)` },
+          { opacity: 0.42,   transform: 'rotate(15deg) scale(1.25)', offset: 0.6 },
+          { opacity: REST_OPACITY, transform: 'rotate(0) scale(1)' }
+        ];
+      case 'bouncer':
+        return [
+          { opacity: 0,      transform: 'translateY(-30px) scale(0.6)' },
+          { opacity: 0.42,   transform: 'translateY(8px)  scale(1.22)', offset: 0.45 },
+          { opacity: 0.32,   transform: 'translateY(-5px) scale(0.94)', offset: 0.7 },
+          { opacity: 0.27,   transform: 'translateY(2px)  scale(1.04)', offset: 0.88 },
+          { opacity: REST_OPACITY, transform: 'translateY(0) scale(1)' }
+        ];
+      case 'zigzagger':
+        return [
+          { opacity: 0,      transform: 'translateX(-20px) scale(0.5)' },
+          { opacity: 0.35,   transform: 'translateX(10px) scale(1.1) rotate(8deg)',  offset: 0.4 },
+          { opacity: 0.32,   transform: 'translateX(-6px) scale(1.05) rotate(-5deg)', offset: 0.7 },
+          { opacity: REST_OPACITY, transform: 'translateX(0) scale(1) rotate(0)' }
+        ];
+      case 'jumper':
+        return [
+          { opacity: 0,      transform: 'translateY(-40px) scale(0.4)' },
+          { opacity: 0.4,    transform: 'translateY(6px)  scale(1.3)',  offset: 0.55 },
+          { opacity: REST_OPACITY, transform: 'translateY(0) scale(1)' }
+        ];
+      case 'driller':
+        return [
+          { opacity: 0,      transform: `rotate(${pick([-1,1]) * 720}deg) scale(0.2)` },
+          { opacity: 0.4,    transform: 'rotate(0) scale(1.2)', offset: 0.65 },
+          { opacity: REST_OPACITY, transform: 'scale(1)' }
+        ];
+      case 'tumbler':
+      default:
+        return [
+          { opacity: 0,      transform: 'scale(0.3) translateY(15px) rotate(-180deg)' },
+          { opacity: 0.45,   transform: 'scale(1.32) rotate(15deg)', offset: 0.55 },
+          { opacity: 0.27,   transform: 'scale(0.94) rotate(-6deg)', offset: 0.78 },
+          { opacity: REST_OPACITY, transform: 'scale(1)' }
+        ];
+    }
+  }
+
   function flee(friend) {
-    if (friend.classList.contains('caught')) return;
+    if (friend.dataset.fleeing === '1') return;
+    friend.dataset.fleeing = '1';
+    friend.style.pointerEvents = 'none';
 
-    // Random escape vector — far enough off-screen in any direction
-    const fleeX = pick([rand(80, 140), rand(-140, -80)]);
-    const fleeY = pick([rand(-90, -35), rand(35, 90)]);
-    friend.style.setProperty('--flee-x', fleeX.toFixed(0) + 'vw');
-    friend.style.setProperty('--flee-y', fleeY.toFixed(0) + 'vh');
-    friend.classList.add('caught');
+    const personality = friend.dataset.personality || 'tumbler';
 
-    // After the flee animation completes, relocate to a fresh section + spot
-    setTimeout(function() {
+    // Per-click randomization
+    const fleeX    = pick([rand(85, 145), rand(-145, -85)]);
+    const fleeY    = pick([rand(-95, -35), rand(35, 95)]);
+    const spinDir  = pick([-1, 1]);
+    const spin     = spinDir * rand(540, 1080);
+    const duration = rand(950, 1450);
+    const easing   = pick([
+      'cubic-bezier(0.5, 0.05, 0.6, 1)',
+      'cubic-bezier(0.45, 0, 0.55, 1)',
+      'cubic-bezier(0.6, -0.05, 0.7, 0.95)',
+      'cubic-bezier(0.4, 0.1, 0.7, 1.1)'
+    ]);
+
+    const fleeAnim = friend.animate(
+      fleeKeyframes(personality, fleeX, fleeY, spin),
+      { duration: duration, easing: easing, fill: 'forwards' }
+    );
+
+    fleeAnim.onfinish = function() {
+      // Relocate to a fresh section + spot on the same page
       const hosts = Array.from(document.querySelectorAll(HOST_SELECTORS));
       const current = friend.parentElement;
       const others = hosts.filter(h => h !== current && !h.contains(friend));
       const newHost = others.length ? pick(others) : current;
-
       if (newHost !== current) newHost.appendChild(friend);
       applySpot(friend, newSpot());
 
-      // Two RAFs so the new position is committed before the arrival anim
-      requestAnimationFrame(function() {
-        requestAnimationFrame(function() {
-          friend.classList.remove('caught');
-          friend.classList.add('arriving');
-          setTimeout(() => friend.classList.remove('arriving'), 980);
-        });
-      });
-    }, 1160);
+      // Cancel flee + immediately start arrival in the same task — no flash
+      fleeAnim.cancel();
+
+      const arriveDuration = rand(720, 1100);
+      const arriveAnim = friend.animate(
+        arriveKeyframes(personality),
+        { duration: arriveDuration, easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)', fill: 'none' }
+      );
+
+      arriveAnim.onfinish = function() {
+        friend.style.pointerEvents = '';
+        friend.dataset.fleeing = '0';
+      };
+    };
   }
 
   function init() {
@@ -451,6 +608,9 @@ if (document.body.dataset.page !== 'living-traces')
       // Skip friends that are intentionally non-interactive (e.g. uncover.html)
       if (getComputedStyle(friend).pointerEvents === 'none') return;
       friend.style.cursor = 'pointer';
+      // Each friend gets a persistent personality for the lifetime of the page
+      friend.dataset.personality = pick(PERSONALITIES);
+      friend.dataset.fleeing = '0';
       friend.addEventListener('click', function(e) {
         e.stopPropagation();
         flee(friend);
