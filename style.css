@@ -148,11 +148,11 @@ img { max-width: 100%; display: block; }
     box-shadow 0.45s ease;
 }
 
-/* Scrolled state — translucent dark, darkens background, cream contents */
+/* Scrolled state — translucent blue, darkens background, cream contents */
 .header.scrolled {
-  background: rgba(26, 20, 19, 0.25);
-  backdrop-filter: blur(20px) brightness(0.45) saturate(1.1);
-  -webkit-backdrop-filter: blur(20px) brightness(0.45) saturate(1.1);
+  background: rgba(36, 144, 207, 0.25);
+  backdrop-filter: blur(20px) brightness(0.55) saturate(1.15);
+  -webkit-backdrop-filter: blur(20px) brightness(0.55) saturate(1.15);
   border-bottom-color: rgba(231, 226, 222, 0.08);
 }
 
@@ -970,7 +970,20 @@ img { max-width: 100%; display: block; }
 
 /* Journey cards (timeline replacement) */
 .about-history {
-  border-top: 1px solid rgba(0,0,0,0.06);
+  /* rule line provided by .fw-section-ruled */
+}
+
+/* Timeline body alignment — h3 title and p body share the same left edge */
+.journey-body h3,
+.journey-body p {
+  text-align: left;
+  margin-left: 0;
+  padding-left: 0;
+  text-indent: 0;
+}
+.journey-body h3 {
+  font-family: var(--font-body);
+  letter-spacing: 0;
 }
 
 .journey-cards {
@@ -1300,6 +1313,329 @@ img { max-width: 100%; display: block; }
 }
 
 /* ========================
+   DIGITAL ATLAS CTA
+   Styled to feel like the Interactive Atlas experience
+   ======================== */
+.atlas-cta {
+  position: relative;
+  background: #1a1413;
+  color: #e7e2de;
+  padding: clamp(5rem, 10vw, 10rem) clamp(1.5rem, 5vw, 4rem);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* Map-style grid overlay */
+.atlas-cta-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(231, 226, 222, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(231, 226, 222, 0.05) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 20%, rgba(0,0,0,0.3) 75%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 20%, rgba(0,0,0,0.3) 75%, transparent 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Slow scan line */
+.atlas-cta-scanline {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background: linear-gradient(180deg,
+    transparent 0%,
+    transparent 48%,
+    rgba(36, 145, 208, 0.08) 50%,
+    transparent 52%,
+    transparent 100%);
+  animation: atlasScan 8s linear infinite;
+}
+
+@keyframes atlasScan {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+/* Ocean-current like horizontal lines */
+.atlas-cta-currents {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.atlas-current {
+  position: absolute;
+  height: 1px;
+  background-repeat: repeat-x;
+  background-size: 24px 1px;
+  opacity: 0.5;
+}
+.atlas-current-1 {
+  top: 18%;
+  width: 60%;
+  background-image: linear-gradient(90deg, rgba(36,145,208,0.4) 0 12px, transparent 12px 24px);
+  animation: atlasDrift 38s linear infinite;
+}
+.atlas-current-2 {
+  top: 42%;
+  width: 75%;
+  background-image: linear-gradient(90deg, rgba(157,211,178,0.35) 0 8px, transparent 8px 24px);
+  animation: atlasDrift 52s linear infinite reverse;
+}
+.atlas-current-3 {
+  top: 68%;
+  width: 55%;
+  background-image: linear-gradient(90deg, rgba(248,225,102,0.3) 0 10px, transparent 10px 24px);
+  animation: atlasDrift 46s linear infinite;
+}
+.atlas-current-4 {
+  top: 86%;
+  width: 70%;
+  background-image: linear-gradient(90deg, rgba(231,226,222,0.25) 0 6px, transparent 6px 24px);
+  animation: atlasDrift 60s linear infinite reverse;
+}
+@keyframes atlasDrift {
+  0% { transform: translateX(-30%); }
+  100% { transform: translateX(130%); }
+}
+
+.atlas-cta-inner {
+  position: relative;
+  z-index: 2;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.atlas-cta-label {
+  display: block;
+  font-family: 'ABCMonumentGroteskMono', 'Courier New', monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(231, 226, 222, 0.45);
+  margin-bottom: 2.5rem;
+}
+
+.atlas-cta-title {
+  font-family: var(--font-heading);
+  font-size: clamp(64px, 13vw, 200px);
+  font-weight: 900;
+  line-height: 0.86;
+  letter-spacing: -0.012em;
+  color: #e7e2de;
+  margin: 0 0 2.5rem;
+  font-feature-settings: "kern" 1;
+  text-rendering: optimizeLegibility;
+}
+
+.atlas-cta-divider {
+  position: relative;
+  width: 100%;
+  height: 1px;
+  background: rgba(231, 226, 222, 0.15);
+  margin: 0 0 2.5rem;
+}
+.atlas-cta-coords {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  background: #1a1413;
+  padding: 0 1rem;
+  font-family: 'ABCMonumentGroteskMono', 'Courier New', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: rgba(231, 226, 222, 0.5);
+  text-transform: uppercase;
+}
+
+.atlas-cta-text {
+  font-family: var(--font-body);
+  font-size: clamp(15px, 1.3vw, 19px);
+  line-height: 1.75;
+  color: rgba(231, 226, 222, 0.75);
+  max-width: 620px;
+  margin: 0 0 2.5rem;
+}
+
+.atlas-cta-worlds {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem 1.4rem;
+  margin: 0 0 2.75rem;
+}
+.atlas-world-dot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--c);
+  box-shadow: 0 0 12px 0 var(--c);
+  animation: atlasPulse 2.8s ease-in-out infinite;
+}
+.atlas-world-dot:nth-of-type(2) { animation-delay: 0.4s; }
+.atlas-world-dot:nth-of-type(3) { animation-delay: 0.8s; }
+.atlas-world-dot:nth-of-type(4) { animation-delay: 1.2s; }
+@keyframes atlasPulse {
+  0%, 100% { box-shadow: 0 0 8px 0 var(--c); opacity: 0.9; }
+  50%      { box-shadow: 0 0 20px 2px var(--c); opacity: 1; }
+}
+.atlas-world-label {
+  font-family: 'ABCMonumentGroteskMono', 'Courier New', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(231, 226, 222, 0.6);
+  margin-right: 0.4rem;
+}
+
+.atlas-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 32px;
+  background: #e7e2de;
+  color: #1a1413;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  border-radius: 14px;
+  text-decoration: none;
+  transition: transform 0.25s ease, box-shadow 0.3s ease, background 0.3s ease;
+  margin-bottom: 2.5rem;
+  position: relative;
+  overflow: hidden;
+}
+.atlas-cta-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(36,145,208,0.18), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+.atlas-cta-btn:hover::before { transform: translateX(100%); }
+.atlas-cta-btn svg { transition: transform 0.3s ease; position: relative; z-index: 1; }
+.atlas-cta-btn span { position: relative; z-index: 1; }
+.atlas-cta-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 40px rgba(36, 145, 208, 0.25);
+}
+.atlas-cta-btn:hover svg { transform: translateX(4px); }
+.atlas-cta-btn:active { transform: scale(0.97); }
+
+.atlas-cta-meta {
+  display: block;
+  font-family: 'ABCMonumentGroteskMono', 'Courier New', monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(231, 226, 222, 0.35);
+}
+
+@media (max-width: 700px) {
+  .atlas-cta-title { font-size: clamp(48px, 14vw, 90px); }
+  .atlas-cta-meta, .atlas-cta-coords { font-size: 9px; letter-spacing: 0.1em; }
+  .atlas-cta-worlds { gap: 0.5rem 1rem; }
+}
+
+/* ========================
+   BRAND FRIENDS — tiny hidden characters sprinkled through the pages.
+   They're small (~36px), low-opacity, and gently animated so they feel
+   alive but only noticeable to someone who pays attention.
+   ======================== */
+.brand-friend {
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  pointer-events: auto;
+  opacity: 0.16;
+  background-color: #2491d0;
+  z-index: 1;
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  animation: friendBob 6s ease-in-out infinite;
+  will-change: transform;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+.brand-friend:hover { opacity: 0.7; transform: scale(1.18) rotate(-4deg); }
+
+/* Variant sizes */
+.brand-friend--xs { width: 24px; height: 24px; }
+.brand-friend--sm { width: 30px; height: 30px; }
+.brand-friend--md { width: 42px; height: 42px; }
+.brand-friend--lg { width: 56px; height: 56px; }
+
+/* Variant colors (brand palette) */
+.brand-friend--blue   { background-color: #2491d0; }
+.brand-friend--brown  { background-color: #675d52; }
+.brand-friend--green  { background-color: #9dd3b2; }
+.brand-friend--yellow { background-color: #f8e166; }
+.brand-friend--cream  { background-color: #e7e2de; opacity: 0.26; }
+.brand-friend--dark   { background-color: #1a1413; opacity: 0.11; }
+
+/* Variant animations — different personalities */
+.brand-friend--bob    { animation: friendBob 6s ease-in-out infinite; }
+.brand-friend--float  { animation: friendFloat 8.4s ease-in-out infinite; }
+.brand-friend--wiggle { animation: friendWiggle 5.2s ease-in-out infinite; }
+.brand-friend--sway   { animation: friendSway 7.6s ease-in-out infinite; }
+.brand-friend--peek   { animation: friendPeek 9s ease-in-out infinite; }
+
+@keyframes friendBob {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50%      { transform: translateY(-7px) rotate(2deg); }
+}
+@keyframes friendFloat {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  33%      { transform: translate(4px, -5px) rotate(-3deg); }
+  66%      { transform: translate(-3px, -8px) rotate(4deg); }
+}
+@keyframes friendWiggle {
+  0%, 100% { transform: rotate(-6deg); }
+  50%      { transform: rotate(6deg); }
+}
+@keyframes friendSway {
+  0%, 100% { transform: translateX(0) rotate(-1deg); }
+  50%      { transform: translateX(6px) rotate(3deg); }
+}
+@keyframes friendPeek {
+  0%, 45%, 100% { transform: translateY(0) scale(1); }
+  55%, 60%      { transform: translateY(-4px) scale(1.05); }
+}
+
+/* Establish positioning context for sections that host brand friends */
+.hero,
+.stats-section,
+.worlds-section,
+.fw-title,
+.fw-section,
+.about-section,
+.fw-world,
+.fw-intro,
+.atlas-cta,
+.uncover-hero,
+.uncover-grid,
+.uncover-section {
+  position: relative;
+}
+
+/* Hide on small screens — don't clutter mobile */
+@media (max-width: 768px) {
+  .brand-friend { display: none; }
+}
+
+/* ========================
    FOUR WORLDS PAGE
    ======================== */
 /* Large title section — fills the page content container (matches header margins) */
@@ -1364,11 +1700,31 @@ h2.fw-section-heading,
   text-rendering: optimizeLegibility;
 }
 
+/* Center modifier — Our Journey */
+.fw-section-heading--center.fw-section-heading--center {
+  text-align: center;
+}
+
 /* Section wrappers that host fw-section-heading match the page-padding edges */
 .fw-section {
   max-width: var(--max-width);
   margin: 0 auto;
   padding: 6rem 2rem;
+}
+
+/* Thin rule line between the hero and sectioned content.
+   The rule matches the page-padding edges (sits inside .fw-section's max-width container). */
+.fw-section-ruled {
+  position: relative;
+}
+.fw-section-ruled::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 2rem;
+  right: 2rem;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.08);
 }
 
 /* Closing statement (replaces gallery) */
