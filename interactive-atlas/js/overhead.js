@@ -46,6 +46,8 @@ var videoFadeTimer = null;
 var videoCutTimer = null;
 var introTimer = null;
 var videoStartTimer = null;
+var contextShowTimer = null;
+var contextHideTimer = null;
 
 // Migrated site context panel refs
 var contextPanel = null;
@@ -143,6 +145,8 @@ function gracefulClose() {
   if (videoCutTimer) clearTimeout(videoCutTimer);
   if (introTimer) clearTimeout(introTimer);
   if (videoStartTimer) clearTimeout(videoStartTimer);
+  if (contextShowTimer) clearTimeout(contextShowTimer);
+  if (contextHideTimer) clearTimeout(contextHideTimer);
   if (volumeFadeInterval) clearInterval(volumeFadeInterval);
 
   // Animate site context panel out
@@ -190,6 +194,8 @@ function showActivation(data) {
   if (videoStartTimer) clearTimeout(videoStartTimer);
   if (videoFadeTimer) clearTimeout(videoFadeTimer);
   if (videoCutTimer) clearTimeout(videoCutTimer);
+  if (contextShowTimer) clearTimeout(contextShowTimer);
+  if (contextHideTimer) clearTimeout(contextHideTimer);
 
   // Flash transition
   transitionFlash.style.background = data.color;
@@ -247,7 +253,7 @@ function showActivation(data) {
   zoneNumber.style.color = data.color;
   sequenceCounter.textContent = (data.index + 1) + ' / ' + data.total;
 
-  // --- Migrated site context panel: populate exactly as table.js used to ---
+  // --- Populate site context panel now, but keep it hidden until 10s into video ---
   if (contextPanel && contextPanelIcon) {
     var panelMask = ICON_MASKS[data.world];
     if (panelMask) {
@@ -264,10 +270,8 @@ function showActivation(data) {
     contextWorld.style.color = data.color;
     contextDesc.textContent = data.desc;
 
-    contextPanel.style.borderColor = data.color + '18';
-    contextPanel.classList.remove('exit');
-    void contextPanel.offsetWidth;
-    contextPanel.classList.add('active');
+    contextPanel.style.borderColor = data.color + '24';
+    contextPanel.classList.remove('active', 'exit');
   }
 
   // --- Phase 2: After 3s, fade out intro, show icon above world bar ---
@@ -291,6 +295,21 @@ function showActivation(data) {
       }).catch(function() {
         if (videoFrame) videoFrame.classList.add('expanded');
       });
+
+      // Context overlay appears 10s into the video, lingers ~8s, then fades
+      contextShowTimer = setTimeout(function() {
+        if (contextPanel) {
+          contextPanel.classList.remove('exit');
+          void contextPanel.offsetWidth;
+          contextPanel.classList.add('active');
+        }
+        contextHideTimer = setTimeout(function() {
+          if (contextPanel) {
+            contextPanel.classList.remove('active');
+            contextPanel.classList.add('exit');
+          }
+        }, 8000);
+      }, 10000);
 
       videoFadeTimer = setTimeout(function() {
         if (videoFadeOverlay) videoFadeOverlay.classList.add('fading');
