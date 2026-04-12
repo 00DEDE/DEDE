@@ -114,22 +114,9 @@ html, body {
   pointer-events: none;
 }
 
-/* World category bar — persistent, with icon that appears */
+/* World category bar — hidden; world info now surfaces via the context overlay */
 .world-bar {
-  position: absolute;
-  top: 3rem;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.6rem;
-  font-size: 0.65rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  transition: color 0.6s ease;
-  opacity: 0.5;
-  z-index: 5;
+  display: none;
 }
 
 .world-bar-icon {
@@ -176,16 +163,9 @@ html, body {
   transition: color 0.6s ease;
 }
 
-/* Zone number */
+/* Zone number — hidden to keep the frame uncluttered */
 .zone-number {
-  position: absolute;
-  top: 3rem;
-  right: 4rem;
-  font-size: 5rem;
-  font-weight: 200;
-  opacity: 0.1;
-  line-height: 1;
-  transition: color 0.6s ease;
+  display: none;
 }
 
 /* Video area */
