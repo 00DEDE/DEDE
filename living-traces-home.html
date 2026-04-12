@@ -978,16 +978,25 @@
         audio.mid = midSum / Math.max(1, midN) / 255;
         audio.treble = trebSum / Math.max(1, len - bassN - midN) / 255;
 
-        // Speech-like gate — volume threshold plus mid-band dominance so the visualizer
-        // responds to voice (formants live in the mid band) rather than music, bass rumble,
-        // traffic, or general ambient noise. Works on browsers without SpeechRecognition.
-        var VOLUME_GATE = 0.05;
+        // Speech-only gate — combines spectral check (voice formants live in the mid band)
+        // with a temporal modulation check (speech is bursty, ambient/music/traffic is flat).
+        // Only when both agree do we treat the input as voice.
+        var vDelta = Math.abs(audio.volume - prevVolume);
+        prevVolume = audio.volume;
+        deltaHistory.push(vDelta);
+        if (deltaHistory.length > DELTA_HISTORY_SIZE) deltaHistory.shift();
+        var avgDelta = 0;
+        for (var k = 0; k < deltaHistory.length; k++) avgDelta += deltaHistory[k];
+        avgDelta /= (deltaHistory.length || 1);
+
+        var VOLUME_GATE = 0.07;
         var totalBand = audio.bass + audio.mid + audio.treble + 0.001;
         var midShare = audio.mid / totalBand;
         var voicelike = audio.volume > VOLUME_GATE
-                     && audio.mid > 0.04
-                     && midShare > 0.32
-                     && audio.mid >= audio.bass * 0.75;
+                     && audio.mid > 0.06
+                     && midShare > 0.4
+                     && audio.mid > audio.bass * 1.1
+                     && avgDelta > 0.008;
         var active = isSpeaking || voicelike;
 
         if (active) {
@@ -1012,6 +1021,9 @@
         smoothAudio.treble += (targetAudio.treble - smoothAudio.treble) * 0.17;
       }
       var volumeSilenceTimer = null;
+      var prevVolume = 0;
+      var deltaHistory = [];
+      var DELTA_HISTORY_SIZE = 30;
 
       // Animation loop
       function loop() {
@@ -1061,13 +1073,14 @@
         ctx.fillStyle = '#fff';
         ctx.globalAlpha = 1;
 
-        // Cymatics-like internal fluid pattern parameters
+        // Cymatics-like internal fluid pattern parameters — softer, rounder waves:
+        // fewer symmetry nodes so lobes stay broad, and reduced overall strength so
+        // the silhouette feels like ocean swell rather than spikes.
         var vol = smoothAudio.volume;
-        var cymaticStrength = vol * 1.2;
-        // Number of symmetry nodes shifts with frequency content
-        var nodes = 3 + Math.round(smoothAudio.treble * 5);
-        var innerFlow = smoothAudio.mid * 0.4;
-        var bassWarp = smoothAudio.bass * 0.35;
+        var cymaticStrength = vol * 0.6;
+        var nodes = 2 + Math.round(smoothAudio.treble * 2);
+        var innerFlow = smoothAudio.mid * 0.3;
+        var bassWarp = smoothAudio.bass * 0.25;
 
         for (var i = 0; i < dots.length; i++) {
           var d = dots[i];
@@ -1090,7 +1103,7 @@
 
           var angle = d.baseAngle;
           var midFactor = 1 - Math.abs(rFactor - 0.5) * 2;
-          angle += smoothAudio.mid * midFactor * 0.3 * Math.sin(time * 1.5 + d.phase);
+          angle += smoothAudio.mid * midFactor * 0.18 * Math.sin(time * 1.1 + d.phase);
 
           // Inner cymatics fluid pattern — creates flowing geometric shapes inside
           if (cymaticStrength > 0.01) {
@@ -1111,7 +1124,7 @@
             r += bassPattern * d.baseR * innerWeight * 0.3;
           }
 
-          // Breakout tendrils
+          // Breakout tendrils — rounded swells (smoothstep falloff), no high-freq jitter
           for (var b = 0; b < breakouts.length; b++) {
             var br = breakouts[b];
             if (rFactor < br.ringStart) continue;
@@ -1120,9 +1133,11 @@
             while (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
             if (Math.abs(angleDiff) < br.spread) {
               var proximity = 1 - Math.abs(angleDiff) / br.spread;
+              // smoothstep: 3p² - 2p³ gives a dome-shaped curve, no cusp at the tip
+              var smooth = proximity * proximity * (3 - 2 * proximity);
               var outerFactor = (rFactor - br.ringStart) / (1 - br.ringStart);
-              var push = proximity * proximity * outerFactor * br.strength * circleMaxR * 0.6;
-              push += Math.sin(time * 3 + d.phase) * push * 0.15;
+              var outerSmooth = outerFactor * outerFactor * (3 - 2 * outerFactor);
+              var push = smooth * outerSmooth * br.strength * circleMaxR * 0.55;
               r += push;
             }
           }
