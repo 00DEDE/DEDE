@@ -1724,9 +1724,6 @@ img { max-width: 100%; display: block; }
   width: 100%;
   font-kerning: normal;
   font-feature-settings: "kern" 1, "calt" 1;
-  animation: fwTitleRise 1.15s cubic-bezier(0.18, 1.2, 0.32, 1) both;
-  transform-origin: left bottom;
-  will-change: transform, opacity, filter;
   text-rendering: optimizeLegibility;
 }
 
@@ -1736,27 +1733,23 @@ img { max-width: 100%; display: block; }
   animation: fwSubRise 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.55s both;
 }
 
-@keyframes fwTitleRise {
-  0% {
-    opacity: 0;
-    transform: translateY(90px) scale(0.9) rotate(-1.8deg);
-    filter: blur(14px);
-  }
-  55% {
-    opacity: 1;
-    transform: translateY(-14px) scale(1.045) rotate(0.4deg);
-    filter: blur(0);
-  }
-  78% {
-    transform: translateY(5px) scale(0.99) rotate(-0.12deg);
-    filter: blur(0);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1) rotate(0);
-    filter: blur(0);
-  }
+/* Doorway reveal — two invisible masks part from the center.
+   Top line emerges from the bottom of its row (mask slides up).
+   Bottom line emerges from the top of its row (mask slides down). */
+.fw-title-line {
+  display: block;
+  will-change: clip-path;
 }
+.fw-title-line-top {
+  clip-path: inset(100% 0 0 0);
+  animation: fwDoorTop 1.15s cubic-bezier(0.76, 0, 0.24, 1) 0.15s forwards;
+}
+.fw-title-line-bottom {
+  clip-path: inset(0 0 100% 0);
+  animation: fwDoorBottom 1.15s cubic-bezier(0.76, 0, 0.24, 1) 0.15s forwards;
+}
+@keyframes fwDoorTop    { to { clip-path: inset(0 0 0 0); } }
+@keyframes fwDoorBottom { to { clip-path: inset(0 0 0 0); } }
 
 @keyframes fwSubRise {
   from { opacity: 0; transform: translateY(22px); filter: blur(6px); }
@@ -1764,8 +1757,8 @@ img { max-width: 100%; display: block; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .fw-title-heading,
-  .fw-title-sub { animation: none; }
+  .fw-title-line,
+  .fw-title-sub { animation: none; clip-path: none; }
 }
 
 .fw-title-sub p {
