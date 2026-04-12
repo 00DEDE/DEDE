@@ -131,10 +131,50 @@
       transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1), left 1.2s cubic-bezier(0.4, 0, 0.2, 1), top 1.2s cubic-bezier(0.4, 0, 0.2, 1), width 1.2s cubic-bezier(0.4, 0, 0.2, 1), height 1.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* Clickable postcards after alignment */
+    /* Clickable postcards after alignment — pulsing halo in brand brown invites
+       a tap. Staggered delay so the six cards ripple rather than pulse in unison.
+       Hover lifts and replaces the pulse with a settled glow. */
     .postcard.clickable {
       pointer-events: auto;
       cursor: pointer;
+      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .postcard.clickable::after {
+      content: '';
+      position: absolute;
+      inset: -5px;
+      border-radius: 12px;
+      pointer-events: none;
+      box-shadow: 0 0 0 0 rgba(103, 93, 82, 0.55);
+      animation: postcard-tap-pulse 2.4s ease-out infinite;
+    }
+    .postcard.clickable:nth-of-type(1)::after { animation-delay: 0s; }
+    .postcard.clickable:nth-of-type(2)::after { animation-delay: 0.2s; }
+    .postcard.clickable:nth-of-type(3)::after { animation-delay: 0.4s; }
+    .postcard.clickable:nth-of-type(4)::after { animation-delay: 0.6s; }
+    .postcard.clickable:nth-of-type(5)::after { animation-delay: 0.8s; }
+    .postcard.clickable:nth-of-type(6)::after { animation-delay: 1.0s; }
+
+    @keyframes postcard-tap-pulse {
+      0%   { box-shadow: 0 0 0 0 rgba(103, 93, 82, 0.55); }
+      70%  { box-shadow: 0 0 0 16px rgba(103, 93, 82, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(103, 93, 82, 0); }
+    }
+
+    .postcard.clickable:hover {
+      transform: translateY(-6px) scale(1.04);
+    }
+    .postcard.clickable:hover::after {
+      animation: none;
+      box-shadow: 0 14px 34px rgba(103, 93, 82, 0.35);
+    }
+
+    /* Once a card has been opened to its front, silence its pulse */
+    .postcard.clickable.engaged::after { animation: none; box-shadow: none; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .postcard.clickable::after { animation: none; }
     }
 
     /* Text block below cards */
