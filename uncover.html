@@ -234,6 +234,21 @@
       .postcard-text { max-width: 680px; padding: 1.4rem 1.9rem; }
       .postcard-text h3 { font-size: 1.25rem; }
       .postcard-text p { font-size: 0.95rem; line-height: 1.55; }
+      .draw-toggle::before {
+        content: 'activate to draw · disactivate to press';
+        position: absolute;
+        right: calc(100% + 14px);
+        top: 50%;
+        transform: translateY(-50%);
+        font-family: var(--font-body, inherit);
+        font-size: 0.78rem;
+        letter-spacing: 0.06em;
+        text-transform: lowercase;
+        color: #675d52;
+        white-space: nowrap;
+        opacity: 0.75;
+        pointer-events: none;
+      }
     }
     .postcard-text h3 {
       font-family: var(--font-heading);
