@@ -194,12 +194,13 @@ html, body {
   mask-repeat: no-repeat;
   -webkit-mask-position: center;
   mask-position: center;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .video-frame.expanded {
   clip-path: inset(0 0);
   transition: clip-path 1.6s cubic-bezier(0.16, 1, 0.3, 1);
-  animation: frame-breathe 6s ease-in-out 1.6s infinite;
 }
 
 .video-frame.contracting {
@@ -217,8 +218,7 @@ html, body {
 .video-frame::after {
   content: '';
   position: absolute;
-  inset: -1px;
-  border-radius: 16px;
+  inset: 0;
   box-shadow: 0 0 30px 8px var(--frame-glow, rgba(231, 226, 222, 0.06)),
               0 0 60px 20px var(--frame-glow-wide, rgba(231, 226, 222, 0.03));
   opacity: 0;
