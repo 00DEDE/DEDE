@@ -978,10 +978,17 @@
         audio.mid = midSum / Math.max(1, midN) / 255;
         audio.treble = trebSum / Math.max(1, len - bassN - midN) / 255;
 
-        // Volume-threshold speech gate — works on browsers without SpeechRecognition (iPad Safari)
-        var VOLUME_GATE = 0.04;
-        var volumeSpeaking = audio.volume > VOLUME_GATE;
-        var active = isSpeaking || volumeSpeaking;
+        // Speech-like gate — volume threshold plus mid-band dominance so the visualizer
+        // responds to voice (formants live in the mid band) rather than music, bass rumble,
+        // traffic, or general ambient noise. Works on browsers without SpeechRecognition.
+        var VOLUME_GATE = 0.05;
+        var totalBand = audio.bass + audio.mid + audio.treble + 0.001;
+        var midShare = audio.mid / totalBand;
+        var voicelike = audio.volume > VOLUME_GATE
+                     && audio.mid > 0.04
+                     && midShare > 0.32
+                     && audio.mid >= audio.bass * 0.75;
+        var active = isSpeaking || voicelike;
 
         if (active) {
           targetAudio.volume = audio.volume;
@@ -998,11 +1005,11 @@
           targetAudio.treble = 0;
         }
 
-        // Faster smoothing — more responsive to voice in real time
-        smoothAudio.volume += (targetAudio.volume - smoothAudio.volume) * 0.18;
-        smoothAudio.bass   += (targetAudio.bass   - smoothAudio.bass)   * 0.18;
-        smoothAudio.mid    += (targetAudio.mid    - smoothAudio.mid)    * 0.16;
-        smoothAudio.treble += (targetAudio.treble - smoothAudio.treble) * 0.2;
+        // Smoothing — 15% slower than before for a calmer reaction
+        smoothAudio.volume += (targetAudio.volume - smoothAudio.volume) * 0.153;
+        smoothAudio.bass   += (targetAudio.bass   - smoothAudio.bass)   * 0.153;
+        smoothAudio.mid    += (targetAudio.mid    - smoothAudio.mid)    * 0.136;
+        smoothAudio.treble += (targetAudio.treble - smoothAudio.treble) * 0.17;
       }
       var volumeSilenceTimer = null;
 
