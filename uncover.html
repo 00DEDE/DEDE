@@ -190,10 +190,10 @@
     @media (min-width: 769px) and (max-width: 1180px) {
       .draw-toggle { display: flex; }
       .uncover-hint { display: none; }
-      .postcard { width: 118px; height: 170px; }
-      .postcard-text { max-width: 520px; padding: 1.1rem 1.5rem; }
-      .postcard-text h3 { font-size: 1rem; }
-      .postcard-text p { font-size: 0.78rem; line-height: 1.5; }
+      .postcard { width: 148px; height: 213px; }
+      .postcard-text { max-width: 680px; padding: 1.4rem 1.9rem; }
+      .postcard-text h3 { font-size: 1.25rem; }
+      .postcard-text p { font-size: 0.95rem; line-height: 1.55; }
     }
     .postcard-text h3 {
       font-family: var(--font-heading);
@@ -543,8 +543,8 @@
         var isMobile = window.innerWidth <= 600;
         var isTablet = !isMobile && window.innerWidth <= 1180;
 
-        var cardW = isMobile ? 90 : (isTablet ? 118 : 160);
-        var cardH = isMobile ? 130 : (isTablet ? 170 : 230);
+        var cardW = isMobile ? 90 : (isTablet ? 148 : 160);
+        var cardH = isMobile ? 130 : (isTablet ? 213 : 230);
         var gap = isMobile ? 10 : (isTablet ? 10 : 16);
 
         postcards.forEach(function(card, i) {
@@ -586,7 +586,7 @@
           // Desktop: single row
           var totalW = 6 * cardW + 5 * gap;
           var startX = (layerW - totalW) / 2;
-          var centerY = (layerH - cardH) / 2;
+          var centerY = isTablet ? 110 : (layerH - cardH) / 2;
 
           postcards.forEach(function(card, i) {
             card.classList.add('aligning');

@@ -2472,8 +2472,8 @@ h2.fw-section-heading,
   .fw-title-heading { font-size: clamp(3rem, 9vw, 6rem); }
   .fw-world,
   .fw-world-reverse {
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
+    grid-template-columns: 0.9fr 1.4fr;
+    gap: 2rem;
     min-height: 0;
     margin: 0 auto 2rem;
     padding: 0 1.5rem;
@@ -2481,28 +2481,28 @@ h2.fw-section-heading,
   }
   .fw-world-image { aspect-ratio: 4 / 5; border-radius: 10px; }
   .fw-world-content { padding: 0.5rem 0; }
-  .fw-icon { width: 48px; margin-bottom: 0.6rem; }
+  .fw-icon { width: 68px; margin-bottom: 1.1rem; }
   .fw-world-content h2 {
-    font-size: clamp(1.3rem, 2.6vw, 1.7rem);
-    margin-bottom: 0.6rem;
+    font-size: clamp(1.7rem, 3.2vw, 2.3rem);
+    margin-bottom: 1rem;
     line-height: 1.1;
   }
   .fw-world-content p {
-    font-size: 0.8rem;
-    line-height: 1.55;
-    margin-bottom: 0.6rem;
+    font-size: 0.95rem;
+    line-height: 1.65;
+    margin-bottom: 1rem;
   }
-  .fw-stat { margin-bottom: 0.6rem; padding-bottom: 0.6rem; }
-  .fw-stat-number { font-size: 1.6rem; }
-  .fw-stat-label { font-size: 0.68rem; }
+  .fw-stat { margin-bottom: 1rem; padding-bottom: 1rem; }
+  .fw-stat-number { font-size: 2.4rem; }
+  .fw-stat-label { font-size: 0.78rem; }
   .fw-stack-info.expanded {
-    max-height: 200px;
-    padding-top: 0.6rem;
-    margin-top: 0.6rem;
+    max-height: 260px;
+    padding-top: 0.9rem;
+    margin-top: 0.9rem;
   }
-  .fw-info h3 { font-size: 1rem; margin-bottom: 0.2rem; }
-  .fw-info-meta { font-size: 0.68rem; margin-bottom: 0.4rem; }
-  .fw-info p { font-size: 0.78rem; line-height: 1.5; }
+  .fw-info h3 { font-size: 1.2rem; margin-bottom: 0.3rem; }
+  .fw-info-meta { font-size: 0.76rem; margin-bottom: 0.5rem; }
+  .fw-info p { font-size: 0.9rem; line-height: 1.6; }
   .fw-stack-counter { font-size: 0.64rem; padding: 3px 8px; }
   .fw-stack-hint { font-size: 0.66rem; padding: 6px 11px; }
   .fw-closing { padding: 3rem 1.5rem 2rem; }
