@@ -2191,21 +2191,89 @@ h2.fw-section-heading,
   transform: scale(1.04);
 }
 
-/* Image clip-path reveal on scroll */
-.world-block .world-image .placeholder-img,
+/* Image clip-path reveal on scroll — four-worlds page keeps the horizontal wipe */
 .fw-world .fw-stack {
   clip-path: inset(0 100% 0 0);
   transition: clip-path 1s cubic-bezier(0.65, 0, 0.35, 1) 0.15s;
 }
 
-.world-block-reverse .world-image .placeholder-img,
 .fw-world-reverse .fw-stack {
   clip-path: inset(0 0 0 100%);
 }
 
-.world-block.visible .world-image .placeholder-img,
 .fw-world.visible .fw-stack {
   clip-path: inset(0 0 0 0);
+}
+
+/* Home page — four distinct entrance treatments so the rhythm varies
+   instead of repeating the same wipe. Triggered by .visible from the
+   IntersectionObserver. Works at mobile / iPad / desktop. */
+.world-block .world-image .placeholder-img {
+  transition:
+    clip-path 1.15s cubic-bezier(0.65, 0, 0.35, 1) 0.15s,
+    transform 1.15s cubic-bezier(0.22, 1, 0.36, 1) 0.15s,
+    filter 0.9s ease 0.15s,
+    opacity 0.7s ease 0.1s;
+  will-change: clip-path, transform, filter, opacity;
+}
+
+/* Variant 1 — bottom-up wipe (rises from floor) */
+.world-block-link:nth-of-type(1) .world-image .placeholder-img {
+  clip-path: inset(100% 0 0 0);
+  transform: translateY(30px);
+  opacity: 0;
+}
+.world-block-link:nth-of-type(1) .world-block.visible .world-image .placeholder-img {
+  clip-path: inset(0 0 0 0);
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Variant 2 — diagonal sweep from top-right corner */
+.world-block-link:nth-of-type(2) .world-image .placeholder-img {
+  clip-path: polygon(100% 0, 100% 0, 100% 0, 100% 0);
+  transform: scale(1.08);
+  opacity: 0;
+}
+.world-block-link:nth-of-type(2) .world-block.visible .world-image .placeholder-img {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* Variant 3 — iris expand from the center, blur-to-focus */
+.world-block-link:nth-of-type(3) .world-image .placeholder-img {
+  clip-path: circle(0% at 50% 50%);
+  transform: scale(1.12) rotate(-1.5deg);
+  filter: blur(6px);
+  opacity: 0;
+}
+.world-block-link:nth-of-type(3) .world-block.visible .world-image .placeholder-img {
+  clip-path: circle(75% at 50% 50%);
+  transform: scale(1) rotate(0);
+  filter: blur(0);
+  opacity: 1;
+}
+
+/* Variant 4 — 3D swing-in from the right edge with de-blur */
+.world-block-link:nth-of-type(4) .world-image .placeholder-img {
+  transform: perspective(1100px) rotateY(-24deg) scale(1.08) translateX(40px);
+  filter: blur(10px);
+  opacity: 0;
+}
+.world-block-link:nth-of-type(4) .world-block.visible .world-image .placeholder-img {
+  transform: perspective(1100px) rotateY(0) scale(1) translateX(0);
+  filter: blur(0);
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .world-block .world-image .placeholder-img {
+    clip-path: none !important;
+    transform: none !important;
+    filter: none !important;
+    opacity: 1 !important;
+  }
 }
 
 /* Button shimmer on hover */
