@@ -281,12 +281,12 @@
     /* ---- LANGUAGE VISUALIZER ---- */
     .lt-language-visualizer {
       display: flex; flex-direction: column; align-items: center;
-      padding: 80px 24px 100px; position: relative; overflow: visible;
+      padding: 40px 24px 40px; position: relative; overflow: visible;
     }
     .lt-lang-heading {
       font-family: 'PPTelegrafLight', sans-serif; font-size: clamp(18px, 3vw, 32px);
       letter-spacing: 0.06em; color: rgba(255,255,255,0.7);
-      text-align: center; margin-bottom: -60px; position: relative; z-index: 2;
+      text-align: center; margin-bottom: -160px; position: relative; z-index: 2;
     }
     .lt-lang-orb-wrap { position: relative; width: 100%; max-width: 1125px; aspect-ratio: 1/1; }
     .lt-lang-orb-wrap canvas { width: 100%; height: 100%; }
@@ -369,7 +369,7 @@
   <!-- UNESCO Logo — top right corner with frosted glass -->
   <a href="home.html" class="unesco-corner" aria-label="Back to UNESCO home">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="60 0 170 144">
-      <style>path { fill: #2490cf; }</style>
+      <style>path { fill: #808080; }</style>
       <path d="M99.11,25.5c4.28,0,7.91-2.62,7.91-7.46V7.93c0-.94-.51-1.44-1.44-1.44h-2.01c-.94,0-1.44.51-1.44,1.44v10.11c0,2.11-1.42,3.21-3.02,3.21s-2.99-1.1-2.99-3.21V7.93c0-.94-.51-1.44-1.44-1.44h-2.03c-.94,0-1.44.51-1.44,1.44v10.11c0,4.84,3.61,7.46,7.91,7.46Z"/>
       <path d="M111.36,25.2h2.03c.91,0,1.44-.51,1.44-1.44v-8.66l6.58,9.2c.43.61.96.91,1.74.91h1.23c.94,0,1.44-.51,1.44-1.44V7.93c0-.94-.51-1.44-1.44-1.44h-2.03c-.94,0-1.44.51-1.44,1.44v8.53l-6.52-9.06c-.45-.61-.99-.91-1.76-.91h-1.26c-.94,0-1.44.51-1.44,1.44v15.83c0,.94.51,1.44,1.44,1.44Z"/>
       <path d="M130.26,25.2h10.11c.94,0,1.44-.51,1.44-1.44v-1.31c0-.94-.51-1.44-1.44-1.44h-6.63v-3.21h5.56c.94,0,1.47-.51,1.47-1.44v-.88c0-.94-.53-1.44-1.47-1.44h-5.56v-3.34h6.63c.94,0,1.44-.51,1.44-1.44v-1.31c0-.94-.51-1.44-1.44-1.44h-10.11c-.94,0-1.44.51-1.44,1.44v15.83c0,.94.51,1.44,1.44,1.44Z"/>
@@ -900,11 +900,15 @@
       var breathTimer = 0;
       var breathInterval = 60 + Math.random() * 80;
 
+      // iPad / tablet viewport gets reduced DPR + dot count for smoother framerate
+      var IS_TABLET = window.innerWidth > 768 && window.innerWidth <= 1180;
+      var DPR = IS_TABLET ? 1.5 : 2;
+
       function sizeCanvas() {
         var wrap = canvas.parentElement;
         var s = wrap.clientWidth;
-        canvas.width = s * 2;
-        canvas.height = s * 2;
+        canvas.width = s * DPR;
+        canvas.height = s * DPR;
         canvas.style.width = s + 'px';
         canvas.style.height = s + 'px';
         generateDots();
@@ -921,9 +925,9 @@
           angle: Math.random() * Math.PI * 2,
           spread: 0.15 + Math.random() * 0.25,
           strength: 0,
-          targetStrength: 0.4 + Math.random() * 0.8,
+          targetStrength: 0.5 + Math.random() * 0.9,
           decay: 0.003 + Math.random() * 0.005,
-          ringStart: 0.5 + Math.random() * 0.3,
+          ringStart: 0.2 + Math.random() * 0.4,
           phase: Math.random() * Math.PI * 2,
           wobbleSpeed: 0.5 + Math.random() * 1.5
         });
@@ -931,15 +935,17 @@
 
       function generateDots() {
         dots = [];
-        circleMaxR = canvas.width / 2 * 0.425;
-        var ringSpacing = 5;
+        circleMaxR = canvas.width / 2 * 0.48;
+        var ringSpacing = IS_TABLET ? 7 : 5;
+        var dotSpacing = IS_TABLET ? 4 : 3;
+        var skipProb = IS_TABLET ? 0.35 : 0.2;
         var numRings = Math.floor((circleMaxR - CENTER_HOLE) / ringSpacing);
         for (var ring = 0; ring < numRings; ring++) {
           var r = CENTER_HOLE + ring * ringSpacing;
           var circ = 2 * Math.PI * r;
-          var numDots = Math.floor(circ / 3);
+          var numDots = Math.floor(circ / dotSpacing);
           for (var d = 0; d < numDots; d++) {
-            if (Math.random() < 0.2) continue;
+            if (Math.random() < skipProb) continue;
             dots.push({
               baseR: r + (Math.random() - 0.5) * 1.2,
               baseAngle: (d / numDots) * Math.PI * 2 + (Math.random() - 0.5) * (0.4 / (ring + 5)),
@@ -972,11 +978,19 @@
         audio.mid = midSum / Math.max(1, midN) / 255;
         audio.treble = trebSum / Math.max(1, len - bassN - midN) / 255;
 
-        if (isSpeaking) {
+        // Volume-threshold speech gate — works on browsers without SpeechRecognition (iPad Safari)
+        var VOLUME_GATE = 0.04;
+        var volumeSpeaking = audio.volume > VOLUME_GATE;
+        var active = isSpeaking || volumeSpeaking;
+
+        if (active) {
           targetAudio.volume = audio.volume;
           targetAudio.bass = audio.bass;
           targetAudio.mid = audio.mid;
           targetAudio.treble = audio.treble;
+          isSpeaking = true;
+          clearTimeout(volumeSilenceTimer);
+          volumeSilenceTimer = setTimeout(function() { isSpeaking = false; }, 350);
         } else {
           targetAudio.volume = 0;
           targetAudio.bass = 0;
@@ -984,11 +998,13 @@
           targetAudio.treble = 0;
         }
 
-        smoothAudio.volume += (targetAudio.volume - smoothAudio.volume) * 0.07;
-        smoothAudio.bass += (targetAudio.bass - smoothAudio.bass) * 0.07;
-        smoothAudio.mid += (targetAudio.mid - smoothAudio.mid) * 0.05;
-        smoothAudio.treble += (targetAudio.treble - smoothAudio.treble) * 0.09;
+        // Faster smoothing — more responsive to voice in real time
+        smoothAudio.volume += (targetAudio.volume - smoothAudio.volume) * 0.18;
+        smoothAudio.bass   += (targetAudio.bass   - smoothAudio.bass)   * 0.18;
+        smoothAudio.mid    += (targetAudio.mid    - smoothAudio.mid)    * 0.16;
+        smoothAudio.treble += (targetAudio.treble - smoothAudio.treble) * 0.2;
       }
+      var volumeSilenceTimer = null;
 
       // Animation loop
       function loop() {
@@ -1032,7 +1048,7 @@
           }
         }
 
-        var audioBreath = 1 + smoothAudio.volume * 0.5;
+        var audioBreath = 1 + smoothAudio.volume * 0.9;
         var pulseWave = time * 0.6;
 
         ctx.fillStyle = '#fff';
@@ -1056,13 +1072,18 @@
           var wobble = Math.sin(time * d.speed + d.phase) * 0.3;
           r += wobble;
 
-          var audioPush = smoothAudio.bass * (1 - rFactor) * 55
-                        + smoothAudio.treble * rFactor * 40;
+          // Uniform voice push — every ring reacts to overall volume
+          var audioPush = smoothAudio.volume * 70;
+          // Frequency accents layered on top (inner emphasizes bass, outer treble, middle mid)
+          audioPush += smoothAudio.bass * (1 - rFactor) * 60;
+          audioPush += smoothAudio.treble * rFactor * 55;
+          var midBand = 1 - Math.abs(rFactor - 0.5) * 2;
+          audioPush += smoothAudio.mid * midBand * 45;
           r += audioPush;
 
           var angle = d.baseAngle;
           var midFactor = 1 - Math.abs(rFactor - 0.5) * 2;
-          angle += smoothAudio.mid * midFactor * 0.22 * Math.sin(time * 1.5 + d.phase);
+          angle += smoothAudio.mid * midFactor * 0.3 * Math.sin(time * 1.5 + d.phase);
 
           // Inner cymatics fluid pattern — creates flowing geometric shapes inside
           if (cymaticStrength > 0.01) {

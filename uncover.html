@@ -186,6 +186,15 @@
       .draw-toggle { display: flex; }
       .uncover-hint { display: none; }
     }
+    /* iPad tablet — keep desktop 6-in-a-row but expose mobile-style draw button */
+    @media (min-width: 769px) and (max-width: 1180px) {
+      .draw-toggle { display: flex; }
+      .uncover-hint { display: none; }
+      .postcard { width: 118px; height: 170px; }
+      .postcard-text { max-width: 520px; padding: 1.1rem 1.5rem; }
+      .postcard-text h3 { font-size: 1rem; }
+      .postcard-text p { font-size: 0.78rem; line-height: 1.5; }
+    }
     .postcard-text h3 {
       font-family: var(--font-heading);
       font-size: 1.1rem;
@@ -364,7 +373,7 @@
       </div>
 
       <div class="footer-tagline">
-        <span><span class="ft-blue">Safeguard</span><br><span class="ft-brown">Humanity's</span><br><span class="ft-green">Inheritance</span></span>
+        <span><span class="ft-blue">Safegua<span class="kern-r">r</span>d</span><br><span class="ft-brown">Humanit<span class="kern-y">y</span><span class="kern-apos">'</span>s</span><br><span class="ft-green">Inheritance</span></span>
       </div>
     </div>
 
@@ -532,10 +541,11 @@
         var layerW = layer.clientWidth;
         var layerH = layer.clientHeight;
         var isMobile = window.innerWidth <= 600;
+        var isTablet = !isMobile && window.innerWidth <= 1180;
 
-        var cardW = isMobile ? 90 : 160;
-        var cardH = isMobile ? 130 : 230;
-        var gap = isMobile ? 10 : 16;
+        var cardW = isMobile ? 90 : (isTablet ? 118 : 160);
+        var cardH = isMobile ? 130 : (isTablet ? 170 : 230);
+        var gap = isMobile ? 10 : (isTablet ? 10 : 16);
 
         postcards.forEach(function(card, i) {
           var rect = card.getBoundingClientRect();

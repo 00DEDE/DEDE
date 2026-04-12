@@ -758,8 +758,8 @@ img { max-width: 100%; display: block; }
   aspect-ratio: 2 / 1;
   height: 100%;
   background-color: #2491d0;
-  -webkit-mask: url('UNESCO_BRAND LOGO V2.svg') no-repeat left center / contain;
-  mask: url('UNESCO_BRAND LOGO V2.svg') no-repeat left center / contain;
+  -webkit-mask: url('UNESCO_BRAND LOGO.svg') no-repeat left center / contain;
+  mask: url('UNESCO_BRAND LOGO.svg') no-repeat left center / contain;
   transition: background-color 0.3s ease;
 }
 
@@ -817,7 +817,7 @@ img { max-width: 100%; display: block; }
 .ft-blue { color: #2490cf; }
 .ft-brown { color: #675d52; }
 .ft-green { color: #9dd3b2; }
-.kern-apos { margin: 0 -0.06em; }
+.kern-apos { display: inline-block; margin: 0 -0.14em; }
 .kern-r { letter-spacing: 0.015em; }
 .kern-y { letter-spacing: 0.03em; }
 
@@ -1754,11 +1754,12 @@ h2.fw-section-heading,
 
 .fw-closing p {
   font-family: var(--font-heading);
-  font-size: clamp(1.5rem, 3vw, 2.4rem);
+  font-size: clamp(3rem, 6vw, 4.8rem);
   font-weight: 700;
-  line-height: 1.3;
+  line-height: 1.02;
+  letter-spacing: -0.015em;
   color: var(--gray-700);
-  max-width: 760px;
+  max-width: 1100px;
   margin: 0;
 }
 
@@ -2447,5 +2448,76 @@ h2.fw-section-heading,
   .fw-info-meta { font-size: 0.72rem; margin-bottom: 0.5rem; }
 
   .fw-closing { padding: 3rem 1.5rem 2rem; }
-  .fw-closing p { font-size: clamp(1.2rem, 4vw, 1.8rem); }
+  .fw-closing p { font-size: clamp(2.4rem, 8vw, 3.6rem); line-height: 1.02; }
 }
+
+/* ========================
+   iPAD AIR TABLET TIER (769–1180px)
+   Keeps desktop structure but tightens scale so UNESCO + Living Traces
+   pages fit comfortably at 820×1180 portrait / 1180×820 landscape.
+   ======================== */
+@media (min-width: 769px) and (max-width: 1180px) {
+  /* Shared container tightening */
+  .header-inner,
+  .footer-top { padding-left: 1.5rem; padding-right: 1.5rem; }
+  .nav-links { gap: 1.2rem; }
+  .nav-links a { font-size: 0.82rem; }
+
+  /* Hero */
+  .hero { padding: 2rem 1.5rem; }
+  .hero h1 { font-size: clamp(3rem, 8vw, 5.5rem); }
+
+  /* Four Worlds — reveal must fit full image + expanded context in one viewport */
+  .fw-title { padding: 6rem 1.5rem 2rem; }
+  .fw-title-heading { font-size: clamp(3rem, 9vw, 6rem); }
+  .fw-world,
+  .fw-world-reverse {
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    min-height: 0;
+    margin: 0 auto 2rem;
+    padding: 0 1.5rem;
+    align-items: center;
+  }
+  .fw-world-image { aspect-ratio: 4 / 5; border-radius: 10px; }
+  .fw-world-content { padding: 0.5rem 0; }
+  .fw-icon { width: 48px; margin-bottom: 0.6rem; }
+  .fw-world-content h2 {
+    font-size: clamp(1.3rem, 2.6vw, 1.7rem);
+    margin-bottom: 0.6rem;
+    line-height: 1.1;
+  }
+  .fw-world-content p {
+    font-size: 0.8rem;
+    line-height: 1.55;
+    margin-bottom: 0.6rem;
+  }
+  .fw-stat { margin-bottom: 0.6rem; padding-bottom: 0.6rem; }
+  .fw-stat-number { font-size: 1.6rem; }
+  .fw-stat-label { font-size: 0.68rem; }
+  .fw-stack-info.expanded {
+    max-height: 200px;
+    padding-top: 0.6rem;
+    margin-top: 0.6rem;
+  }
+  .fw-info h3 { font-size: 1rem; margin-bottom: 0.2rem; }
+  .fw-info-meta { font-size: 0.68rem; margin-bottom: 0.4rem; }
+  .fw-info p { font-size: 0.78rem; line-height: 1.5; }
+  .fw-stack-counter { font-size: 0.64rem; padding: 3px 8px; }
+  .fw-stack-hint { font-size: 0.66rem; padding: 6px 11px; }
+  .fw-closing { padding: 3rem 1.5rem 2rem; }
+  .fw-closing p { font-size: clamp(2rem, 5.5vw, 3.4rem); line-height: 1.04; }
+
+  /* Performance — disable expensive blur/animations on lower-power iPad GPUs */
+  .fw-stack::after { animation-duration: 4s; }
+  .fw-stack-img.active { animation: none; }
+  .fw-stack-hint { backdrop-filter: none; -webkit-backdrop-filter: none; }
+
+  /* Footer */
+  .footer { padding: 3rem 1.5rem 0; }
+  .footer-top { grid-template-columns: 1fr 1.6fr 1fr; gap: 2rem; padding-bottom: 2rem; }
+  .footer-tagline span { font-size: clamp(1.6rem, 3.5vw, 2.6rem); }
+  .footer-col h4 { font-size: 0.75rem; }
+  .footer-col a { font-size: 0.75rem; }
+}
+

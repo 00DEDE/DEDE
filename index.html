@@ -216,6 +216,16 @@
       pointer-events: all;
     }
 
+    /* iPad tablet splash — prevent year / ring-icon overlap at 820–1180px */
+    @media (min-width: 769px) and (max-width: 1180px) {
+      .icon-80 { width: 340px; height: 340px; }
+      .splash-year { font-size: 60px; }
+      .splash-year-left { padding-left: 3vw; }
+      .splash-year-right { padding-right: 3vw; }
+      #brandRing { transform: scale(0.82); transform-origin: center; }
+      .brand-icon { width: 46px; height: 46px; }
+    }
+
     /* Mobile splash adjustments */
     @media (max-width: 768px) {
       @keyframes year-in {

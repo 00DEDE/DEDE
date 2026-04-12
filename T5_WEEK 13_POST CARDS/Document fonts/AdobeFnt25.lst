@@ -1,0 +1,63 @@
+%!Adobe-FontList 1.25
+%Locale:0x409
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:Type1
+FontName:ABCDiatypeUnlicensedTrial-Regular
+FamilyName:ABC Diatype Unlicensed Trial
+StyleName:Regular
+MenuName:ABC Diatype Unlicensed Trial
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:ABC Diatype Unlicensed Trial
+WritingScript:Roman
+OutlineFileName:/Users/dede/Documents/GitHub/DEDE/T5_WEEK 13_POST CARDS/Document fonts/ABCDiatype-Regular-Trial.otf
+DataFormat:sfntData
+UsesStandardEncoding:yes
+isCFF:yes
+hasSVG:no
+hasSBIX:no
+hasCOLR:no
+VariableFontType:NonVariableFont
+FileLength:191668
+FileModTime:792271678
+NameArray:0,Win,1,ABC Diatype Unlicensed Trial
+NameArray:0,Win,16,ABC Diatype Unlicensed Trial
+%EndFont
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:Invalid
+OutlineFileName:/Users/dede/Documents/GitHub/DEDE/T5_WEEK 13_POST CARDS/Document fonts/AdobeFnt25.lst
+FileLength:1281
+FileModTime:797721222
+%EndFont
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:TrueType
+FontName:InterTight-Regular
+FamilyName:Inter Tight
+StyleName:Regular
+MenuName:Inter Tight
+FamilyPrefix:InterTight
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:Inter Tight Regular
+WritingScript:Roman
+OutlineFileName:/Users/dede/Documents/GitHub/DEDE/T5_WEEK 13_POST CARDS/Document fonts/InterTight-VariableFont_wght.ttf
+DataFormat:sfntData
+hasSVG:no
+hasSBIX:no
+hasCOLR:no
+VariableFontType:TrueTypeVariableFont
+FileLength:580572
+FileModTime:747184280
+NameArray:0,Win,1,Inter Tight
+%EndFont
+
