@@ -56,17 +56,19 @@
         <div class="category-desc" id="category-desc"></div>
       </div>
 
-      <!-- Persistent bar: world name + icon that reappears above it -->
-      <div class="world-bar" id="world-bar">
-        <img class="world-bar-icon" id="world-bar-icon" src="" alt="">
-        <span class="world-bar-text" id="world-bar-text"></span>
-      </div>
       <div class="zone-number" id="zone-number"></div>
 
       <div class="video-area">
-        <div class="video-frame" id="video-frame">
-          <video class="overhead-video" id="overhead-video" playsinline></video>
-          <div class="video-fade-overlay" id="video-fade-overlay"></div>
+        <div class="video-shell">
+          <div class="video-frame" id="video-frame">
+            <video class="overhead-video" id="overhead-video" playsinline></video>
+            <div class="video-fade-overlay" id="video-fade-overlay"></div>
+          </div>
+          <!-- Persistent bar: world name + icon, sits inside the top of the frame -->
+          <div class="world-bar" id="world-bar">
+            <img class="world-bar-icon" id="world-bar-icon" src="" alt="">
+            <span class="world-bar-text" id="world-bar-text"></span>
+          </div>
         </div>
       </div>
 

@@ -114,20 +114,40 @@ html, body {
   pointer-events: none;
 }
 
-/* World category bar — hidden; world info now surfaces via the context overlay */
+/* World category bar — sits centered inside the top of the video frame */
 .world-bar {
-  display: none;
+  position: absolute;
+  top: 23%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  transition: color 0.6s ease, opacity 0.6s ease;
+  opacity: 0;
+  z-index: 8;
+  pointer-events: none;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.55);
+}
+
+.video-frame.expanded ~ .world-bar {
+  opacity: 0.85;
 }
 
 .world-bar-icon {
-  width: 36px;
-  height: 36px;
+  width: 34px;
+  height: 34px;
   opacity: 0;
   transition: opacity 0.8s ease;
+  filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.45));
 }
 
 .world-bar-icon.visible {
-  opacity: 0.5;
+  opacity: 0.9;
 }
 
 .world-bar-icon[src=""] {
@@ -178,12 +198,18 @@ html, body {
   z-index: 1;
 }
 
-/* Frame container — holds video + overlay, masked by overhead video frame SVG */
-.video-frame {
+/* Sizing wrapper — lets us overlay UI (world-bar) on top of the masked frame */
+.video-shell {
   position: relative;
   width: min(96vw, 176vh);
   max-height: 88vh;
   aspect-ratio: 6912 / 3456;
+}
+
+/* Frame container — holds video + overlay, masked by overhead video frame SVG */
+.video-frame {
+  position: absolute;
+  inset: 0;
   clip-path: inset(0 50%);
   transition: clip-path 1.6s cubic-bezier(0.16, 1, 0.3, 1);
   -webkit-mask-image: url('../assets/graphic/OVERHEAD_VIDEO FRAME.svg');
@@ -194,8 +220,8 @@ html, body {
   mask-repeat: no-repeat;
   -webkit-mask-position: center;
   mask-position: center;
-  transform: translateZ(0);
-  backface-visibility: hidden;
+  -webkit-mask-mode: alpha;
+  mask-mode: alpha;
 }
 
 .video-frame.expanded {
