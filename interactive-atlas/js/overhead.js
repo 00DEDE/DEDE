@@ -49,13 +49,12 @@ var videoStartTimer = null;
 var contextShowTimer = null;
 var contextHideTimer = null;
 
-// Migrated site context panel refs
+// Site context overlay refs
 var contextPanel = null;
-var contextPanelIcon = null;
 var contextLocation = null;
 var contextRegion = null;
-var contextWorld = null;
-var contextDesc = null;
+var contextCivilization = null;
+var contextInsight = null;
 
 var VIDEO_DURATION = 240;
 var FADE_OUT_START = 230;
@@ -110,13 +109,12 @@ function init() {
   videoFadeOverlay = document.getElementById('video-fade-overlay');
   videoFrame       = document.getElementById('video-frame');
 
-  // Migrated site context panel
-  contextPanel       = document.getElementById('context-panel');
-  contextPanelIcon   = document.getElementById('context-panel-icon');
-  contextLocation    = document.getElementById('context-location');
-  contextRegion      = document.getElementById('context-region');
-  contextWorld       = document.getElementById('context-world');
-  contextDesc        = document.getElementById('context-desc');
+  // Site context overlay
+  contextPanel        = document.getElementById('context-panel');
+  contextLocation     = document.getElementById('context-location');
+  contextRegion       = document.getElementById('context-region');
+  contextCivilization = document.getElementById('context-civilization');
+  contextInsight      = document.getElementById('context-insight');
 
   // Click on intro overlay unlocks audio
   var audioUnlocked = false;
@@ -182,7 +180,7 @@ function gracefulClose() {
 
   // Contract video frame
   if (videoFrame) {
-    videoFrame.classList.remove('expanded');
+    videoFrame.classList.remove('expanded', 'dim');
     videoFrame.classList.add('contracting');
   }
 
@@ -240,7 +238,7 @@ function showActivation(data) {
   introLayer.classList.add('visible');
   worldBarIcon.classList.remove('visible');
   if (videoFrame) {
-    videoFrame.classList.remove('expanded', 'contracting');
+    videoFrame.classList.remove('expanded', 'contracting', 'dim');
   }
   if (videoFadeOverlay) videoFadeOverlay.classList.remove('fading');
 
@@ -282,24 +280,13 @@ function showActivation(data) {
   zoneNumber.style.color = data.color;
   sequenceCounter.textContent = (data.index + 1) + ' / ' + data.total;
 
-  // --- Populate site context panel now, but keep it hidden until 10s into video ---
-  if (contextPanel && contextPanelIcon) {
-    var panelMask = ICON_MASKS[data.world];
-    if (panelMask) {
-      contextPanelIcon.style.webkitMaskImage = panelMask;
-      contextPanelIcon.style.maskImage = panelMask;
-    }
-    contextPanelIcon.style.backgroundColor = data.color;
-    contextPanelIcon.style.display = 'block';
-
+  // --- Populate site context overlay (shown 20s into video) ---
+  if (contextPanel) {
     contextLocation.textContent = data.location;
     contextLocation.style.color = data.color;
     contextRegion.textContent = data.region;
-    contextWorld.textContent = data.worldName || WORLD_NAMES[data.world] || '';
-    contextWorld.style.color = data.color;
-    contextDesc.textContent = data.desc;
-
-    contextPanel.style.borderColor = data.color + '24';
+    contextCivilization.textContent = data.civilization || '';
+    contextInsight.textContent = data.keyInsight || '';
     contextPanel.classList.remove('active', 'exit');
   }
 
@@ -325,8 +312,10 @@ function showActivation(data) {
         if (videoFrame) videoFrame.classList.add('expanded');
       });
 
-      // Context overlay appears 10s into the video, lingers ~8s, then fades
+      // Context overlay appears 20s into the video, lingers 10s, then fades.
+      // Video frame darkens underneath while the text is on screen.
       contextShowTimer = setTimeout(function() {
+        if (videoFrame) videoFrame.classList.add('dim');
         if (contextPanel) {
           contextPanel.classList.remove('exit');
           void contextPanel.offsetWidth;
@@ -337,8 +326,9 @@ function showActivation(data) {
             contextPanel.classList.remove('active');
             contextPanel.classList.add('exit');
           }
-        }, 8000);
-      }, 10000);
+          if (videoFrame) videoFrame.classList.remove('dim');
+        }, 10000);
+      }, 20000);
 
       videoFadeTimer = setTimeout(function() {
         if (videoFadeOverlay) videoFadeOverlay.classList.add('fading');
