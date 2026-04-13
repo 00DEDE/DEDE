@@ -201,8 +201,8 @@ html, body {
 /* Sizing wrapper — lets us overlay UI (world-bar) on top of the masked frame */
 .video-shell {
   position: relative;
-  width: min(96vw, 176vh);
-  max-height: 88vh;
+  width: min(99vw, 198vh);
+  max-height: 99vh;
   aspect-ratio: 6912 / 3456;
 }
 
