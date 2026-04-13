@@ -61,11 +61,35 @@ var VIDEO_DURATION = 240;
 var FADE_OUT_START = 230;
 
 var CATEGORY_LABELS = {
-  monuments:  'Monuments & Built Heritage',
-  nature:     'Natural World Heritage Sites',
+  monuments:  'Built Monuments',
+  nature:     'Natural Sites',
   language:   'Endangered Languages',
-  intangible: 'Intangible Cultural Heritage'
+  intangible: 'Intangible Traditions'
 };
+
+var labelToggleInterval = null;
+var labelTogglePhase = 0; // 0 = short, 1 = long
+
+function startLabelToggle(shortText, longText) {
+  if (labelToggleInterval) clearInterval(labelToggleInterval);
+  labelTogglePhase = 0;
+  labelToggleInterval = setInterval(function() {
+    if (!worldBarText) return;
+    worldBarText.classList.add('swap');
+    setTimeout(function() {
+      labelTogglePhase = 1 - labelTogglePhase;
+      worldBarText.textContent = labelTogglePhase === 0 ? shortText : longText;
+      worldBarText.classList.remove('swap');
+    }, 700);
+  }, 5000);
+}
+
+function stopLabelToggle() {
+  if (labelToggleInterval) {
+    clearInterval(labelToggleInterval);
+    labelToggleInterval = null;
+  }
+}
 
 function init() {
   introOverlay     = document.getElementById('intro-overlay');
@@ -148,6 +172,7 @@ function gracefulClose() {
   if (contextShowTimer) clearTimeout(contextShowTimer);
   if (contextHideTimer) clearTimeout(contextHideTimer);
   if (volumeFadeInterval) clearInterval(volumeFadeInterval);
+  stopLabelToggle();
 
   // Animate site context panel out
   if (contextPanel) {
@@ -242,8 +267,12 @@ function showActivation(data) {
   accentLine.style.background = data.color;
   categoryDesc.textContent = CATEGORY_LABELS[data.world] || '';
 
-  worldBarText.textContent = data.worldName;
+  var shortLabel = CATEGORY_LABELS[data.world] || '';
+  var longLabel  = data.worldName || WORLD_NAMES[data.world] || '';
+  worldBarText.classList.remove('swap');
+  worldBarText.textContent = shortLabel;
   worldBar.style.color = data.color;
+  startLabelToggle(shortLabel, longLabel);
 
   if (ICONS[data.world]) {
     worldBarIcon.src = ICONS[data.world];
