@@ -27,6 +27,15 @@ html, body {
   font-family: 'ABCDiatype', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   cursor: default;
   user-select: none;
+  text-wrap: pretty;
+}
+
+h1, h2, h3,
+.wcp-title, .wcp-eyebrow, .wcp-meta,
+.legend-label, .intro-icon-label,
+.world-indicator .world-name,
+.status-zone {
+  text-wrap: balance;
 }
 
 h1, h2, h3, .world-indicator .world-name, .context-location {

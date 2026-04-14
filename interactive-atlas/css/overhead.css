@@ -26,6 +26,14 @@ html, body {
   color: #e7e2de;
   font-family: 'ABCDiatype', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   user-select: none;
+  text-wrap: pretty;
+}
+
+.location-title, .location-pronunciation, .category-desc,
+.context-location, .context-pronunciation, .context-coordinates,
+.context-region, .context-civilization, .context-insight,
+.intro-icon-label {
+  text-wrap: balance;
 }
 
 .location-title, .zone-number, .context-location {
@@ -147,8 +155,8 @@ html, body {
 }
 
 .world-bar-icon {
-  width: 34px;
-  height: 34px;
+  width: 68px;
+  height: 68px;
   opacity: 0;
   transition: opacity 0.8s ease;
 }
@@ -169,8 +177,8 @@ html, body {
 }
 
 .overhead-icon {
-  width: 48px;
-  height: 48px;
+  width: 144px;
+  height: 144px;
   opacity: 0.5;
   transition: opacity 0.6s ease;
 }
