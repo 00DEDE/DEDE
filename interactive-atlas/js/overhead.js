@@ -129,8 +129,8 @@ function init() {
   if (introOverlay) {
     requestAnimationFrame(function() {
       introOverlay.classList.add('phase-1');
-      setTimeout(function() { introOverlay.classList.add('phase-2'); }, 1000);
-      setTimeout(function() { introOverlay.classList.add('phase-3'); }, 2100);
+      setTimeout(function() { introOverlay.classList.add('phase-2'); }, 2000);
+      setTimeout(function() { introOverlay.classList.add('phase-3'); }, 3100);
     });
   }
 
