@@ -744,6 +744,10 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
 }
 
 .intro-icons {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   display: flex;
   align-items: center;
   gap: 5rem;
@@ -788,8 +792,11 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
 }
 
 .intro-title-svg {
-  margin-bottom: 3.5rem;
-  width: clamp(600px, 80vw, 1200px);
+  position: absolute;
+  top: 8vh;
+  left: 50%;
+  transform: translate(-50%, 8px);
+  width: clamp(420px, 56vw, 840px);
   height: auto;
   opacity: 0;
   filter: brightness(0) invert(0.91) sepia(0.05) saturate(0.3);
@@ -798,12 +805,15 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
 }
 
 @keyframes intro-title-enter {
-  0% { opacity: 0; transform: translateY(8px); }
-  100% { opacity: 0.5; transform: translateY(0); }
+  0% { opacity: 0; transform: translate(-50%, 8px); }
+  100% { opacity: 0.5; transform: translate(-50%, 0); }
 }
 
 .intro-logo {
-  margin-top: 1.75rem;
+  position: absolute;
+  bottom: 8vh;
+  left: 50%;
+  transform: translate(-50%, 8px);
   height: 120px;
   width: auto;
   filter: brightness(0) invert(0.91) sepia(0.05) saturate(0.3);
