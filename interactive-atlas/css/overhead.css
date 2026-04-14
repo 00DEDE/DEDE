@@ -121,7 +121,7 @@ html, body {
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
   align-items: center;
   gap: 0.55rem;
   font-size: 0.7rem;
@@ -131,9 +131,6 @@ html, body {
   opacity: 0;
   z-index: 8;
   pointer-events: none;
-  text-shadow: 0 0 32px rgba(0, 0, 0, 0.85),
-               0 0 14px rgba(0, 0, 0, 0.7),
-               0 2px 6px rgba(0, 0, 0, 0.55);
 }
 
 .world-bar-text {
@@ -154,8 +151,6 @@ html, body {
   height: 34px;
   opacity: 0;
   transition: opacity 0.8s ease;
-  filter: drop-shadow(0 0 18px rgba(0, 0, 0, 0.75))
-          drop-shadow(0 2px 8px rgba(0, 0, 0, 0.55));
 }
 
 .world-bar-icon.visible {
@@ -240,6 +235,22 @@ html, body {
 /* Dimmed state — applied when site context text is on screen */
 .video-frame.dim {
   filter: brightness(0.42) saturate(0.85);
+}
+
+/* Bottom gradient shadow — keeps world-bar icon + text legible over any video */
+.video-frame::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.78) 0%,
+    rgba(0, 0, 0, 0.55) 12%,
+    rgba(0, 0, 0, 0.25) 25%,
+    transparent 42%
+  );
+  pointer-events: none;
+  z-index: 1;
 }
 
 .video-frame.expanded {

@@ -80,7 +80,7 @@ function startLabelToggle(shortText, longText) {
       worldBarText.textContent = labelTogglePhase === 0 ? shortText : longText;
       worldBarText.classList.remove('swap');
     }, 700);
-  }, 5000);
+  }, 10000);
 }
 
 function stopLabelToggle() {
