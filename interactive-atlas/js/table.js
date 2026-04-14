@@ -113,7 +113,44 @@ var wcpTitle = null;
 var wcpDesc = null;
 var wcpMeta = null;
 
+// Populate the drifting ocean rows with brand-friend icons.
+// Each row gets a different count — some small (3–5), some the full set.
+function buildOceanRows() {
+  var oceanLayer = document.getElementById('ocean-layer');
+  if (!oceanLayer) return;
+
+  var FRIEND_TOTAL = 11;
+  // [count, rowClass]. Count < 11 picks a rotating slice of friends.
+  var ROWS = [
+    [4,  'row-1'],
+    [11, 'row-2'],
+    [5,  'row-3'],
+    [3,  'row-4'],
+    [11, 'row-5'],
+    [4,  'row-6'],
+    [3,  'row-7'],
+    [3,  'row-8']
+  ];
+
+  ROWS.forEach(function(spec, rowIdx) {
+    var count = spec[0];
+    var row = document.createElement('div');
+    row.className = 'ocean-row ' + spec[1];
+    for (var i = 0; i < count; i++) {
+      var friendNum = ((rowIdx * 3 + i) % FRIEND_TOTAL) + 1;
+      var img = document.createElement('img');
+      img.className = 'ocean-friend';
+      img.src = '../brand-friends/friend-' + friendNum + '.svg';
+      img.alt = '';
+      row.appendChild(img);
+    }
+    oceanLayer.appendChild(row);
+  });
+}
+
 function init() {
+  buildOceanRows();
+
   worldIndicator = document.getElementById('world-indicator');
   statusZone = document.getElementById('status-zone');
   legend = document.getElementById('legend');
