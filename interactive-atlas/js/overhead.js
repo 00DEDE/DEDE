@@ -332,7 +332,9 @@ function showActivation(data) {
     overheadVideo.load();
 
     videoStartTimer = setTimeout(function() {
-      overheadVideo.currentTime = 0;
+      overheadVideo.currentTime = data.videoStart || 0;
+      overheadVideo.style.transform = 'scale(' + (data.videoZoom || 1) + ')';
+      overheadVideo.style.transformOrigin = 'center center';
       overheadVideo.play().then(function() {
         if (videoFrame) videoFrame.classList.add('expanded');
       }).catch(function() {
