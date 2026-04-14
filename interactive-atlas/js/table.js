@@ -138,11 +138,12 @@ function buildOceanRows() {
     row.className = 'ocean-row ' + spec[1];
     for (var i = 0; i < count; i++) {
       var friendNum = ((rowIdx * 3 + i) % FRIEND_TOTAL) + 1;
-      var img = document.createElement('img');
-      img.className = 'ocean-friend';
-      img.src = '../brand-friends/friend-' + friendNum + '.svg';
-      img.alt = '';
-      row.appendChild(img);
+      var url = "url('../brand-friends/friend-" + friendNum + ".svg')";
+      var el = document.createElement('div');
+      el.className = 'ocean-friend';
+      el.style.webkitMaskImage = url;
+      el.style.maskImage = url;
+      row.appendChild(el);
     }
     oceanLayer.appendChild(row);
   });

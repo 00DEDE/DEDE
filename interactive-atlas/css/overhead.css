@@ -423,8 +423,16 @@ html, body {
   left: 50%;
   transform: translate(-50%, -50%) scale(3);
   height: 120px;
-  width: auto;
-  filter: brightness(0) invert(0.91) sepia(0.05) saturate(0.3);
+  aspect-ratio: 1152 / 720;
+  background-color: #e7e2de;
+  -webkit-mask-image: url('../assets/graphic/UNESCO_LOGO.svg');
+  mask-image: url('../assets/graphic/UNESCO_LOGO.svg');
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
   opacity: 0;
   transition: opacity 0.9s ease;
 }
@@ -445,9 +453,17 @@ html, body {
   left: 50%;
   transform: translate(-50%, 0);
   width: clamp(420px, 56vw, 840px);
-  height: auto;
+  aspect-ratio: 1152 / 212.8;
+  background-color: #e7e2de;
+  -webkit-mask-image: url('../assets/graphic/BLOCK_TYPE_TRANSITION\ TITLE.svg');
+  mask-image: url('../assets/graphic/BLOCK_TYPE_TRANSITION\ TITLE.svg');
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
   opacity: 0;
-  filter: brightness(0) invert(0.91) sepia(0.05) saturate(0.3);
   transition: opacity 0.9s ease;
 }
 
@@ -491,6 +507,7 @@ html, body {
 
 .intro-icon-label {
   font-size: 0.75rem;
+  font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   opacity: 0.4;
