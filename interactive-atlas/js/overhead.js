@@ -71,6 +71,7 @@ function rampVolume(durationSec, fromVol, toVol) {
 
 var AUDIO_FADE_OUT_SEC = 4;
 var audioFadeOutTriggered = false;
+function onVideoEnded() { gracefulClose(); }
 function onTimeUpdateAudioFadeOut() {
   if (!overheadVideo || audioFadeOutTriggered) return;
   var dur = overheadVideo.duration;
@@ -222,7 +223,10 @@ function gracefulClose() {
   if (volumeFadeInterval) clearInterval(volumeFadeInterval);
   if (audioFadeTimer) { clearInterval(audioFadeTimer); audioFadeTimer = null; }
   audioFadeOutTriggered = false;
-  if (overheadVideo) overheadVideo.removeEventListener('timeupdate', onTimeUpdateAudioFadeOut);
+  if (overheadVideo) {
+    overheadVideo.removeEventListener('timeupdate', onTimeUpdateAudioFadeOut);
+    overheadVideo.removeEventListener('ended', onVideoEnded);
+  }
   stopLabelToggle();
 
   // Animate site context panel out
@@ -274,7 +278,10 @@ function showActivation(data) {
   if (contextHideTimer) clearTimeout(contextHideTimer);
   if (audioFadeTimer) { clearInterval(audioFadeTimer); audioFadeTimer = null; }
   audioFadeOutTriggered = false;
-  if (overheadVideo) overheadVideo.removeEventListener('timeupdate', onTimeUpdateAudioFadeOut);
+  if (overheadVideo) {
+    overheadVideo.removeEventListener('timeupdate', onTimeUpdateAudioFadeOut);
+    overheadVideo.removeEventListener('ended', onVideoEnded);
+  }
 
   // Flash transition
   transitionFlash.style.background = data.color;
@@ -312,8 +319,10 @@ function showActivation(data) {
   }
 
   // --- Phase 1: Show title, icon, context ---
-  if (overheadIcon && ICONS[data.world]) {
-    overheadIcon.src = ICONS[data.world];
+  if (overheadIcon && ICON_MASKS[data.world]) {
+    overheadIcon.style.webkitMaskImage = ICON_MASKS[data.world];
+    overheadIcon.style.maskImage = ICON_MASKS[data.world];
+    overheadIcon.style.backgroundColor = data.color;
   }
 
   locationTitle.textContent = data.location;
@@ -331,8 +340,10 @@ function showActivation(data) {
   worldBar.style.color = data.color;
   startLabelToggle(shortLabel, longLabel);
 
-  if (ICONS[data.world]) {
-    worldBarIcon.src = ICONS[data.world];
+  if (ICON_MASKS[data.world]) {
+    worldBarIcon.style.webkitMaskImage = ICON_MASKS[data.world];
+    worldBarIcon.style.maskImage = ICON_MASKS[data.world];
+    worldBarIcon.style.backgroundColor = data.color;
   }
 
   zoneNumber.textContent = String(data.zone).padStart(2, '0');
@@ -390,6 +401,7 @@ function showActivation(data) {
           if (videoFrame) videoFrame.classList.add('expanded');
           if (fadeIn > 0 && !overheadVideo.muted) rampVolume(fadeIn, 0, 1);
           overheadVideo.addEventListener('timeupdate', onTimeUpdateAudioFadeOut);
+          overheadVideo.addEventListener('ended', onVideoEnded, { once: true });
         }).catch(function() {
           if (videoFrame) videoFrame.classList.add('expanded');
         });
