@@ -32,6 +32,7 @@ var worldBar = null;
 var worldBarText = null;
 var worldBarIcon = null;
 var locationTitle = null;
+var locationPronunciation = null;
 var zoneNumber = null;
 var accentLine = null;
 var categoryDesc = null;
@@ -52,6 +53,7 @@ var contextHideTimer = null;
 // Site context overlay refs
 var contextPanel = null;
 var contextLocation = null;
+var contextPronunciation = null;
 var contextRegion = null;
 var contextCivilization = null;
 var contextInsight = null;
@@ -97,7 +99,8 @@ function init() {
   worldBar         = document.getElementById('world-bar');
   worldBarText     = document.getElementById('world-bar-text');
   worldBarIcon     = document.getElementById('world-bar-icon');
-  locationTitle    = document.getElementById('location-title');
+  locationTitle        = document.getElementById('location-title');
+  locationPronunciation = document.getElementById('location-pronunciation');
   zoneNumber       = document.getElementById('zone-number');
   accentLine       = document.getElementById('accent-line');
   categoryDesc     = document.getElementById('category-desc');
@@ -112,9 +115,22 @@ function init() {
   // Site context overlay
   contextPanel        = document.getElementById('context-panel');
   contextLocation     = document.getElementById('context-location');
+  contextPronunciation = document.getElementById('context-pronunciation');
   contextRegion       = document.getElementById('context-region');
   contextCivilization = document.getElementById('context-civilization');
   contextInsight      = document.getElementById('context-insight');
+
+  // Intro overlay choreography:
+  //   t=0      logo fades in at center
+  //   t=1000ms logo slides to bottom, title fades in at center
+  //   t=2100ms title slides to top, icon groups fade in (staggered)
+  if (introOverlay) {
+    requestAnimationFrame(function() {
+      introOverlay.classList.add('phase-1');
+      setTimeout(function() { introOverlay.classList.add('phase-2'); }, 1000);
+      setTimeout(function() { introOverlay.classList.add('phase-3'); }, 2100);
+    });
+  }
 
   // Click on intro overlay unlocks audio
   var audioUnlocked = false;
@@ -262,6 +278,9 @@ function showActivation(data) {
 
   locationTitle.textContent = data.location;
   locationTitle.style.color = data.color;
+  if (locationPronunciation) {
+    locationPronunciation.textContent = data.pronunciation || '';
+  }
   accentLine.style.background = data.color;
   categoryDesc.textContent = CATEGORY_LABELS[data.world] || '';
 
@@ -284,6 +303,9 @@ function showActivation(data) {
   if (contextPanel) {
     contextLocation.textContent = data.location;
     contextLocation.style.color = data.color;
+    if (contextPronunciation) {
+      contextPronunciation.textContent = data.pronunciation || '';
+    }
     contextRegion.textContent = data.region;
     contextCivilization.textContent = data.civilization || '';
     contextInsight.textContent = data.keyInsight || '';
