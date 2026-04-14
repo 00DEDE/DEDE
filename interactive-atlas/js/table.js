@@ -278,10 +278,10 @@ function init() {
   // Keyboard controls — dispatched by phase
   // Right/Up → advance, Left/Down → retreat
   document.addEventListener('keydown', function(e) {
-    if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowUp' || e.key === 'PageDown') {
       e.preventDefault();
       handleAdvance();
-    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown' || e.key === 'PageUp') {
       e.preventDefault();
       handleRetreat();
     }
