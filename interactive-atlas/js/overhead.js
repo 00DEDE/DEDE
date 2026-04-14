@@ -332,14 +332,29 @@ function showActivation(data) {
     overheadVideo.load();
 
     videoStartTimer = setTimeout(function() {
-      overheadVideo.currentTime = data.videoStart || 0;
-      overheadVideo.style.transform = 'scale(' + (data.videoZoom || 1) + ')';
+      var zoom = data.videoZoom || 1;
+      overheadVideo.style.transform = zoom === 1 ? '' : 'scale(' + zoom + ')';
       overheadVideo.style.transformOrigin = 'center center';
-      overheadVideo.play().then(function() {
-        if (videoFrame) videoFrame.classList.add('expanded');
-      }).catch(function() {
-        if (videoFrame) videoFrame.classList.add('expanded');
-      });
+
+      var startAt = data.videoStart || 0;
+      var seekAndPlay = function() {
+        try { if (startAt > 0) overheadVideo.currentTime = startAt; } catch (err) {}
+        overheadVideo.play().then(function() {
+          if (videoFrame) videoFrame.classList.add('expanded');
+        }).catch(function() {
+          if (videoFrame) videoFrame.classList.add('expanded');
+        });
+      };
+      if (startAt > 0 && overheadVideo.readyState < 1) {
+        overheadVideo.addEventListener('loadedmetadata', seekAndPlay, { once: true });
+      } else {
+        try { overheadVideo.currentTime = startAt; } catch (err) {}
+        overheadVideo.play().then(function() {
+          if (videoFrame) videoFrame.classList.add('expanded');
+        }).catch(function() {
+          if (videoFrame) videoFrame.classList.add('expanded');
+        });
+      }
 
       // Context overlay appears 20s into the video, lingers 10s, then fades.
       // Video frame darkens underneath while the text is on screen.
