@@ -552,6 +552,16 @@ html, body {
   margin-top: 0.35rem;
 }
 
+.context-coordinates {
+  font-family: 'ABCDiatype', 'Helvetica Neue', sans-serif;
+  font-size: 0.78rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  opacity: 0.6;
+  margin-top: 0.5rem;
+  font-variant-numeric: tabular-nums;
+}
+
 .context-region {
   font-size: 0.82rem;
   letter-spacing: 0.18em;

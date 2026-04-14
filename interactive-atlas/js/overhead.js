@@ -54,6 +54,7 @@ var contextHideTimer = null;
 var contextPanel = null;
 var contextLocation = null;
 var contextPronunciation = null;
+var contextCoordinates = null;
 var contextRegion = null;
 var contextCivilization = null;
 var contextInsight = null;
@@ -116,6 +117,7 @@ function init() {
   contextPanel        = document.getElementById('context-panel');
   contextLocation     = document.getElementById('context-location');
   contextPronunciation = document.getElementById('context-pronunciation');
+  contextCoordinates  = document.getElementById('context-coordinates');
   contextRegion       = document.getElementById('context-region');
   contextCivilization = document.getElementById('context-civilization');
   contextInsight      = document.getElementById('context-insight');
@@ -305,6 +307,9 @@ function showActivation(data) {
     contextLocation.style.color = data.color;
     if (contextPronunciation) {
       contextPronunciation.textContent = data.pronunciation || '';
+    }
+    if (contextCoordinates) {
+      contextCoordinates.textContent = data.coordinates || '';
     }
     contextRegion.textContent = data.region;
     contextCivilization.textContent = data.civilization || '';
