@@ -316,6 +316,7 @@ html, body {
   height: 100%;
   object-fit: cover;
   opacity: 0.65;
+  filter: saturate(1.18) contrast(1.1) brightness(var(--video-brightness, 1));
 }
 
 .video-fade-overlay {

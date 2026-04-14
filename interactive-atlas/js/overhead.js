@@ -49,6 +49,38 @@ var introTimer = null;
 var videoStartTimer = null;
 var contextShowTimer = null;
 var contextHideTimer = null;
+var audioFadeTimer = null;
+
+function rampVolume(durationSec, fromVol, toVol) {
+  if (!overheadVideo) return;
+  if (fromVol == null) fromVol = 0;
+  if (toVol == null) toVol = 1;
+  var steps = 30;
+  var interval = (durationSec * 1000) / steps;
+  var i = 0;
+  if (audioFadeTimer) clearInterval(audioFadeTimer);
+  try { overheadVideo.volume = fromVol; } catch (e) {}
+  audioFadeTimer = setInterval(function() {
+    i++;
+    var p = Math.min(1, i / steps);
+    var v = fromVol + (toVol - fromVol) * p;
+    try { overheadVideo.volume = Math.max(0, Math.min(1, v)); } catch (e) {}
+    if (i >= steps) { clearInterval(audioFadeTimer); audioFadeTimer = null; }
+  }, interval);
+}
+
+var AUDIO_FADE_OUT_SEC = 4;
+var audioFadeOutTriggered = false;
+function onTimeUpdateAudioFadeOut() {
+  if (!overheadVideo || audioFadeOutTriggered) return;
+  var dur = overheadVideo.duration;
+  if (!isFinite(dur)) return;
+  if (overheadVideo.currentTime >= dur - AUDIO_FADE_OUT_SEC) {
+    audioFadeOutTriggered = true;
+    var currentVol = overheadVideo.volume;
+    rampVolume(AUDIO_FADE_OUT_SEC, currentVol, 0);
+  }
+}
 
 // Site context overlay refs
 var contextPanel = null;
@@ -188,6 +220,9 @@ function gracefulClose() {
   if (contextShowTimer) clearTimeout(contextShowTimer);
   if (contextHideTimer) clearTimeout(contextHideTimer);
   if (volumeFadeInterval) clearInterval(volumeFadeInterval);
+  if (audioFadeTimer) { clearInterval(audioFadeTimer); audioFadeTimer = null; }
+  audioFadeOutTriggered = false;
+  if (overheadVideo) overheadVideo.removeEventListener('timeupdate', onTimeUpdateAudioFadeOut);
   stopLabelToggle();
 
   // Animate site context panel out
@@ -237,6 +272,9 @@ function showActivation(data) {
   if (videoCutTimer) clearTimeout(videoCutTimer);
   if (contextShowTimer) clearTimeout(contextShowTimer);
   if (contextHideTimer) clearTimeout(contextHideTimer);
+  if (audioFadeTimer) { clearInterval(audioFadeTimer); audioFadeTimer = null; }
+  audioFadeOutTriggered = false;
+  if (overheadVideo) overheadVideo.removeEventListener('timeupdate', onTimeUpdateAudioFadeOut);
 
   // Flash transition
   transitionFlash.style.background = data.color;
@@ -335,25 +373,36 @@ function showActivation(data) {
       var zoom = data.videoZoom || 1;
       overheadVideo.style.transform = zoom === 1 ? '' : 'scale(' + zoom + ')';
       overheadVideo.style.transformOrigin = 'center center';
+      overheadVideo.style.setProperty('--video-brightness', data.videoBrightness || 1);
 
       var startAt = data.videoStart || 0;
-      var seekAndPlay = function() {
-        try { if (startAt > 0) overheadVideo.currentTime = startAt; } catch (err) {}
+      var fadeIn = data.audioFadeIn || 0;
+
+      if (audioFadeTimer) { clearInterval(audioFadeTimer); audioFadeTimer = null; }
+      if (fadeIn > 0) {
+        overheadVideo.volume = 0;
+      } else if (!overheadVideo.muted) {
+        overheadVideo.volume = 1;
+      }
+
+      var beginPlay = function() {
         overheadVideo.play().then(function() {
           if (videoFrame) videoFrame.classList.add('expanded');
+          if (fadeIn > 0 && !overheadVideo.muted) rampVolume(fadeIn, 0, 1);
+          overheadVideo.addEventListener('timeupdate', onTimeUpdateAudioFadeOut);
         }).catch(function() {
           if (videoFrame) videoFrame.classList.add('expanded');
         });
+      };
+      var seekAndPlay = function() {
+        try { if (startAt > 0) overheadVideo.currentTime = startAt; } catch (err) {}
+        beginPlay();
       };
       if (startAt > 0 && overheadVideo.readyState < 1) {
         overheadVideo.addEventListener('loadedmetadata', seekAndPlay, { once: true });
       } else {
         try { overheadVideo.currentTime = startAt; } catch (err) {}
-        overheadVideo.play().then(function() {
-          if (videoFrame) videoFrame.classList.add('expanded');
-        }).catch(function() {
-          if (videoFrame) videoFrame.classList.add('expanded');
-        });
+        beginPlay();
       }
 
       // Context overlay appears 20s into the video, lingers 10s, then fades.
