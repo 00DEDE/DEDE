@@ -159,7 +159,7 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   width: 100%;
   max-height: 100%;
   aspect-ratio: 2 / 1;
-  transform: scale(1.3);
+  transform: scale(1.17);
   transform-origin: center center;
 }
 
@@ -937,10 +937,10 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   opacity: 0.4;
 }
 
-/* Corner title — top left */
+/* Corner title — top left, sits inside the SVG frame with padding */
 .corner-title {
   position: fixed;
-  top: 1.5rem;
+  top: 13cqh;
   left: 2rem;
   height: 108px;
   width: auto;
@@ -949,10 +949,10 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   z-index: 10;
 }
 
-/* Corner logo — top right */
+/* Corner logo — top right, sits inside the SVG frame with padding */
 .corner-logo {
   position: fixed;
-  top: 1.5rem;
+  top: 13cqh;
   right: 2rem;
   height: 82px;
   width: auto;
