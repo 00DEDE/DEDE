@@ -31,22 +31,33 @@ html, body {
 }
 
 /* ========================
-   STAGE — fixed canvas matching TABLE_DISPLAY FRAME.svg viewBox (3366×1683)
-   Centered in viewport and scaled to fit. Acts as a size container so
-   descendants can use cqw/cqh to reference the canvas rather than the viewport.
+   STAGE — masked canvas matching TABLE_DISPLAY FRAME.svg aspect (2:1).
+   The SVG form acts as a mask: everything outside the form's shape is
+   invisible. Stage fills the viewport, maintaining the frame's aspect ratio,
+   and is a size container so descendants can use cqw/cqh to reference the
+   canvas rather than the viewport.
    ======================== */
 .stage {
-  position: absolute;
+  position: fixed;
   top: 50%;
   left: 50%;
-  width: 3366px;
-  height: 1683px;
-  transform-origin: center center;
-  transform: translate(-50%, -50%) scale(min(calc(100vw / 3366), calc(100vh / 1683)));
+  transform: translate(-50%, -50%);
+  width: min(100vw, 200vh);
+  aspect-ratio: 2 / 1;
   container-type: size;
   container-name: stage;
   overflow: hidden;
   background: #1a1413;
+  -webkit-mask-image: url('../assets/graphic/TABLE_DISPLAY FRAME.svg');
+  mask-image: url('../assets/graphic/TABLE_DISPLAY FRAME.svg');
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-mode: alpha;
+  mask-mode: alpha;
 }
 
 h1, h2, h3,
