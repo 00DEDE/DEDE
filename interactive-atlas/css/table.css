@@ -472,7 +472,7 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
    ======================== */
 .world-context-panel {
   position: fixed;
-  bottom: 11cqh;
+  bottom: 2cqh;
   left: 50%;
   right: auto;
   transform: translateX(-50%) translateY(28px) scale(0.97);
@@ -607,6 +607,7 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
    STATUS BAR — progress dots + media controls, bottom edge
    ======================== */
 .status-bar {
+  display: none;
   position: fixed;
   bottom: 2cqh;
   left: 50%;
@@ -693,6 +694,7 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
    WORLD INDICATOR
    ======================== */
 .world-indicator {
+  display: none;
   position: fixed;
   top: 2rem;
   left: 50%;
@@ -737,21 +739,21 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   flex-direction: column;
   align-items: center;
   gap: 0.85rem;
-  width: 88px;
+  width: 110px;
   opacity: 0.32;
   z-index: 14;
   transition: opacity 0.7s ease,
               transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-#legend-item-monuments  { left: 4.5cqw;  top: 22cqh; }
-#legend-item-intangible { right: 4.5cqw; top: 22cqh; }
-#legend-item-nature     { left: 4.5cqw;  bottom: 22cqh; }
-#legend-item-language   { right: 4.5cqw; bottom: 22cqh; }
+#legend-item-monuments  { left: 5.5cqw;  top: 1cqh; }
+#legend-item-intangible { right: 5.5cqw; top: 1cqh; }
+#legend-item-nature     { left: 5.5cqw;  bottom: 1cqh; }
+#legend-item-language   { right: 5.5cqw; bottom: 1cqh; }
 
 .legend-icon {
-  width: 80px;
-  height: 80px;
+  width: 96px;
+  height: 96px;
   -webkit-mask-size: contain;
   mask-size: contain;
   -webkit-mask-repeat: no-repeat;
@@ -951,11 +953,11 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   opacity: 0.4;
 }
 
-/* Corner title — top-left plateau (x ≈ 5–14%, below mask top edge at 7.3%) */
+/* Corner title — upper-left side notch area, below the top-left plateau */
 .corner-title {
   position: fixed;
-  top: 10.5cqh;
-  left: 5.5cqw;
+  top: 22cqh;
+  left: 4.5cqw;
   width: 8cqw;
   height: auto;
   filter: brightness(0) invert(0.91) sepia(0.05) saturate(0.3);
@@ -963,11 +965,11 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   z-index: 10;
 }
 
-/* Corner logo — top-right plateau (x ≈ 86–95%), top-aligned with the title */
+/* Corner logo — upper-right side notch area, below the top-right plateau */
 .corner-logo {
   position: fixed;
-  top: 10.5cqh;
-  right: 5.5cqw;
+  top: 22cqh;
+  right: 4.5cqw;
   width: 8cqw;
   height: auto;
   filter: brightness(0) invert(0.91) sepia(0.05) saturate(0.3);
