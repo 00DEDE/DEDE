@@ -467,22 +467,22 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
 .scan-line { display: none; }
 
 /* ========================
-   WORLD CONTEXT PANEL — bottom-center, shown during world phase
+   WORLD CONTEXT PANEL — bottom-centered, width aligned with the second-highest
+   inward corners of the frame (x=496 to x=2869 = ~70.5% of stage width)
    ======================== */
 .world-context-panel {
   position: fixed;
-  bottom: 88px;
-  /* Anchored center-LEFT of viewport so it sits clear of the bottom-right legend */
-  left: 2.4rem;
+  bottom: 11cqh;
+  left: 50%;
   right: auto;
-  transform: translateY(28px) scale(0.97);
-  transform-origin: left center;
+  transform: translateX(-50%) translateY(28px) scale(0.97);
+  transform-origin: center center;
   display: flex;
   align-items: center;
   gap: 2.4rem;
   padding: 2rem 2.8rem;
-  max-width: 880px;
-  width: calc(100cqw - 540px); /* leaves a clear corridor for the legend on the right */
+  width: 70.5cqw;
+  max-width: none;
   background: rgba(26, 20, 19, 0.88);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
@@ -497,13 +497,13 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
 }
 
 .world-context-panel.active {
-  transform: translateY(0) scale(1);
+  transform: translateX(-50%) translateY(0) scale(1);
   opacity: 1;
   pointer-events: auto;
 }
 
 .world-context-panel.exit {
-  transform: translateY(20px) scale(0.98);
+  transform: translateX(-50%) translateY(20px) scale(0.98);
   opacity: 0;
   pointer-events: none;
   transition: transform 0.45s ease-in,
@@ -581,31 +581,52 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
 }
 
 /* ========================
-   STATUS BAR
+   ZONE HEADER — top-centered, lives inside the frame's center top strip
+   (y=0–7%, x=15–85%). Displays the active zone and its title.
+   ======================== */
+.zone-header {
+  position: fixed;
+  top: 2.4cqh;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-align: center;
+  padding: 0.4rem 1.4rem;
+  pointer-events: none;
+  max-width: 68cqw;
+}
+
+.status-zone {
+  color: rgba(231, 226, 222, 0.75);
+}
+
+/* ========================
+   STATUS BAR — progress dots + media controls, bottom edge
    ======================== */
 .status-bar {
   position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  bottom: 2cqh;
+  left: 50%;
+  transform: translateX(-50%);
   height: 48px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 0 2rem;
-  background: rgba(26, 20, 19, 0.7);
+  justify-content: center;
+  gap: 2.4rem;
+  padding: 0 1.6rem;
+  background: rgba(26, 20, 19, 0.55);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border-top: 1px solid rgba(255,255,255,0.05);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
   font-size: 0.65rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: rgba(231, 226, 222, 0.4);
   z-index: 20;
-}
-
-.status-zone {
-  color: rgba(231, 226, 222, 0.7);
 }
 
 .status-hint {
@@ -698,42 +719,35 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
 }
 
 /* ========================
-   LEGEND — bottom right, horizontal row, projection-readable
+   LEGEND — broken apart, one group per frame corner notch
+     monuments  → upper-left  (second-highest left corner)
+     intangible → upper-right (second-highest right corner)
+     nature     → lower-left  (second-lowest left corner)
+     language   → lower-right (second-lowest right corner)
    ======================== */
 .legend {
-  position: fixed;
-  bottom: 72px;
-  right: 2.4rem;
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  gap: 1.6rem;
-  z-index: 14;
-  opacity: 1;
-  padding: 1.2rem 1.4rem;
-}
-
-/* Solid backplate that hides the drifting rows beneath the legend */
-.legend::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-color: #1a1413;
-  border-radius: 14px;
-  z-index: -1;
+  /* Ghost container — children are positioned individually */
+  position: static;
+  display: contents;
 }
 
 .legend-item {
+  position: fixed;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.85rem;
   width: 88px;
   opacity: 0.32;
-  transform: translateY(0);
+  z-index: 14;
   transition: opacity 0.7s ease,
               transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
+
+#legend-item-monuments  { left: 4.5cqw;  top: 22cqh; }
+#legend-item-intangible { right: 4.5cqw; top: 22cqh; }
+#legend-item-nature     { left: 4.5cqw;  bottom: 22cqh; }
+#legend-item-language   { right: 4.5cqw; bottom: 22cqh; }
 
 .legend-icon {
   width: 80px;
@@ -937,25 +951,25 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   opacity: 0.4;
 }
 
-/* Corner title — top left, sits inside the SVG frame with padding */
+/* Corner title — top-left plateau (x ≈ 5–14%, below mask top edge at 7.3%) */
 .corner-title {
   position: fixed;
-  top: 13cqh;
-  left: 2rem;
-  height: 108px;
-  width: auto;
+  top: 10.5cqh;
+  left: 5.5cqw;
+  width: 8cqw;
+  height: auto;
   filter: brightness(0) invert(0.91) sepia(0.05) saturate(0.3);
   opacity: 0.5;
   z-index: 10;
 }
 
-/* Corner logo — top right, sits inside the SVG frame with padding */
+/* Corner logo — top-right plateau (x ≈ 86–95%), top-aligned with the title */
 .corner-logo {
   position: fixed;
-  top: 13cqh;
-  right: 2rem;
-  height: 82px;
-  width: auto;
+  top: 10.5cqh;
+  right: 5.5cqw;
+  width: 8cqw;
+  height: auto;
   filter: brightness(0) invert(0.91) sepia(0.05) saturate(0.3);
   opacity: 0.5;
   z-index: 10;
