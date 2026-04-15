@@ -29,6 +29,25 @@ html, body {
   text-wrap: pretty;
 }
 
+/* ========================
+   STAGE — fixed canvas matching OVERHEAD_VIDEO FRAME.svg viewBox (6912×3456)
+   Centered in viewport and scaled to fit. Acts as a size container so
+   descendants can use cqw/cqh to reference the canvas rather than the viewport.
+   ======================== */
+.stage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 6912px;
+  height: 3456px;
+  transform-origin: center center;
+  transform: translate(-50%, -50%) scale(min(calc(100vw / 6912), calc(100vh / 3456)));
+  container-type: size;
+  container-name: stage;
+  overflow: hidden;
+  background: #1a1413;
+}
+
 .location-title, .location-pronunciation, .category-desc,
 .context-location, .context-pronunciation, .context-coordinates,
 .context-region, .context-civilization, .context-insight,
@@ -43,8 +62,8 @@ html, body {
 /* Main layout */
 .overhead-wrap {
   position: relative;
-  width: 100vw;
-  height: 100vh;
+  width: 100cqw;
+  height: 100cqh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -193,7 +212,7 @@ html, body {
 
 /* Location title */
 .location-title {
-  font-size: clamp(3rem, 8vw, 7rem);
+  font-size: clamp(3rem, 8cqw, 7rem);
   font-weight: 700;
   letter-spacing: -0.03em;
   line-height: 0.95;
@@ -204,7 +223,7 @@ html, body {
 
 .location-pronunciation {
   margin-top: 0.9rem;
-  font-size: clamp(0.75rem, 1vw, 0.95rem);
+  font-size: clamp(0.75rem, 1cqw, 0.95rem);
   letter-spacing: 0.18em;
   text-transform: uppercase;
   opacity: 0.55;
@@ -230,8 +249,8 @@ html, body {
 /* Sizing wrapper — lets us overlay UI (world-bar) on top of the masked frame */
 .video-shell {
   position: relative;
-  width: min(99vw, 198vh);
-  max-height: 99vh;
+  width: min(99cqw, 198cqh);
+  max-height: 99cqh;
   aspect-ratio: 6912 / 3456;
 }
 
@@ -458,16 +477,16 @@ html, body {
 
 .intro-overlay.phase-3 .intro-logo {
   opacity: 0.5;
-  top: calc(100% - 8vh);
+  top: calc(100% - 8cqh);
   transform: translate(-50%, -100%) scale(1);
 }
 
 .intro-title-svg {
   position: absolute;
-  top: 8vh;
+  top: 8cqh;
   left: 50%;
   transform: translate(-50%, 0);
-  width: clamp(420px, 56vw, 840px);
+  width: clamp(420px, 56cqw, 840px);
   aspect-ratio: 1152 / 212.8;
   background-color: #e7e2de;
   -webkit-mask-image: url('../assets/graphic/BLOCK_TYPE_TRANSITION\ TITLE.svg');
@@ -540,7 +559,7 @@ html, body {
   flex-direction: column;
   align-items: center;
   gap: 0.55rem;
-  width: min(72vw, 960px);
+  width: min(72cqw, 960px);
   text-align: center;
   z-index: 20;
   opacity: 0;
@@ -568,7 +587,7 @@ html, body {
 
 .context-location {
   font-family: 'Inter Tight', 'Helvetica Neue', sans-serif;
-  font-size: clamp(2.4rem, 5vw, 4rem);
+  font-size: clamp(2.4rem, 5cqw, 4rem);
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1.02;
@@ -611,7 +630,7 @@ html, body {
 }
 
 .context-insight {
-  font-size: clamp(1rem, 1.4vw, 1.25rem);
+  font-size: clamp(1rem, 1.4cqw, 1.25rem);
   line-height: 1.5;
   opacity: 0.95;
   max-width: 52ch;

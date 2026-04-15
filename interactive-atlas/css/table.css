@@ -30,6 +30,25 @@ html, body {
   text-wrap: pretty;
 }
 
+/* ========================
+   STAGE — fixed canvas matching TABLE_DISPLAY FRAME.svg viewBox (3366×1683)
+   Centered in viewport and scaled to fit. Acts as a size container so
+   descendants can use cqw/cqh to reference the canvas rather than the viewport.
+   ======================== */
+.stage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 3366px;
+  height: 1683px;
+  transform-origin: center center;
+  transform: translate(-50%, -50%) scale(min(calc(100vw / 3366), calc(100vh / 1683)));
+  container-type: size;
+  container-name: stage;
+  overflow: hidden;
+  background: #1a1413;
+}
+
 h1, h2, h3,
 .wcp-title, .wcp-eyebrow, .wcp-meta,
 .legend-label, .intro-icon-label,
@@ -91,23 +110,23 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
 
 /* Horizontal drift with gentle vertical sway */
 @keyframes drift-right {
-  0%   { transform: translateX(-30vw) translateY(0); opacity: 0; }
+  0%   { transform: translateX(-30cqw) translateY(0); opacity: 0; }
   3%   { opacity: 0.8; }
-  25%  { transform: translateX(15vw) translateY(-5px); }
-  50%  { transform: translateX(50vw) translateY(4px); }
-  75%  { transform: translateX(80vw) translateY(-3px); }
+  25%  { transform: translateX(15cqw) translateY(-5px); }
+  50%  { transform: translateX(50cqw) translateY(4px); }
+  75%  { transform: translateX(80cqw) translateY(-3px); }
   97%  { opacity: 0.8; }
-  100% { transform: translateX(110vw) translateY(0); opacity: 0; }
+  100% { transform: translateX(110cqw) translateY(0); opacity: 0; }
 }
 
 @keyframes drift-left {
-  0%   { transform: translateX(110vw) translateY(0); opacity: 0; }
+  0%   { transform: translateX(110cqw) translateY(0); opacity: 0; }
   3%   { opacity: 0.7; }
-  25%  { transform: translateX(75vw) translateY(4px); }
-  50%  { transform: translateX(45vw) translateY(-5px); }
-  75%  { transform: translateX(15vw) translateY(3px); }
+  25%  { transform: translateX(75cqw) translateY(4px); }
+  50%  { transform: translateX(45cqw) translateY(-5px); }
+  75%  { transform: translateX(15cqw) translateY(3px); }
   97%  { opacity: 0.7; }
-  100% { transform: translateX(-30vw) translateY(0); opacity: 0; }
+  100% { transform: translateX(-30cqw) translateY(0); opacity: 0; }
 }
 
 /* ========================
@@ -115,8 +134,8 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
    ======================== */
 .map-wrap {
   position: relative;
-  width: 100vw;
-  height: calc(100vh - 160px);
+  width: 100cqw;
+  height: calc(100cqh - 160px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -443,7 +462,7 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   gap: 2.4rem;
   padding: 2rem 2.8rem;
   max-width: 880px;
-  width: calc(100vw - 540px); /* leaves a clear corridor for the legend on the right */
+  width: calc(100cqw - 540px); /* leaves a clear corridor for the legend on the right */
   background: rgba(26, 20, 19, 0.88);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
@@ -823,16 +842,16 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
 
 .intro-overlay.phase-3 .intro-logo {
   opacity: 0.5;
-  top: calc(100% - 8vh);
+  top: calc(100% - 8cqh);
   transform: translate(-50%, -100%) scale(1);
 }
 
 .intro-title-svg {
   position: absolute;
-  top: 8vh;
+  top: 8cqh;
   left: 50%;
   transform: translate(-50%, 0);
-  width: clamp(420px, 56vw, 840px);
+  width: clamp(420px, 56cqw, 840px);
   aspect-ratio: 1152 / 212.8;
   background-color: #e7e2de;
   -webkit-mask-image: url('../assets/graphic/BLOCK_TYPE_TRANSITION\ TITLE.svg');
