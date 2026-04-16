@@ -953,11 +953,13 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   opacity: 0.4;
 }
 
-/* Corner title — upper-left side notch area, below the top-left plateau */
+/* Corner title — same y as zone-header "Ready", inside the center top strip
+   (visible x range 15–85%), positioned left of center to avoid the icons on
+   the top-left plateau (which extends to ~14% width). */
 .corner-title {
   position: fixed;
-  top: 22cqh;
-  left: 4.5cqw;
+  top: 2.4cqh;
+  left: 17cqw;
   width: 8cqw;
   height: auto;
   filter: brightness(0) invert(0.91) sepia(0.05) saturate(0.3);
@@ -965,11 +967,12 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   z-index: 10;
 }
 
-/* Corner logo — upper-right side notch area, below the top-right plateau */
+/* Corner logo — same y as zone-header, inside the center top strip, right
+   of center, mirroring the title. */
 .corner-logo {
   position: fixed;
-  top: 22cqh;
-  right: 4.5cqw;
+  top: 2.4cqh;
+  right: 17cqw;
   width: 8cqw;
   height: auto;
   filter: brightness(0) invert(0.91) sepia(0.05) saturate(0.3);
