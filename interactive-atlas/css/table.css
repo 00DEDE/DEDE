@@ -961,7 +961,7 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
 .corner-title {
   position: fixed;
   top: 2.4cqh;
-  left: 14cqw;
+  left: 15.5cqw;
   width: 12cqw;
   height: auto;
   filter: brightness(0) invert(0.91) sepia(0.05) saturate(0.3);
@@ -974,7 +974,7 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
 .corner-logo {
   position: fixed;
   top: 2.4cqh;
-  right: 14cqw;
+  right: 15.5cqw;
   width: 8.3cqw;
   height: auto;
   filter: brightness(0) invert(0.91) sepia(0.05) saturate(0.3);
