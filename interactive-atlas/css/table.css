@@ -463,10 +463,12 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   opacity: 0;
 }
 
-/* When any marker is active, dim every other marker so the active one
-   reads as the singular focus. Reverts automatically when no marker is
-   active because the :has() selector stops matching. */
-.markers-layer:has(.marker.active) .marker:not(.active) {
+/* When any marker is active OR world-highlighted (world phase), dim every
+   other marker so the highlighted ones read as the singular focus. Reverts
+   automatically when no marker is active/highlighted because the :has()
+   selector stops matching. */
+.markers-layer:has(.marker.active, .marker.world-highlight)
+  .marker:not(.active):not(.world-highlight) {
   opacity: 0.18;
   transition: opacity 0.5s ease;
 }
