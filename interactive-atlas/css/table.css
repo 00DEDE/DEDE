@@ -463,6 +463,14 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   opacity: 0;
 }
 
+/* When any marker is active, dim every other marker so the active one
+   reads as the singular focus. Reverts automatically when no marker is
+   active because the :has() selector stops matching. */
+.markers-layer:has(.marker.active) .marker:not(.active) {
+  opacity: 0.18;
+  transition: opacity 0.5s ease;
+}
+
 /* Scan line removed */
 .scan-line { display: none; }
 
@@ -814,6 +822,17 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
 
 .legend-item.world-shown .legend-icon {
   filter: drop-shadow(0 0 4px currentColor);
+}
+
+/* When any legend item is active, push the others further down so the
+   active one reads as the singular focus. Reverts automatically when no
+   item is active because the :has() selector stops matching. */
+.legend:has(.legend-item.world-active) .legend-item:not(.world-active) {
+  opacity: 0.12;
+}
+
+.legend:has(.legend-item.world-active) .legend-item:not(.world-active) .legend-icon {
+  filter: none;
 }
 
 /* Sites phase — legend recedes to a quiet corner reference */
