@@ -613,7 +613,6 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   left: 50%;
   transform: translateX(-50%);
   height: 48px;
-  display: flex;
   align-items: center;
   justify-content: center;
   gap: 2.4rem;
