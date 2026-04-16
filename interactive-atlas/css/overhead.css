@@ -155,7 +155,7 @@ html, body {
 /* World category bar — sits centered inside the top of the video frame */
 .world-bar {
   position: absolute;
-  bottom: 9%;
+  top: 9%;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -289,13 +289,15 @@ html, body {
   filter: brightness(0.42) saturate(0.85);
 }
 
-/* Bottom gradient shadow — keeps world-bar icon + text legible over any video */
+/* Top gradient shadow — keeps world-bar icon + text legible over any video.
+   Direction flipped from `to top` so the dark band now sits at the top of
+   the frame, matching the world-bar's new top position. */
 .video-frame::before {
   content: '';
   position: absolute;
   inset: 0;
   background: linear-gradient(
-    to top,
+    to bottom,
     rgba(0, 0, 0, 0.78) 0%,
     rgba(0, 0, 0, 0.55) 12%,
     rgba(0, 0, 0, 0.25) 25%,
