@@ -357,12 +357,12 @@ html, body {
   bottom: 22%;
   text-align: center;
   font-family: 'ABCDiatype', 'Helvetica Neue', sans-serif;
-  font-size: 1.6rem;
-  line-height: 1.35;
+  font-size: 1.2rem;
+  line-height: 1.4;
   letter-spacing: 0.01em;
-  color: #f3ede6;
-  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.85),
-               0 0 4px rgba(0, 0, 0, 0.6);
+  color: rgba(231, 226, 222, 0.72);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.75),
+               0 0 4px rgba(0, 0, 0, 0.55);
   opacity: 0;
   transition: opacity 0.45s ease;
   pointer-events: none;
@@ -370,7 +370,7 @@ html, body {
 }
 
 .video-subtitle.visible {
-  opacity: 1;
+  opacity: 0.85;
 }
 
 .overhead-video {
