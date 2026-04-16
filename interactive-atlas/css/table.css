@@ -746,8 +746,8 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
               transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-#legend-item-monuments  { left: 5.5cqw;  top: 26cqh; }
-#legend-item-intangible { right: 5.5cqw; top: 26cqh; }
+#legend-item-monuments  { left: 5.5cqw;  top: 9.3cqh; }
+#legend-item-intangible { right: 5.5cqw; top: 9.3cqh; }
 #legend-item-nature     { left: 5.5cqw;  bottom: 26cqh; }
 #legend-item-language   { right: 5.5cqw; bottom: 26cqh; }
 
@@ -962,7 +962,7 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   position: fixed;
   top: 2.4cqh;
   left: 17cqw;
-  width: 15cqw;
+  width: 12cqw;
   height: auto;
   filter: brightness(0) invert(0.91) sepia(0.05) saturate(0.3);
   opacity: 0.5;
@@ -975,7 +975,7 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   position: fixed;
   top: 2.4cqh;
   right: 17cqw;
-  width: 8cqw;
+  width: 6.4cqw;
   height: auto;
   filter: brightness(0) invert(0.91) sepia(0.05) saturate(0.3);
   opacity: 0.5;
