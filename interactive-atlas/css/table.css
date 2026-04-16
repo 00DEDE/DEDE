@@ -466,10 +466,12 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
 /* When any marker is active OR world-highlighted (world phase), dim every
    other marker so the highlighted ones read as the singular focus. Reverts
    automatically when no marker is active/highlighted because the :has()
-   selector stops matching. */
+   selector stops matching.
+   !important is required to beat the marker-enter animation's `forwards`
+   fill, which locks opacity:1 on every marker after entry. */
 .markers-layer:has(.marker.active, .marker.world-highlight)
   .marker:not(.active):not(.world-highlight) {
-  opacity: 0.18;
+  opacity: 0.18 !important;
   transition: opacity 0.5s ease;
 }
 
