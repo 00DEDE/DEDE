@@ -748,8 +748,8 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
 
 #legend-item-monuments  { left: 5.5cqw;  top: 9.3cqh; }
 #legend-item-intangible { right: 5.5cqw; top: 9.3cqh; }
-#legend-item-nature     { left: 5.5cqw;  bottom: 26cqh; }
-#legend-item-language   { right: 5.5cqw; bottom: 26cqh; }
+#legend-item-nature     { left: 5.5cqw;  bottom: 9.3cqh; }
+#legend-item-language   { right: 5.5cqw; bottom: 9.3cqh; }
 
 .legend-icon {
   width: 96px;
@@ -975,7 +975,7 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   position: fixed;
   top: 2.4cqh;
   right: 17cqw;
-  width: 6.4cqw;
+  width: 8.3cqw;
   height: auto;
   filter: brightness(0) invert(0.91) sepia(0.05) saturate(0.3);
   opacity: 0.5;
