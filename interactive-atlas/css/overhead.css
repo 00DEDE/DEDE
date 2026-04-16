@@ -379,8 +379,23 @@ html, body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0.65;
+  opacity: 0;
   filter: saturate(1.18) contrast(1.1) brightness(var(--video-brightness, 1));
+  transition: opacity 1.8s ease;
+}
+
+/* When playing, video gracefully fades up to its target opacity. The
+   fade-in pairs with the audio ramp so visual and sound rise together. */
+.overhead-video.playing {
+  opacity: 0.65;
+}
+
+/* As the video approaches its end (or is closed), fade visual + audio out
+   together for a soft exit. Longer transition to make the wind-down feel
+   intentional rather than abrupt. */
+.overhead-video.fading-out {
+  opacity: 0;
+  transition: opacity 4s ease;
 }
 
 .video-fade-overlay {

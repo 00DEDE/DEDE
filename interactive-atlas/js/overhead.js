@@ -84,6 +84,10 @@ function onTimeUpdateAudioFadeOut() {
     audioFadeOutTriggered = true;
     var currentVol = overheadVideo.volume;
     rampVolume(AUDIO_FADE_OUT_SEC, currentVol, 0);
+    // Pair the audio ramp-out with a visual opacity fade so picture and
+    // sound disappear together.
+    overheadVideo.classList.remove('playing');
+    overheadVideo.classList.add('fading-out');
   }
 }
 
@@ -280,6 +284,12 @@ function gracefulClose() {
     videoFrame.classList.add('contracting');
   }
 
+  // Fade the video itself out in sync with the audio ramp-down below.
+  if (overheadVideo) {
+    overheadVideo.classList.remove('playing');
+    overheadVideo.classList.add('fading-out');
+  }
+
   // Gradually lower volume over 3 seconds
   if (overheadVideo) {
     var startVolume = overheadVideo.volume;
@@ -428,7 +438,9 @@ function showActivation(data) {
       overheadVideo.style.setProperty('--video-brightness', data.videoBrightness || 1);
 
       var startAt = data.videoStart || 0;
-      var fadeIn = data.audioFadeIn || 0;
+      // Default audio fade-in if the entry doesn't specify one — the user
+      // wants every video to ease in audibly, not pop on at full volume.
+      var fadeIn = data.audioFadeIn || 1.8;
 
       if (audioFadeTimer) { clearInterval(audioFadeTimer); audioFadeTimer = null; }
       if (fadeIn > 0) {
@@ -436,6 +448,10 @@ function showActivation(data) {
       } else if (!overheadVideo.muted) {
         overheadVideo.volume = 1;
       }
+
+      // Reset visual fade state — start fully transparent, then add .playing
+      // after play() so the CSS transition runs.
+      overheadVideo.classList.remove('playing', 'fading-out');
 
       // Subtitle setup — times in subtitle entries are RELATIVE to startAt,
       // so the same .start values map cleanly to where the video actually
@@ -448,6 +464,11 @@ function showActivation(data) {
       var beginPlay = function() {
         overheadVideo.play().then(function() {
           if (videoFrame) videoFrame.classList.add('expanded');
+          // Trigger the opacity fade-in on next frame so the transition
+          // animates from 0 → 0.65 instead of jumping.
+          requestAnimationFrame(function() {
+            overheadVideo.classList.add('playing');
+          });
           if (fadeIn > 0 && !overheadVideo.muted) rampVolume(fadeIn, 0, 1);
           overheadVideo.addEventListener('timeupdate', onTimeUpdateAudioFadeOut);
           if (currentSubtitles) {
@@ -456,6 +477,9 @@ function showActivation(data) {
           overheadVideo.addEventListener('ended', onVideoEnded, { once: true });
         }).catch(function() {
           if (videoFrame) videoFrame.classList.add('expanded');
+          requestAnimationFrame(function() {
+            overheadVideo.classList.add('playing');
+          });
         });
       };
       var seekAndPlay = function() {
