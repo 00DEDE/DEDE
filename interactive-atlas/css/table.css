@@ -257,6 +257,11 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   z-index: 5;
   animation: marker-enter 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
   animation-delay: var(--delay, 0s);
+  /* Opacity transition lives on the base rule (not the dim rule) so it
+     applies in BOTH directions — when :has() begins matching (dim in) and
+     when it stops matching (dim out). Otherwise markers snap back to full
+     brightness the instant the active class is removed. */
+  transition: opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @keyframes marker-enter {
@@ -422,8 +427,19 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
 
 .marker.deactivated {
   transform: translate(-50%, -50%) scale(1);
-  transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1);
   animation: none;
+}
+
+/* Smooth the color/border fade as a marker leaves the active state, so
+   the deactivation reads as a deliberate wind-down rather than a snap. */
+.marker.deactivated .marker-icon,
+.marker.deactivated .marker-ring,
+.marker.deactivated .marker-glow {
+  transition: background-color 0.9s ease,
+              border-color 0.9s ease,
+              opacity 0.9s ease;
 }
 
 /* ========================
@@ -466,13 +482,13 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
 /* When any marker is active OR world-highlighted (world phase), dim every
    other marker so the highlighted ones read as the singular focus. Reverts
    automatically when no marker is active/highlighted because the :has()
-   selector stops matching.
+   selector stops matching. The transition lives on the base .marker rule
+   so dim-out is just as graceful as dim-in.
    !important is required to beat the marker-enter animation's `forwards`
    fill, which locks opacity:1 on every marker after entry. */
 .markers-layer:has(.marker.active, .marker.world-highlight)
   .marker:not(.active):not(.world-highlight) {
   opacity: 0.18 !important;
-  transition: opacity 0.5s ease;
 }
 
 /* Scan line removed */
