@@ -43,6 +43,10 @@ var overheadVideo = null;
 var overheadIcon = null;
 var videoFadeOverlay = null;
 var videoFrame = null;
+var videoSubtitle = null;
+var currentSubtitles = null;
+var currentSubtitleStart = 0;
+var lastSubtitleIndex = -1;
 var videoFadeTimer = null;
 var videoCutTimer = null;
 var introTimer = null;
@@ -80,6 +84,36 @@ function onTimeUpdateAudioFadeOut() {
     audioFadeOutTriggered = true;
     var currentVol = overheadVideo.volume;
     rampVolume(AUDIO_FADE_OUT_SEC, currentVol, 0);
+  }
+}
+
+function showSubtitle(text) {
+  if (!videoSubtitle) return;
+  videoSubtitle.textContent = text;
+  videoSubtitle.classList.add('visible');
+}
+
+function hideSubtitle() {
+  if (!videoSubtitle) return;
+  videoSubtitle.classList.remove('visible');
+}
+
+// Subtitle entries' .start/.end are relative to videoStart, so subtract
+// currentSubtitleStart from currentTime to get the elapsed-since-start clock.
+function onTimeUpdateSubtitle() {
+  if (!overheadVideo || !currentSubtitles) return;
+  var t = overheadVideo.currentTime - currentSubtitleStart;
+  var found = -1;
+  for (var i = 0; i < currentSubtitles.length; i++) {
+    var s = currentSubtitles[i];
+    if (t >= s.start && t < s.end) { found = i; break; }
+  }
+  if (found === lastSubtitleIndex) return;
+  lastSubtitleIndex = found;
+  if (found === -1) {
+    hideSubtitle();
+  } else {
+    showSubtitle(currentSubtitles[found].text);
   }
 }
 
@@ -145,6 +179,7 @@ function init() {
   overheadIcon     = document.getElementById('overhead-icon');
   videoFadeOverlay = document.getElementById('video-fade-overlay');
   videoFrame       = document.getElementById('video-frame');
+  videoSubtitle    = document.getElementById('video-subtitle');
 
   // Site context overlay
   contextPanel        = document.getElementById('context-panel');
@@ -225,8 +260,12 @@ function gracefulClose() {
   audioFadeOutTriggered = false;
   if (overheadVideo) {
     overheadVideo.removeEventListener('timeupdate', onTimeUpdateAudioFadeOut);
+    overheadVideo.removeEventListener('timeupdate', onTimeUpdateSubtitle);
     overheadVideo.removeEventListener('ended', onVideoEnded);
   }
+  hideSubtitle();
+  currentSubtitles = null;
+  lastSubtitleIndex = -1;
   stopLabelToggle();
 
   // Animate site context panel out
@@ -280,8 +319,10 @@ function showActivation(data) {
   audioFadeOutTriggered = false;
   if (overheadVideo) {
     overheadVideo.removeEventListener('timeupdate', onTimeUpdateAudioFadeOut);
+    overheadVideo.removeEventListener('timeupdate', onTimeUpdateSubtitle);
     overheadVideo.removeEventListener('ended', onVideoEnded);
   }
+  hideSubtitle();
 
   // Flash transition
   transitionFlash.style.background = data.color;
@@ -383,7 +424,7 @@ function showActivation(data) {
     videoStartTimer = setTimeout(function() {
       var zoom = data.videoZoom || 1;
       overheadVideo.style.transform = zoom === 1 ? '' : 'scale(' + zoom + ')';
-      overheadVideo.style.transformOrigin = 'center center';
+      overheadVideo.style.transformOrigin = data.videoZoomOrigin || 'center center';
       overheadVideo.style.setProperty('--video-brightness', data.videoBrightness || 1);
 
       var startAt = data.videoStart || 0;
@@ -396,11 +437,22 @@ function showActivation(data) {
         overheadVideo.volume = 1;
       }
 
+      // Subtitle setup — times in subtitle entries are RELATIVE to startAt,
+      // so the same .start values map cleanly to where the video actually
+      // begins playing (after seeking past the burned-in intro frames).
+      currentSubtitles = (data.subtitles && data.subtitles.length) ? data.subtitles : null;
+      currentSubtitleStart = startAt;
+      lastSubtitleIndex = -1;
+      hideSubtitle();
+
       var beginPlay = function() {
         overheadVideo.play().then(function() {
           if (videoFrame) videoFrame.classList.add('expanded');
           if (fadeIn > 0 && !overheadVideo.muted) rampVolume(fadeIn, 0, 1);
           overheadVideo.addEventListener('timeupdate', onTimeUpdateAudioFadeOut);
+          if (currentSubtitles) {
+            overheadVideo.addEventListener('timeupdate', onTimeUpdateSubtitle);
+          }
           overheadVideo.addEventListener('ended', onVideoEnded, { once: true });
         }).catch(function() {
           if (videoFrame) videoFrame.classList.add('expanded');
