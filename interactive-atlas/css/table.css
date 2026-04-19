@@ -896,7 +896,7 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) scale(3);
+  transform: translate(-50%, -50%) scale(3.5);
   height: 120px;
   aspect-ratio: 1152 / 720;
   background-color: #e7e2de;
@@ -909,18 +909,35 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   -webkit-mask-position: center;
   mask-position: center;
   opacity: 0;
-  transition: opacity 0.9s ease;
+  filter: blur(10px);
+  transition: opacity 1.2s ease,
+              transform 2s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 1.8s ease;
 }
 
-.intro-overlay.phase-1 .intro-logo { opacity: 0.5; }
-.intro-overlay.phase-2 .intro-logo { opacity: 0; }
+/* Logo drifts inward from scale(3.5) to scale(3), deblurs, and fades up */
+.intro-overlay.phase-1 .intro-logo {
+  opacity: 0.5;
+  transform: translate(-50%, -50%) scale(3);
+  filter: blur(0);
+}
+
+/* Logo zooms in slightly as it dissolves out */
+.intro-overlay.phase-2 .intro-logo {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(2.5);
+  filter: blur(6px);
+  transition: opacity 0.9s ease,
+              transform 1s ease-in,
+              filter 0.9s ease;
+}
 
 /* --- Phase 2-3: splash "Digital Atlas" at center ---------------------- */
 .intro-splash-title {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) scale(0.9);
   width: clamp(656px, 87.5cqw, 1312px);
   aspect-ratio: 1152 / 212.8;
   background-color: #e7e2de;
@@ -933,11 +950,28 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   -webkit-mask-position: center;
   mask-position: center;
   opacity: 0;
-  transition: opacity 0.9s ease;
+  filter: blur(8px);
+  transition: opacity 1s ease,
+              transform 1.6s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 1.4s ease;
 }
 
-.intro-overlay.phase-2 .intro-splash-title { opacity: 0.5; }
-.intro-overlay.phase-3 .intro-splash-title { opacity: 0; }
+/* Title gently zooms from 0.9 → 1, deblurs as it fades in */
+.intro-overlay.phase-2 .intro-splash-title {
+  opacity: 0.5;
+  transform: translate(-50%, -50%) scale(1);
+  filter: blur(0);
+}
+
+/* Title eases out with a slight drift larger and reblur */
+.intro-overlay.phase-3 .intro-splash-title {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(1.06);
+  filter: blur(5px);
+  transition: opacity 0.8s ease,
+              transform 0.9s ease-in,
+              filter 0.8s ease;
+}
 
 /* --- Phase 4: title positioned above icons, revealed by mask ---------- */
 .intro-title-svg {
