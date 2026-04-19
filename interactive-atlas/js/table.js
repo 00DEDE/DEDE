@@ -202,9 +202,10 @@ function init() {
     channel.postMessage({ type: 'intro-show' });
 
     requestAnimationFrame(function() {
-      introOverlay.classList.add('phase-1');
-      setTimeout(function() { introOverlay.classList.add('phase-2'); }, 2000);
-      setTimeout(function() { introOverlay.classList.add('phase-3'); }, 3100);
+      introOverlay.classList.add('phase-1');                          // t=0     UNESCO logo at center
+      setTimeout(function() { introOverlay.classList.add('phase-2'); }, 2000);  // t=2s    logo out, splash title in
+      setTimeout(function() { introOverlay.classList.add('phase-3'); }, 3800);  // t=3.8s  splash out, icons stagger in
+      setTimeout(function() { introOverlay.classList.add('phase-4'); }, 5500);  // t=5.5s  mask-reveal title + logo
     });
 
     setTimeout(function() {
@@ -212,7 +213,7 @@ function init() {
       setTimeout(function() {
         introOverlay.remove();
       }, 1300);
-    }, 5500);
+    }, 8500);
   }
 
   // Create progress dots
