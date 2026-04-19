@@ -937,7 +937,7 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) scale(0.9);
+  transform: translate(-50%, -50%) scale(1.12);
   width: clamp(656px, 87.5cqw, 1312px);
   aspect-ratio: 1152 / 212.8;
   background-color: #e7e2de;
@@ -950,27 +950,27 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   -webkit-mask-position: center;
   mask-position: center;
   opacity: 0;
-  filter: blur(8px);
-  transition: opacity 1s ease,
-              transform 1.6s cubic-bezier(0.16, 1, 0.3, 1),
-              filter 1.4s ease;
+  filter: blur(10px);
+  transition: opacity 1.2s ease,
+              transform 2s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 1.8s ease;
 }
 
-/* Title gently zooms from 0.9 → 1, deblurs as it fades in */
+/* Title drifts inward from scale(1.12) → scale(1), deblurs, and fades up */
 .intro-overlay.phase-2 .intro-splash-title {
   opacity: 0.5;
   transform: translate(-50%, -50%) scale(1);
   filter: blur(0);
 }
 
-/* Title eases out with a slight drift larger and reblur */
+/* Title zooms in slightly as it dissolves out */
 .intro-overlay.phase-3 .intro-splash-title {
   opacity: 0;
-  transform: translate(-50%, -50%) scale(1.06);
-  filter: blur(5px);
-  transition: opacity 0.8s ease,
-              transform 0.9s ease-in,
-              filter 0.8s ease;
+  transform: translate(-50%, -50%) scale(0.92);
+  filter: blur(6px);
+  transition: opacity 0.9s ease,
+              transform 1s ease-in,
+              filter 0.9s ease;
 }
 
 /* --- Phase 4: title positioned above icons, revealed by mask ---------- */
