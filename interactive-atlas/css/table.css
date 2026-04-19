@@ -958,7 +958,7 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   mask-position: center;
   opacity: 0.5;
   clip-path: inset(100% 0 0 0);
-  filter: blur(12px);
+  filter: blur(15.6px);
   transition: clip-path 1.4s cubic-bezier(0.16, 1, 0.3, 1),
               filter 1.6s ease;
 }
@@ -987,7 +987,7 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   mask-position: center;
   opacity: 0.5;
   clip-path: inset(0 0 100% 0);
-  filter: blur(12px);
+  filter: blur(15.6px);
   transition: clip-path 1.4s cubic-bezier(0.16, 1, 0.3, 1),
               filter 1.6s ease;
 }
