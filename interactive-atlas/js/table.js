@@ -196,11 +196,14 @@ function init() {
     }
   });
 
-  // Intro overlay — choreograph phases, then fade out
+  // Intro overlay — choreograph phases, then fade into text overlay, then map
   var introOverlay = document.getElementById('intro-overlay');
+  var introTextOverlay = document.getElementById('intro-text-overlay');
+
   if (introOverlay) {
     channel.postMessage({ type: 'intro-show' });
 
+    // Phase 1-4: animated intro overlay
     requestAnimationFrame(function() {
       introOverlay.classList.add('phase-1');                          // t=0     UNESCO logo at center
       setTimeout(function() { introOverlay.classList.add('phase-2'); }, 2000);  // t=2s    logo out, splash title in
@@ -208,12 +211,26 @@ function init() {
       setTimeout(function() { introOverlay.classList.add('phase-4'); }, 5500);  // t=5.5s  mask-reveal title + logo
     });
 
+    // t=8.5s: intro overlay fades out, revealing the text overlay behind it
     setTimeout(function() {
       introOverlay.classList.add('fade-out');
-      setTimeout(function() {
-        introOverlay.remove();
-      }, 1300);
+      setTimeout(function() { introOverlay.remove(); }, 1800);
+
+      // Once intro overlay is fading, reveal the text paragraphs
+      if (introTextOverlay) {
+        setTimeout(function() {
+          introTextOverlay.classList.add('text-visible');
+        }, 600);
+
+        // After the text has been readable, fade the text overlay out → map
+        setTimeout(function() {
+          introTextOverlay.classList.add('fade-out');
+          setTimeout(function() { introTextOverlay.remove(); }, 2000);
+        }, 12000);
+      }
     }, 8500);
+  } else if (introTextOverlay) {
+    introTextOverlay.remove();
   }
 
   // Create progress dots

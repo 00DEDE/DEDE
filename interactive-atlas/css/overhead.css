@@ -496,20 +496,20 @@ html, body {
 }
 
 /* ----------------------------------------------------------------------
-   INTRO OVERLAY ANIMATION
-   phase-1 → UNESCO logo fades in at center, 3× scale
-   phase-2 → big center logo fades out
-   phase-3 → atlas title (top), icon groups (center), and small UNESCO
-             logo (bottom) all fade in together
-   Only opacity transitions — position/scale changes happen instantly
-   while the element is invisible between phases.
+   INTRO OVERLAY ANIMATION — mirrors table display's 4-phase sequence
+   phase-1 → big UNESCO logo drifts in at center
+   phase-2 → logo dissolves, "Digital Atlas" splash drifts in
+   phase-3 → splash out, icon groups stagger in
+   phase-4 → mask-reveal title (above, slides up) + horizontal logo
+             (below, slides down) with gaussian blur
    ---------------------------------------------------------------------- */
 
+/* --- Phase 1-2: big center UNESCO logo -------------------------------- */
 .intro-logo {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) scale(3);
+  transform: translate(-50%, -50%) scale(3.5);
   height: 120px;
   aspect-ratio: 1152 / 720;
   background-color: #e7e2de;
@@ -522,25 +522,34 @@ html, body {
   -webkit-mask-position: center;
   mask-position: center;
   opacity: 0;
-  transition: opacity 0.9s ease;
+  filter: blur(10px);
+  transition: opacity 1.2s ease,
+              transform 2s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 1.8s ease;
 }
 
-.intro-overlay.phase-1 .intro-logo { opacity: 0.5; }
-
-.intro-overlay.phase-2 .intro-logo { opacity: 0; }
-
-.intro-overlay.phase-3 .intro-logo {
+.intro-overlay.phase-1 .intro-logo {
   opacity: 0.5;
-  top: calc(100% - 8cqh);
-  transform: translate(-50%, -100%) scale(1);
+  transform: translate(-50%, -50%) scale(3);
+  filter: blur(0);
 }
 
-.intro-title-svg {
+.intro-overlay.phase-2 .intro-logo {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(2.5);
+  filter: blur(6px);
+  transition: opacity 0.9s ease,
+              transform 1s ease-in,
+              filter 0.9s ease;
+}
+
+/* --- Phase 2-3: splash "Digital Atlas" at center ---------------------- */
+.intro-splash-title {
   position: absolute;
-  top: 8cqh;
+  top: 50%;
   left: 50%;
-  transform: translate(-50%, 0);
-  width: clamp(420px, 56cqw, 840px);
+  transform: translate(-50%, -50%) scale(1.12);
+  width: clamp(656px, 87.5cqw, 1312px);
   aspect-ratio: 1152 / 212.8;
   background-color: #e7e2de;
   -webkit-mask-image: url('../assets/graphic/BLOCK_TYPE_TRANSITION\ TITLE.svg');
@@ -552,12 +561,86 @@ html, body {
   -webkit-mask-position: center;
   mask-position: center;
   opacity: 0;
-  transition: opacity 0.9s ease;
+  filter: blur(10px);
+  transition: opacity 1.2s ease,
+              transform 2s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 1.8s ease;
 }
 
-.intro-overlay.phase-3 .intro-title-svg { opacity: 0.5; }
+.intro-overlay.phase-2 .intro-splash-title {
+  opacity: 0.5;
+  transform: translate(-50%, -50%) scale(1);
+  filter: blur(0);
+}
 
-/* Four icon groups — stay at their resting centered position, fade in together */
+.intro-overlay.phase-3 .intro-splash-title {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.92);
+  filter: blur(6px);
+  transition: opacity 0.9s ease,
+              transform 1s ease-in,
+              filter 0.9s ease;
+}
+
+/* --- Phase 4: title above icons, revealed by mask sliding up ---------- */
+.intro-title-svg {
+  position: absolute;
+  top: 8cqh;
+  left: 50%;
+  transform: translate(-50%, 0);
+  width: clamp(270px, 36cqw, 540px);
+  aspect-ratio: 1152 / 212.8;
+  background-color: #e7e2de;
+  -webkit-mask-image: url('../assets/graphic/BLOCK_TYPE_TRANSITION\ TITLE.svg');
+  mask-image: url('../assets/graphic/BLOCK_TYPE_TRANSITION\ TITLE.svg');
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  opacity: 0.5;
+  clip-path: inset(100% 0 0 0);
+  filter: blur(15.6px);
+  transition: clip-path 1.4s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 1.6s ease;
+}
+
+.intro-overlay.phase-4 .intro-title-svg {
+  clip-path: inset(0);
+  filter: blur(0);
+}
+
+/* --- Phase 4: horizontal logo below icons, revealed by mask sliding down */
+.intro-bottom-logo {
+  position: absolute;
+  bottom: 8cqh;
+  left: 50%;
+  transform: translateX(-50%);
+  width: clamp(160px, 18cqw, 320px);
+  aspect-ratio: 1152 / 216;
+  background-color: #e7e2de;
+  -webkit-mask-image: url('../assets/graphic/UNESCO_HORIZONTAL\ LOGO.svg');
+  mask-image: url('../assets/graphic/UNESCO_HORIZONTAL\ LOGO.svg');
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  opacity: 0.5;
+  clip-path: inset(0 0 100% 0);
+  filter: blur(15.6px);
+  transition: clip-path 1.4s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 1.6s ease;
+}
+
+.intro-overlay.phase-4 .intro-bottom-logo {
+  clip-path: inset(0);
+  filter: blur(0);
+}
+
+/* Four icon groups — stagger in during phase 3 */
 .intro-icons {
   position: absolute;
   top: 50%;

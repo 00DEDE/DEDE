@@ -194,15 +194,17 @@ function init() {
   contextCivilization = document.getElementById('context-civilization');
   contextInsight      = document.getElementById('context-insight');
 
-  // Intro overlay choreography:
-  //   t=0      logo fades in at center
-  //   t=1000ms logo slides to bottom, title fades in at center
-  //   t=2100ms title slides to top, icon groups fade in (staggered)
+  // Intro overlay choreography — mirrors table display's 4-phase sequence:
+  //   t=0     UNESCO logo drifts in
+  //   t=2s    logo out, splash title in
+  //   t=3.8s  splash out, icons stagger in
+  //   t=5.5s  mask-reveal title + horizontal logo
   if (introOverlay) {
     requestAnimationFrame(function() {
       introOverlay.classList.add('phase-1');
       setTimeout(function() { introOverlay.classList.add('phase-2'); }, 2000);
-      setTimeout(function() { introOverlay.classList.add('phase-3'); }, 3100);
+      setTimeout(function() { introOverlay.classList.add('phase-3'); }, 3800);
+      setTimeout(function() { introOverlay.classList.add('phase-4'); }, 5500);
     });
   }
 
