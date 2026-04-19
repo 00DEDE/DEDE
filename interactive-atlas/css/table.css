@@ -921,7 +921,7 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: clamp(420px, 56cqw, 840px);
+  width: clamp(525px, 70cqw, 1050px);
   aspect-ratio: 1152 / 212.8;
   background-color: #e7e2de;
   -webkit-mask-image: url('../assets/graphic/BLOCK_TYPE_TRANSITION\ TITLE.svg');
@@ -945,7 +945,7 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   top: 8cqh;
   left: 50%;
   transform: translate(-50%, 0);
-  width: clamp(360px, 48cqw, 720px);
+  width: clamp(270px, 36cqw, 540px);
   aspect-ratio: 1152 / 212.8;
   background-color: #e7e2de;
   -webkit-mask-image: url('../assets/graphic/BLOCK_TYPE_TRANSITION\ TITLE.svg');
