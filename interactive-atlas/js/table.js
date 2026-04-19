@@ -221,17 +221,35 @@ function init() {
       setTimeout(function() { introOverlay.remove(); }, 1800);
     }, 8500);
 
-    // t=9.5s: text paragraphs animate in (after intro overlay is mostly faded)
+    // t=9.5s: text paragraphs stagger in
     if (introTextOverlay) {
+      var introTextContent = document.getElementById('intro-text-content');
+      var introHighlight = document.getElementById('intro-highlight');
+
       setTimeout(function() {
         introTextOverlay.classList.add('text-visible');
       }, 9500);
 
-      // t=22s: text overlay fades out → map
+      // t=16s: all paragraphs fade out together
+      setTimeout(function() {
+        if (introTextContent) introTextContent.classList.add('text-exit');
+      }, 16000);
+
+      // t=18s: highlight phrase appears at center
+      setTimeout(function() {
+        if (introHighlight) introHighlight.classList.add('visible');
+      }, 18000);
+
+      // t=21s: highlight fades out
+      setTimeout(function() {
+        if (introHighlight) introHighlight.classList.add('exit');
+      }, 21000);
+
+      // t=23s: entire text overlay fades out → map revealed
       setTimeout(function() {
         introTextOverlay.classList.add('fade-out');
         setTimeout(function() { introTextOverlay.remove(); }, 2000);
-      }, 22000);
+      }, 23000);
     }
   } else if (introTextOverlay) {
     introTextOverlay.remove();
