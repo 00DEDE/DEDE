@@ -921,7 +921,7 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: clamp(525px, 70cqw, 1050px);
+  width: clamp(656px, 87.5cqw, 1312px);
   aspect-ratio: 1152 / 212.8;
   background-color: #e7e2de;
   -webkit-mask-image: url('../assets/graphic/BLOCK_TYPE_TRANSITION\ TITLE.svg');
@@ -958,11 +958,14 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   mask-position: center;
   opacity: 0.5;
   clip-path: inset(100% 0 0 0);
-  transition: clip-path 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+  filter: blur(12px);
+  transition: clip-path 1.4s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 1.6s ease;
 }
 
 .intro-overlay.phase-4 .intro-title-svg {
   clip-path: inset(0);
+  filter: blur(0);
 }
 
 /* --- Phase 4: horizontal logo below icons, revealed by mask ----------- */
@@ -984,11 +987,14 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   mask-position: center;
   opacity: 0.5;
   clip-path: inset(0 0 100% 0);
-  transition: clip-path 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+  filter: blur(12px);
+  transition: clip-path 1.4s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 1.6s ease;
 }
 
 .intro-overlay.phase-4 .intro-bottom-logo {
   clip-path: inset(0);
+  filter: blur(0);
 }
 
 .intro-icons {
