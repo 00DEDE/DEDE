@@ -196,7 +196,11 @@ function init() {
     }
   });
 
-  // Intro overlay — choreograph phases, then fade into text overlay, then map
+  // Intro sequence:
+  //   1. Intro overlay plays phases 1-4 (0–8.5s)
+  //   2. Intro overlay fades out → text overlay behind it becomes visible
+  //   3. Text paragraphs animate in
+  //   4. Text overlay fades out → map revealed
   var introOverlay = document.getElementById('intro-overlay');
   var introTextOverlay = document.getElementById('intro-text-overlay');
 
@@ -205,30 +209,30 @@ function init() {
 
     // Phase 1-4: animated intro overlay
     requestAnimationFrame(function() {
-      introOverlay.classList.add('phase-1');                          // t=0     UNESCO logo at center
-      setTimeout(function() { introOverlay.classList.add('phase-2'); }, 2000);  // t=2s    logo out, splash title in
-      setTimeout(function() { introOverlay.classList.add('phase-3'); }, 3800);  // t=3.8s  splash out, icons stagger in
-      setTimeout(function() { introOverlay.classList.add('phase-4'); }, 5500);  // t=5.5s  mask-reveal title + logo
+      introOverlay.classList.add('phase-1');
+      setTimeout(function() { introOverlay.classList.add('phase-2'); }, 2000);
+      setTimeout(function() { introOverlay.classList.add('phase-3'); }, 3800);
+      setTimeout(function() { introOverlay.classList.add('phase-4'); }, 5500);
     });
 
-    // t=8.5s: intro overlay fades out, revealing the text overlay behind it
+    // t=8.5s: intro overlay fades out → text overlay appears behind it
     setTimeout(function() {
       introOverlay.classList.add('fade-out');
       setTimeout(function() { introOverlay.remove(); }, 1800);
-
-      // Once intro overlay is fading, reveal the text paragraphs
-      if (introTextOverlay) {
-        setTimeout(function() {
-          introTextOverlay.classList.add('text-visible');
-        }, 600);
-
-        // After the text has been readable, fade the text overlay out → map
-        setTimeout(function() {
-          introTextOverlay.classList.add('fade-out');
-          setTimeout(function() { introTextOverlay.remove(); }, 2000);
-        }, 12000);
-      }
     }, 8500);
+
+    // t=9.5s: text paragraphs animate in (after intro overlay is mostly faded)
+    if (introTextOverlay) {
+      setTimeout(function() {
+        introTextOverlay.classList.add('text-visible');
+      }, 9500);
+
+      // t=22s: text overlay fades out → map
+      setTimeout(function() {
+        introTextOverlay.classList.add('fade-out');
+        setTimeout(function() { introTextOverlay.remove(); }, 2000);
+      }, 22000);
+    }
   } else if (introTextOverlay) {
     introTextOverlay.remove();
   }

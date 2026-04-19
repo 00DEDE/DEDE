@@ -868,13 +868,13 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
    Sits outside .stage so it isn't clipped by the frame mask.
    ======================== */
 .intro-text-overlay {
-  position: fixed;
+  position: absolute;
   inset: 0;
   background: #1a1413;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 99;
+  z-index: 50;
   transition: opacity 1.8s ease;
 }
 
@@ -895,7 +895,7 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
 
 .intro-text-content {
   position: relative;
-  max-width: 680px;
+  max-width: 55cqw;
   padding: 2rem;
   text-align: center;
   z-index: 1;
