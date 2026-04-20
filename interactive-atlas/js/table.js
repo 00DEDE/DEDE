@@ -221,35 +221,53 @@ function init() {
       setTimeout(function() { introOverlay.remove(); }, 1800);
     }, 8500);
 
-    // t=9.5s: text paragraphs stagger in
+    // t=9.5s: text paragraphs stagger in (delays: 0.9s, 4.2s, 7.5s; transitions ~4.5s)
+    // All text fully visible at ~t=21.5s, leave up 12s, exit at ~t=33.5s
     if (introTextOverlay) {
       var introTextContent = document.getElementById('intro-text-content');
       var introHighlight = document.getElementById('intro-highlight');
+      var highlightPhrase = document.getElementById('highlight-phrase');
 
       setTimeout(function() {
         introTextOverlay.classList.add('text-visible');
       }, 9500);
 
-      // t=16s: all paragraphs fade out together
+      // t=33.5s: fade out paragraphs, keep highlight phrase in place then move to center
       setTimeout(function() {
-        if (introTextContent) introTextContent.classList.add('text-exit');
-      }, 16000);
+        if (introHighlight && highlightPhrase) {
+          // Position the highlight element exactly where the span is
+          var overlayRect = introTextOverlay.getBoundingClientRect();
+          var spanRect = highlightPhrase.getBoundingClientRect();
+          introHighlight.style.left = (spanRect.left - overlayRect.left) + 'px';
+          introHighlight.style.top = (spanRect.top - overlayRect.top) + 'px';
 
-      // t=18s: highlight phrase appears at center
-      setTimeout(function() {
-        if (introHighlight) introHighlight.classList.add('visible');
-      }, 18000);
+          // Show highlight (appears seamlessly over the span)
+          introHighlight.classList.add('visible');
 
-      // t=21s: highlight fades out
+          // Next frame: fade out text + simultaneously move highlight to vertical center
+          requestAnimationFrame(function() {
+            requestAnimationFrame(function() {
+              if (introTextContent) introTextContent.classList.add('text-exit');
+              // Move to vertical center (left stays the same — vertical only)
+              introHighlight.style.top = '50%';
+              introHighlight.style.transform = 'translateY(-50%)';
+            });
+          });
+        } else if (introTextContent) {
+          introTextContent.classList.add('text-exit');
+        }
+      }, 33500);
+
+      // t=38s: highlight fades out (held ~4.5s at center)
       setTimeout(function() {
         if (introHighlight) introHighlight.classList.add('exit');
-      }, 21000);
+      }, 38000);
 
-      // t=23s: entire text overlay fades out → map revealed
+      // t=40s: entire text overlay fades out → map revealed
       setTimeout(function() {
         introTextOverlay.classList.add('fade-out');
         setTimeout(function() { introTextOverlay.remove(); }, 2000);
-      }, 23000);
+      }, 40000);
     }
   } else if (introTextOverlay) {
     introTextOverlay.remove();
