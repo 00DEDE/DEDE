@@ -97,6 +97,9 @@ var worldIndicator = null;
 var statusZone = null;
 var progressDots = [];
 var legend = null;
+var arrowIncentive = null;
+var stageEl = null;
+var arrowTimeout = null;
 
 // World phase state
 var phase = 'world';            // 'world' | 'sites'
@@ -155,6 +158,17 @@ function init() {
   worldIndicator = document.getElementById('world-indicator');
   statusZone = document.getElementById('status-zone');
   legend = document.getElementById('legend');
+  arrowIncentive = document.getElementById('arrow-incentive');
+  stageEl = document.querySelector('.stage');
+
+  // Build arrow indicators
+  if (arrowIncentive) {
+    for (var a = 0; a < 5; a++) {
+      var arrow = document.createElement('div');
+      arrow.className = 'arrow-indicator';
+      arrowIncentive.appendChild(arrow);
+    }
+  }
 
   // World context panel refs
   worldContextPanel = document.getElementById('world-context-panel');
@@ -208,66 +222,83 @@ function init() {
     channel.postMessage({ type: 'intro-show' });
 
     // Phase 1-4: animated intro overlay
+    var introIconItems = document.querySelectorAll('.intro-icon-item');
     requestAnimationFrame(function() {
       introOverlay.classList.add('phase-1');
       setTimeout(function() { introOverlay.classList.add('phase-2'); }, 2000);
-      setTimeout(function() { introOverlay.classList.add('phase-3'); }, 3800);
-      setTimeout(function() { introOverlay.classList.add('phase-4'); }, 5500);
+
+      // Phase 3 solo: show each icon one at a time (1.8s each)
+      var soloStart = 3800;
+      var soloDuration = 1800;
+      setTimeout(function() { introOverlay.classList.add('phase-3-solo'); }, soloStart);
+      for (var s = 0; s < 4; s++) {
+        (function(idx) {
+          // Show this icon
+          setTimeout(function() {
+            introIconItems.forEach(function(el) { el.classList.remove('solo-active'); });
+            if (introIconItems[idx]) introIconItems[idx].classList.add('solo-active');
+          }, soloStart + 200 + idx * soloDuration);
+          // Hide this icon before next (except the last — hidden by group transition)
+        })(s);
+      }
+
+      // Phase 3 group: all 4 icons appear together in fluid sequence
+      var groupStart = soloStart + 200 + 4 * soloDuration + 400;
+      setTimeout(function() {
+        introIconItems.forEach(function(el) { el.classList.remove('solo-active'); });
+        introOverlay.classList.remove('phase-3-solo');
+        introOverlay.classList.add('phase-3-group');
+      }, groupStart);
+
+      // Phase 4: title + logo mask reveals
+      setTimeout(function() { introOverlay.classList.add('phase-4'); }, groupStart + 1800);
     });
 
-    // t=8.5s: intro overlay fades out → text overlay appears behind it
+    // Intro overlay fades out after phase 4 completes
+    var introFadeTime = 16000;
     setTimeout(function() {
       introOverlay.classList.add('fade-out');
       setTimeout(function() { introOverlay.remove(); }, 1800);
-    }, 8500);
+    }, introFadeTime);
 
     // t=9.5s: text paragraphs stagger in (delays: 0.9s, 4.2s, 7.5s; transitions ~4.5s)
     // All text fully visible at ~t=21.5s, leave up 12s, exit at ~t=33.5s
     if (introTextOverlay) {
       var introTextContent = document.getElementById('intro-text-content');
-      var introHighlight = document.getElementById('intro-highlight');
-      var highlightPhrase = document.getElementById('highlight-phrase');
 
-      setTimeout(function() {
-        introTextOverlay.classList.add('text-visible');
-      }, 9500);
+      var textStart = introFadeTime + 1500;
+      var paragraphs = document.querySelectorAll('#intro-text-content p');
+      var paraCount = paragraphs.length;
+      var paraFadeIn = 2500;   // time for fade-in transition
+      var paraHold = 6000;     // time visible on screen
+      var paraFadeOut = 2000;  // time for fade-out transition
+      var paraCycle = paraFadeIn + paraHold + paraFadeOut;
 
-      // t=33.5s: fade out paragraphs, keep highlight phrase in place then move to center
-      setTimeout(function() {
-        if (introHighlight && highlightPhrase) {
-          // Position the highlight element exactly where the span is
-          var overlayRect = introTextOverlay.getBoundingClientRect();
-          var spanRect = highlightPhrase.getBoundingClientRect();
-          introHighlight.style.left = (spanRect.left - overlayRect.left) + 'px';
-          introHighlight.style.top = (spanRect.top - overlayRect.top) + 'px';
+      // Show each paragraph one at a time
+      for (var p = 0; p < paraCount; p++) {
+        (function(idx) {
+          var showTime = textStart + idx * paraCycle;
+          // Fade in
+          setTimeout(function() {
+            paragraphs[idx].classList.add('para-visible');
+          }, showTime);
+          // Fade out
+          setTimeout(function() {
+            paragraphs[idx].classList.remove('para-visible');
+            paragraphs[idx].classList.add('para-exit');
+          }, showTime + paraFadeIn + paraHold);
+        })(p);
+      }
 
-          // Show highlight (appears seamlessly over the span)
-          introHighlight.classList.add('visible');
-
-          // Next frame: fade out text + simultaneously move highlight to vertical center
-          requestAnimationFrame(function() {
-            requestAnimationFrame(function() {
-              if (introTextContent) introTextContent.classList.add('text-exit');
-              // Move to vertical center (left stays the same — vertical only)
-              introHighlight.style.top = '50%';
-              introHighlight.style.transform = 'translateY(-50%)';
-            });
-          });
-        } else if (introTextContent) {
-          introTextContent.classList.add('text-exit');
-        }
-      }, 33500);
-
-      // t=38s: highlight fades out (held ~4.5s at center)
-      setTimeout(function() {
-        if (introHighlight) introHighlight.classList.add('exit');
-      }, 38000);
-
-      // t=40s: entire text overlay fades out → map revealed
+      // Overlay fades out after last paragraph is done
+      var textFadeTime = textStart + paraCount * paraCycle + 500;
       setTimeout(function() {
         introTextOverlay.classList.add('fade-out');
         setTimeout(function() { introTextOverlay.remove(); }, 2000);
-      }, 40000);
+      }, textFadeTime);
+
+      // Legend tour is driven by arrow keys via the existing world phase.
+      // Markers get world colors when the user completes the tour (transitionToSitesPhase).
     }
   } else if (introTextOverlay) {
     introTextOverlay.remove();
@@ -565,7 +596,14 @@ function transitionToSitesPhase() {
   phase = 'sites';
 
   // Push the legend into its quiet "reference" state
-  if (legend) legend.classList.add('sites-phase');
+  if (legend) {
+    legend.classList.add('sites-phase');
+    legend.classList.add('tour-complete');
+  }
+
+  // Enable world colors on map markers
+  var ml = document.getElementById('markers-layer');
+  if (ml) ml.classList.add('world-colors-active');
 
   // Make sure no stray world-highlight survives into the sites phase
   WORLD_PHASE_ORDER.forEach(quietlyClearWorld);
@@ -597,6 +635,14 @@ function deactivateZone() {
     markerEls[currentIndex].classList.remove('active');
     markerEls[currentIndex].classList.add('deactivated');
   }
+
+  // Hide arrow incentive + remove table dim
+  if (arrowTimeout) { clearTimeout(arrowTimeout); arrowTimeout = null; }
+  if (arrowIncentive) {
+    arrowIncentive.classList.remove('visible');
+    arrowIncentive.classList.add('exit');
+  }
+  if (stageEl) stageEl.classList.remove('overhead-active');
 
   // Tell overhead to gracefully close the video and dismiss its context panel
   channel.postMessage({ type: 'zone-deactivate' });
@@ -645,6 +691,21 @@ function activateZone(index) {
       dot.style.background = '';
     }
   });
+
+  // Arrow incentive — show arrows briefly, then dim table
+  if (arrowTimeout) { clearTimeout(arrowTimeout); arrowTimeout = null; }
+  if (stageEl) stageEl.classList.remove('overhead-active');
+  if (arrowIncentive) {
+    arrowIncentive.classList.remove('exit');
+    arrowIncentive.classList.add('visible');
+  }
+  arrowTimeout = setTimeout(function() {
+    if (arrowIncentive) {
+      arrowIncentive.classList.remove('visible');
+      arrowIncentive.classList.add('exit');
+    }
+    if (stageEl) stageEl.classList.add('overhead-active');
+  }, 3500);
 
   // Broadcast to overhead display
   channel.postMessage({

@@ -269,12 +269,16 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
 }
 
-/* Idle invite pulse — only first ring pulses in idle */
+/* Idle invite pulse — neutral color by default, world color after legend tour */
 .marker:not(.active):not(.visited):not(.deactivated) .marker-pulse-1 {
-  border-color: var(--world-color);
+  border-color: rgba(231, 226, 222, 0.5);
   opacity: 0.3;
   animation: invite-pulse var(--pulse-dur, 6s) ease-out infinite;
   animation-delay: var(--pulse-delay, 0s);
+}
+
+.markers-layer.world-colors-active .marker:not(.active):not(.visited):not(.deactivated) .marker-pulse-1 {
+  border-color: var(--world-color);
 }
 
 @keyframes invite-pulse {
@@ -767,10 +771,15 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   align-items: center;
   gap: 0.85rem;
   width: 110px;
-  opacity: 0.32;
+  opacity: 0.75;
   z-index: 14;
   transition: opacity 0.7s ease,
               transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* After legend tour completes, legend recedes to quiet reference */
+.legend.tour-complete .legend-item {
+  opacity: 0.32;
 }
 
 #legend-item-monuments  { left: 5.5cqw;  top: 9.3cqh; }
@@ -895,17 +904,11 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
 
 .intro-text-content {
   position: relative;
-  max-width: 55cqw;
+  width: 55cqw;
+  height: 40cqh;
   padding: 2rem;
   text-align: center;
   z-index: 1;
-  transition: opacity 2.5s ease, filter 2.5s ease;
-}
-
-/* Fade all paragraphs out together */
-.intro-text-content.text-exit {
-  opacity: 0;
-  filter: blur(6px);
 }
 
 .intro-text-content p {
@@ -914,54 +917,37 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   line-height: 1.75;
   color: rgba(231, 226, 222, 0.72);
   letter-spacing: 0.01em;
-  margin-bottom: 1.6rem;
+  margin-bottom: 0;
   text-wrap: pretty;
   orphans: 3;
   widows: 3;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) translateY(12px);
+  width: 100%;
   opacity: 0;
-  transform: translateY(16px);
   filter: blur(4px);
-  transition: opacity 3.5s ease,
-              transform 4.5s cubic-bezier(0.16, 1, 0.3, 1),
-              filter 4s ease;
+  transition: opacity 2.5s ease,
+              transform 3s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 2.8s ease;
 }
 
-.intro-text-overlay.text-visible p {
+/* Paragraph visible — fade in at center */
+.intro-text-content p.para-visible {
   opacity: 1;
-  transform: translateY(0);
+  transform: translate(-50%, -50%) translateY(0);
   filter: blur(0);
 }
 
-.intro-text-overlay.text-visible p:nth-child(1) { transition-delay: 0.9s; }
-.intro-text-overlay.text-visible p:nth-child(2) { transition-delay: 4.2s; }
-.intro-text-overlay.text-visible p:nth-child(3) { transition-delay: 7.5s; }
-
-/* Highlight phrase — positioned at span location via JS, then moves to vertical center */
-.intro-highlight {
-  position: absolute;
-  font-family: 'ABCDiatype', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-size: 1.25rem;
-  line-height: 1.75;
-  color: rgba(231, 226, 222, 0.72);
-  letter-spacing: 0.01em;
-  text-align: center;
-  white-space: nowrap;
+/* Paragraph exit — fade out */
+.intro-text-content p.para-exit {
   opacity: 0;
-  z-index: 2;
-  pointer-events: none;
-  transition: opacity 0.3s ease,
-              top 2.8s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.intro-highlight.visible {
-  opacity: 1;
-}
-
-.intro-highlight.exit {
-  opacity: 0;
-  filter: blur(6px);
-  transition: opacity 1.8s ease,
-              filter 1.8s ease;
+  transform: translate(-50%, -50%) translateY(-8px);
+  filter: blur(4px);
+  transition: opacity 2s ease,
+              transform 2.2s ease-in,
+              filter 2s ease;
 }
 
 /* ========================
@@ -1066,7 +1052,7 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
 }
 
 /* Title zooms in slightly as it dissolves out */
-.intro-overlay.phase-3 .intro-splash-title {
+.intro-overlay.phase-3-solo .intro-splash-title {
   opacity: 0;
   transform: translate(-50%, -50%) scale(0.92);
   filter: blur(6px);
@@ -1153,15 +1139,36 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   transition: opacity 0.8s ease, transform 0.8s ease;
 }
 
-.intro-overlay.phase-3 .intro-icon-item {
+/* --- Phase 3 solo showcase: each icon appears alone at center ---------- */
+.intro-overlay.phase-3-solo .intro-icons {
+  gap: 0;
+}
+
+.intro-overlay.phase-3-solo .intro-icon-item {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  filter: blur(6px);
+  transition: opacity 1s ease, filter 1s ease;
+}
+
+.intro-overlay.phase-3-solo .intro-icon-item.solo-active {
+  opacity: 1;
+  filter: blur(0);
+}
+
+/* --- Phase 3 group: all 4 icons appear in fluid sequence --------------- */
+.intro-overlay.phase-3-group .intro-icon-item {
   opacity: 1;
   transform: translateY(0);
 }
 
-.intro-overlay.phase-3 .intro-icon-item:nth-child(1) { transition-delay: 0.05s; }
-.intro-overlay.phase-3 .intro-icon-item:nth-child(2) { transition-delay: 0.20s; }
-.intro-overlay.phase-3 .intro-icon-item:nth-child(3) { transition-delay: 0.35s; }
-.intro-overlay.phase-3 .intro-icon-item:nth-child(4) { transition-delay: 0.50s; }
+.intro-overlay.phase-3-group .intro-icon-item:nth-child(1) { transition-delay: 0.05s; }
+.intro-overlay.phase-3-group .intro-icon-item:nth-child(2) { transition-delay: 0.20s; }
+.intro-overlay.phase-3-group .intro-icon-item:nth-child(3) { transition-delay: 0.35s; }
+.intro-overlay.phase-3-group .intro-icon-item:nth-child(4) { transition-delay: 0.50s; }
 
 .intro-icon {
   width: 240px;
@@ -1209,4 +1216,82 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   filter: brightness(0) invert(0.91) sepia(0.05) saturate(0.3);
   opacity: 0.5;
   z-index: 10;
+}
+
+/* ========================
+   ARROW INCENTIVE — rippling arrows guiding viewer to overhead display
+   ======================== */
+.arrow-incentive {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2cqh;
+  z-index: 25;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+.arrow-incentive.visible {
+  opacity: 1;
+}
+
+.arrow-incentive.exit {
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+
+.arrow-indicator {
+  width: 2.4cqw;
+  height: 2.4cqw;
+  background-color: rgba(231, 226, 222, 0.6);
+  -webkit-mask-image: url('../assets/graphic/ARROW.svg');
+  mask-image: url('../assets/graphic/ARROW.svg');
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  opacity: 0;
+  animation: arrow-ripple 2.4s ease-in-out infinite;
+}
+
+.arrow-indicator:nth-child(1) { animation-delay: 0s; }
+.arrow-indicator:nth-child(2) { animation-delay: 0.25s; }
+.arrow-indicator:nth-child(3) { animation-delay: 0.50s; }
+.arrow-indicator:nth-child(4) { animation-delay: 0.75s; }
+.arrow-indicator:nth-child(5) { animation-delay: 1.0s; }
+
+@keyframes arrow-ripple {
+  0%   { opacity: 0; transform: translateY(6px); }
+  20%  { opacity: 0.7; transform: translateY(0); }
+  50%  { opacity: 0.4; transform: translateY(-4px); }
+  80%  { opacity: 0; transform: translateY(-8px); }
+  100% { opacity: 0; transform: translateY(-8px); }
+}
+
+/* ========================
+   TABLE DIM — dims entire table except active marker when overhead is active
+   ======================== */
+.stage.overhead-active .map-grid,
+.stage.overhead-active .ocean-layer,
+.stage.overhead-active .continents-mask,
+.stage.overhead-active .map-continents,
+.stage.overhead-active .corner-title,
+.stage.overhead-active .corner-logo,
+.stage.overhead-active .zone-header,
+.stage.overhead-active .legend,
+.stage.overhead-active .world-context-panel {
+  opacity: 0.15;
+  transition: opacity 1.2s ease;
+}
+
+.stage.overhead-active .markers-layer .marker:not(.active) {
+  opacity: 0.08 !important;
+  transition: opacity 1.2s ease;
 }
