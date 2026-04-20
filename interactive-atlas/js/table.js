@@ -247,6 +247,8 @@ function init() {
       setTimeout(function() {
         introIconItems.forEach(function(el) { el.classList.remove('solo-active'); });
         introOverlay.classList.remove('phase-3-solo');
+        // Force browser to register opacity:0 before starting group transition
+        void introOverlay.offsetWidth;
         introOverlay.classList.add('phase-3');
       }, groupStart);
 
