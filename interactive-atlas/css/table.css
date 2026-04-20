@@ -510,6 +510,27 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   margin-bottom: 16px;
 }
 
+.marker-label.label-right {
+  top: 50%;
+  left: 100%;
+  bottom: auto;
+  transform: translateY(-50%);
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-left: 16px;
+}
+
+.marker-label.label-left {
+  top: 50%;
+  left: auto;
+  right: 100%;
+  bottom: auto;
+  transform: translateY(-50%);
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-right: 16px;
+}
+
 .marker.world-highlight .marker-label {
   opacity: 0.85;
 }
