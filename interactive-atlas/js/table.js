@@ -161,9 +161,9 @@ function init() {
   arrowIncentive = document.getElementById('arrow-incentive');
   stageEl = document.querySelector('.stage');
 
-  // Build arrow indicators
+  // Build arrow indicators (8 arrows in a ring)
   if (arrowIncentive) {
-    for (var a = 0; a < 5; a++) {
+    for (var a = 0; a < 8; a++) {
       var arrow = document.createElement('div');
       arrow.className = 'arrow-indicator';
       arrowIncentive.appendChild(arrow);
@@ -268,30 +268,27 @@ function init() {
 
       var textStart = introFadeTime + 1500;
       var paragraphs = document.querySelectorAll('#intro-text-content p');
-      var paraCount = paragraphs.length;
-      var paraFadeIn = 2500;   // time for fade-in transition
-      var paraHold = 6000;     // time visible on screen
-      var paraFadeOut = 2000;  // time for fade-out transition
-      var paraCycle = paraFadeIn + paraHold + paraFadeOut;
+      var paraFadeIn = 2500;
+      var paraFadeOut = 2000;
+      var paraGap = 2000;      // breathing room between paragraphs
+      // Per-paragraph hold times: P1 +30%, P2 +70%, P3 +30%
+      var paraHolds = [7800, 10200, 7800];
 
-      // Show each paragraph one at a time
-      for (var p = 0; p < paraCount; p++) {
-        (function(idx) {
-          var showTime = textStart + idx * paraCycle;
-          // Fade in
+      var cursor = textStart;
+      for (var p = 0; p < paragraphs.length; p++) {
+        (function(idx, t) {
           setTimeout(function() {
             paragraphs[idx].classList.add('para-visible');
-          }, showTime);
-          // Fade out
+          }, t);
           setTimeout(function() {
             paragraphs[idx].classList.remove('para-visible');
             paragraphs[idx].classList.add('para-exit');
-          }, showTime + paraFadeIn + paraHold);
-        })(p);
+          }, t + paraFadeIn + paraHolds[idx]);
+        })(p, cursor);
+        cursor += paraFadeIn + paraHolds[idx] + paraFadeOut + paraGap;
       }
 
-      // Overlay fades out after last paragraph is done
-      var textFadeTime = textStart + paraCount * paraCycle + 500;
+      var textFadeTime = cursor - paraGap + 500;
       setTimeout(function() {
         introTextOverlay.classList.add('fade-out');
         setTimeout(function() { introTextOverlay.remove(); }, 2000);
@@ -695,7 +692,11 @@ function activateZone(index) {
   // Arrow incentive — show arrows briefly, then dim table
   if (arrowTimeout) { clearTimeout(arrowTimeout); arrowTimeout = null; }
   if (stageEl) stageEl.classList.remove('overhead-active');
-  if (arrowIncentive) {
+  if (arrowIncentive && markerEls[index]) {
+    var rect = markerEls[index].getBoundingClientRect();
+    arrowIncentive.style.left = (rect.left + rect.width / 2) + 'px';
+    arrowIncentive.style.top = (rect.top + rect.height / 2) + 'px';
+    arrowIncentive.style.setProperty('--arrow-color', world.color);
     arrowIncentive.classList.remove('exit');
     arrowIncentive.classList.add('visible');
   }
