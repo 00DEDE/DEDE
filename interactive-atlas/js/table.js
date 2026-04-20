@@ -192,7 +192,7 @@ function init() {
   var markersLayer = document.getElementById('markers-layer');
 
   // Set legend icon masks
-  var legendKeys = ['monuments', 'nature', 'language', 'intangible'];
+  var legendKeys = ['monuments', 'nature', 'intangible', 'language'];
   legendKeys.forEach(function(key) {
     var el = document.getElementById('legend-icon-' + key);
     if (el) {
@@ -270,9 +270,9 @@ function init() {
       var paragraphs = document.querySelectorAll('#intro-text-content p');
       var paraFadeIn = 2500;
       var paraFadeOut = 2000;
-      var paraGap = 2000;      // breathing room between paragraphs
-      // Per-paragraph hold times: P1 +30%, P2 +70%, P3 +30%
-      var paraHolds = [7800, 10200, 7800];
+      var paraGap = 800;       // brief breathing room between paragraphs
+      // Per-paragraph hold times: P1 +30%, P2 +50% more than P1/P3, P3 +30%
+      var paraHolds = [7800, 11700, 7800];
 
       var cursor = textStart;
       for (var p = 0; p < paragraphs.length; p++) {
@@ -346,6 +346,12 @@ function init() {
     icon.style.webkitMaskImage = mask;
     icon.style.maskImage = mask;
     marker.appendChild(icon);
+
+    // Location label (visible during legend tour)
+    var label = document.createElement('div');
+    label.className = 'marker-label';
+    label.textContent = entry.location;
+    marker.appendChild(label);
 
     // Click handler — toggle activate/deactivate (sites phase only)
     marker.addEventListener('click', function() {

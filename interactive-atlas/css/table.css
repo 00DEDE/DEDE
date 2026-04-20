@@ -483,6 +483,30 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   opacity: 0;
 }
 
+/* Location label — shown during world phase (legend tour) */
+.marker-label {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 4px;
+  font-family: 'ABCDiatype', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 0.45rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: center;
+  white-space: nowrap;
+  color: var(--world-color, #e7e2de);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s ease;
+}
+
+.marker.world-highlight .marker-label {
+  opacity: 0.85;
+}
+
 /* When any marker is active OR world-highlighted (world phase), dim every
    other marker so the highlighted ones read as the singular focus. Reverts
    automatically when no marker is active/highlighted because the :has()
@@ -1062,12 +1086,12 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
               filter 0.9s ease;
 }
 
-/* --- Phase 4: title positioned above icons, revealed by mask ---------- */
+/* --- Phase 4: title positioned above icons — drift-in + deblur -------- */
 .intro-title-svg {
   position: absolute;
   top: 8cqh;
   left: 50%;
-  transform: translate(-50%, 0);
+  transform: translate(-50%, 0) scale(1.12);
   width: clamp(270px, 36cqw, 540px);
   aspect-ratio: 1152 / 212.8;
   background-color: #e7e2de;
@@ -1079,24 +1103,25 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   mask-repeat: no-repeat;
   -webkit-mask-position: center;
   mask-position: center;
-  opacity: 0.5;
-  clip-path: inset(100% 0 0 0);
-  filter: blur(15.6px);
-  transition: clip-path 1.4s cubic-bezier(0.16, 1, 0.3, 1),
-              filter 1.6s ease;
+  opacity: 0;
+  filter: blur(10px);
+  transition: opacity 1.2s ease,
+              transform 2s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 1.8s ease;
 }
 
 .intro-overlay.phase-4 .intro-title-svg {
-  clip-path: inset(0);
+  opacity: 0.5;
+  transform: translate(-50%, 0) scale(1);
   filter: blur(0);
 }
 
-/* --- Phase 4: horizontal logo below icons, revealed by mask ----------- */
+/* --- Phase 4: horizontal logo below icons — drift-in + deblur --------- */
 .intro-bottom-logo {
   position: absolute;
   bottom: 8cqh;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%) scale(1.12);
   width: clamp(160px, 18cqw, 320px);
   aspect-ratio: 1152 / 216;
   background-color: #e7e2de;
@@ -1108,15 +1133,16 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   mask-repeat: no-repeat;
   -webkit-mask-position: center;
   mask-position: center;
-  opacity: 0.5;
-  clip-path: inset(0 0 100% 0);
-  filter: blur(15.6px);
-  transition: clip-path 1.4s cubic-bezier(0.16, 1, 0.3, 1),
-              filter 1.6s ease;
+  opacity: 0;
+  filter: blur(10px);
+  transition: opacity 1.2s ease,
+              transform 2s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 1.8s ease;
 }
 
 .intro-overlay.phase-4 .intro-bottom-logo {
-  clip-path: inset(0);
+  opacity: 0.5;
+  transform: translateX(-50%) scale(1);
   filter: blur(0);
 }
 
@@ -1254,15 +1280,15 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   animation: arrow-radiate 2.4s ease-in-out infinite;
 }
 
-/* 8 arrows arranged in a ring, each offset from center */
-.arrow-indicator:nth-child(1) { left: -14px; top: -130px; animation-delay: 0s; }
-.arrow-indicator:nth-child(2) { left: 78px;  top: -100px; animation-delay: 0.15s; }
-.arrow-indicator:nth-child(3) { left: 110px; top: -14px;  animation-delay: 0.30s; }
-.arrow-indicator:nth-child(4) { left: 78px;  top: 72px;   animation-delay: 0.45s; }
-.arrow-indicator:nth-child(5) { left: -14px; top: 102px;  animation-delay: 0.60s; }
-.arrow-indicator:nth-child(6) { left: -106px; top: 72px;  animation-delay: 0.75s; }
-.arrow-indicator:nth-child(7) { left: -138px; top: -14px; animation-delay: 0.90s; }
-.arrow-indicator:nth-child(8) { left: -106px; top: -100px; animation-delay: 1.05s; }
+/* 8 arrows arranged in a ring outside the pulsating rings (~180px radius) */
+.arrow-indicator:nth-child(1) { left: -14px; top: -194px; animation-delay: 0s; }
+.arrow-indicator:nth-child(2) { left: 113px;  top: -141px; animation-delay: 0.15s; }
+.arrow-indicator:nth-child(3) { left: 166px; top: -14px;  animation-delay: 0.30s; }
+.arrow-indicator:nth-child(4) { left: 113px;  top: 113px;   animation-delay: 0.45s; }
+.arrow-indicator:nth-child(5) { left: -14px; top: 166px;  animation-delay: 0.60s; }
+.arrow-indicator:nth-child(6) { left: -141px; top: 113px;  animation-delay: 0.75s; }
+.arrow-indicator:nth-child(7) { left: -194px; top: -14px; animation-delay: 0.90s; }
+.arrow-indicator:nth-child(8) { left: -141px; top: -141px; animation-delay: 1.05s; }
 
 @keyframes arrow-radiate {
   0%   { opacity: 0; transform: scale(0.7); }
