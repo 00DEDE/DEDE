@@ -285,7 +285,7 @@ function init() {
             paragraphs[idx].classList.add('para-exit');
           }, t + paraFadeIn + paraHolds[idx]);
         })(p, cursor);
-        cursor += paraFadeIn + paraHolds[idx] + paraFadeOut + paraGap;
+        cursor += paraFadeIn + paraHolds[p] + paraFadeOut + paraGap;
       }
 
       var textFadeTime = cursor - paraGap + 500;
