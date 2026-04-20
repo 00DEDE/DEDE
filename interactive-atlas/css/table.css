@@ -489,9 +489,9 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   top: 100%;
   left: 50%;
   transform: translateX(-50%);
-  margin-top: 4px;
+  margin-top: 16px;
   font-family: 'ABCDiatype', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-size: 0.45rem;
+  font-size: 0.34rem;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -501,6 +501,13 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.6s ease;
+}
+
+.marker-label.label-above {
+  top: auto;
+  bottom: 100%;
+  margin-top: 0;
+  margin-bottom: 16px;
 }
 
 .marker.world-highlight .marker-label {
