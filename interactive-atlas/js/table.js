@@ -247,7 +247,7 @@ function init() {
       setTimeout(function() {
         introIconItems.forEach(function(el) { el.classList.remove('solo-active'); });
         introOverlay.classList.remove('phase-3-solo');
-        introOverlay.classList.add('phase-3-group');
+        introOverlay.classList.add('phase-3');
       }, groupStart);
 
       // Phase 4: title + logo mask reveals
