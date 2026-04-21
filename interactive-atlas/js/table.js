@@ -126,6 +126,7 @@ function fadeAmbient(targetVolume, durationMs) {
 function startAmbient(fadeInMs) {
   if (!ambientAudio || ambientManuallyPaused) return;
   ambientAudio.volume = 0;
+  try { if (ambientAudio.currentTime < 5) ambientAudio.currentTime = 5; } catch (e) {}
   var dur = fadeInMs || AMBIENT_FADE_MS;
   var attempt = function() {
     var p = ambientAudio.play();
