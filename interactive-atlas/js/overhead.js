@@ -63,13 +63,26 @@ function rampVolume(durationSec, fromVol, toVol) {
   var interval = (durationSec * 1000) / steps;
   var i = 0;
   if (audioFadeTimer) clearInterval(audioFadeTimer);
+  // If we're ramping UP, make sure the element isn't muted from a prior fade.
+  if (toVol > 0) {
+    try { overheadVideo.muted = false; } catch (e) {}
+  }
   try { overheadVideo.volume = fromVol; } catch (e) {}
   audioFadeTimer = setInterval(function() {
     i++;
     var p = Math.min(1, i / steps);
     var v = fromVol + (toVol - fromVol) * p;
     try { overheadVideo.volume = Math.max(0, Math.min(1, v)); } catch (e) {}
-    if (i >= steps) { clearInterval(audioFadeTimer); audioFadeTimer = null; }
+    if (i >= steps) {
+      clearInterval(audioFadeTimer);
+      audioFadeTimer = null;
+      // Ramping to silence: force mute as a hard safety so nothing leaks
+      // through at the tail of the video.
+      if (toVol === 0) {
+        try { overheadVideo.volume = 0; } catch (e) {}
+        try { overheadVideo.muted = true; } catch (e) {}
+      }
+    }
   }, interval);
 }
 
@@ -571,9 +584,13 @@ function showActivation(data) {
       var fadeIn = data.audioFadeIn || 1.8;
 
       if (audioFadeTimer) { clearInterval(audioFadeTimer); audioFadeTimer = null; }
+      // A previous video (e.g. Machu Picchu) may have hard-muted the element
+      // at its tail as a safety. Clear that before starting the next one so
+      // audio can actually play.
+      try { overheadVideo.muted = false; } catch (e) {}
       if (fadeIn > 0) {
         overheadVideo.volume = 0;
-      } else if (!overheadVideo.muted) {
+      } else {
         overheadVideo.volume = 1;
       }
 
@@ -597,7 +614,7 @@ function showActivation(data) {
           requestAnimationFrame(function() {
             overheadVideo.classList.add('playing');
           });
-          if (fadeIn > 0 && !overheadVideo.muted) rampVolume(fadeIn, 0, 1);
+          if (fadeIn > 0) rampVolume(fadeIn, 0, 1);
           overheadVideo.addEventListener('timeupdate', onTimeUpdateAudioFadeOut);
           if (currentSubtitles) {
             overheadVideo.addEventListener('timeupdate', onTimeUpdateSubtitle);
