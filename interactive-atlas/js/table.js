@@ -202,6 +202,45 @@ function buildOceanRows() {
   });
 }
 
+// Wrap each visual line of every .closing-body paragraph in a span so the CSS
+// can reveal them one at a time with --line-index-based staggered delays.
+function splitClosingIntoLines() {
+  var paragraphs = document.querySelectorAll('.closing-body');
+  if (!paragraphs.length) return;
+  var globalIndex = 0;
+  paragraphs.forEach(function(p) {
+    var tokens = p.textContent.split(' ');
+    p.innerHTML = tokens.map(function(t) {
+      return '<span class="closing-word">' + t + '</span>';
+    }).join(' ');
+    var words = p.querySelectorAll('.closing-word');
+    var lines = [];
+    var curLine = [];
+    var lastTop = null;
+    words.forEach(function(w) {
+      var top = w.offsetTop;
+      if (lastTop !== null && top !== lastTop) {
+        lines.push(curLine);
+        curLine = [];
+      }
+      curLine.push(w.textContent);
+      lastTop = top;
+    });
+    if (curLine.length) lines.push(curLine);
+    p.innerHTML = lines.map(function(line) {
+      var html = '<span class="closing-line" style="--line-index:' + globalIndex + ';">' + line.join(' ') + '</span>';
+      globalIndex++;
+      return html;
+    }).join('');
+  });
+  // Bottom UNESCO logo fades in right after the final line begins revealing.
+  var bottomLogo = document.querySelector('.closing-bottom-logo');
+  if (bottomLogo) {
+    var logoDelay = 4 + (globalIndex - 1) * 0.9 + 0.6;
+    bottomLogo.style.setProperty('--logo-delay', logoDelay + 's');
+  }
+}
+
 function init() {
   // Table is authoritative for the intro sequence — when it reloads, pull the
   // overhead along so both pages restart their intros in lockstep. Fire
@@ -211,6 +250,7 @@ function init() {
   setTimeout(function() { channel.postMessage({ type: 'refresh-overhead' }); }, 400);
 
   buildOceanRows();
+  splitClosingIntoLines();
 
   worldIndicator = document.getElementById('world-indicator');
   statusZone = document.getElementById('status-zone');

@@ -1055,9 +1055,18 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
 
 .closing-title-svg {
   display: block;
-  width: 38cqw;
-  height: auto;
-  margin: 0 auto 2rem;
+  width: 49cqw;
+  aspect-ratio: 720 / 113.86;
+  margin: 0 auto 2.4rem;
+  background-color: #e7e2de;
+  -webkit-mask-image: url('../assets/graphic/THANK\ YOU.svg');
+  mask-image: url('../assets/graphic/THANK\ YOU.svg');
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
   opacity: 0;
   transform: translateY(14cqh);
   transition: opacity 1.8s ease,
@@ -1078,30 +1087,51 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   letter-spacing: 0.01em;
   margin: 0 0 1.25rem;
   text-wrap: pretty;
-  opacity: 0;
-  -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 0%);
-  mask-image: linear-gradient(to bottom, #000 0%, transparent 0%);
-  transition: opacity 1.2s ease,
-              -webkit-mask-image 5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-              mask-image 5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-.closing-overlay.visible .closing-body {
-  opacity: 1;
-  -webkit-mask-image: linear-gradient(to bottom, #000 100%, transparent 110%);
-  mask-image: linear-gradient(to bottom, #000 100%, transparent 110%);
-}
-
-.closing-overlay.visible .closing-body:nth-of-type(1) {
-  transition-delay: 4s, 4s, 4s;
-}
-
-.closing-overlay.visible .closing-body:nth-of-type(2) {
-  transition-delay: 9s, 9s, 9s;
 }
 
 .closing-body:last-child {
   margin-bottom: 0;
+}
+
+/* Each visual line is wrapped by JS into a .closing-line span and revealed
+   in sequence, staggered off --line-index set on the span. */
+.closing-line {
+  display: block;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 1.4s ease,
+              transform 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.closing-overlay.visible .closing-line {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: calc(4s + var(--line-index, 0) * 0.9s);
+}
+
+.closing-bottom-logo {
+  position: absolute;
+  bottom: 8cqh;
+  left: 50%;
+  transform: translateX(-50%);
+  width: clamp(160px, 18cqw, 320px);
+  aspect-ratio: 1152 / 216;
+  background-color: #e7e2de;
+  -webkit-mask-image: url('../assets/graphic/UNESCO_HORIZONTAL\ LOGO.svg');
+  mask-image: url('../assets/graphic/UNESCO_HORIZONTAL\ LOGO.svg');
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  opacity: 0;
+  transition: opacity 1.8s ease;
+}
+
+.closing-overlay.visible .closing-bottom-logo {
+  opacity: 0.5;
+  transition-delay: var(--logo-delay, 12s);
 }
 
 /* ========================
