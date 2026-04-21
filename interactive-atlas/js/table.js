@@ -397,7 +397,8 @@ function init() {
     }, introStart);
   }
 
-  // Skip Intro — tear down the intro sequence immediately and reveal the map
+  // Skip Intro — tear down the intro sequence immediately and reveal the map.
+  // Also tells the overhead page to jump to its final resting state in sync.
   var skipIntroBtn = document.getElementById('skip-intro');
   if (skipIntroBtn) {
     skipIntroBtn.addEventListener('click', function() {
@@ -408,6 +409,7 @@ function init() {
       if (ambientAudio && ambientAudio.paused && !ambientManuallyPaused) {
         startAmbient(800);
       }
+      channel.postMessage({ type: 'skip-intro' });
       skipIntroBtn.classList.add('hidden');
     });
     // Auto-hide the button once the intro overlay has been removed

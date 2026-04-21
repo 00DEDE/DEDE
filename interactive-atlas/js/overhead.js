@@ -199,6 +199,12 @@ function init() {
   //   2. text overlay fades out
   //   3. intro overlay plays phase-1 → phase-2 → phase-3-solo → phase-3 → phase-4
   var introTextOverlay = document.getElementById('intro-text-overlay');
+  var introTimeouts = [];
+  function introTimeout(fn, delay) {
+    var id = setTimeout(fn, delay);
+    introTimeouts.push(id);
+    return id;
+  }
   var textFadeTime = 0;
   if (introTextOverlay) {
     var paragraphs = document.querySelectorAll('#intro-text-content p');
@@ -210,10 +216,10 @@ function init() {
     var cursor = 0;
     for (var p = 0; p < paragraphs.length; p++) {
       (function(idx, t) {
-        setTimeout(function() {
+        introTimeout(function() {
           paragraphs[idx].classList.add('para-visible');
         }, t);
-        setTimeout(function() {
+        introTimeout(function() {
           paragraphs[idx].classList.remove('para-visible');
           paragraphs[idx].classList.add('para-exit');
         }, t + paraFadeIn + paraHolds[idx]);
@@ -222,9 +228,9 @@ function init() {
     }
 
     textFadeTime = cursor - paraGap + 500;
-    setTimeout(function() {
+    introTimeout(function() {
       introTextOverlay.classList.add('fade-out');
-      setTimeout(function() { introTextOverlay.remove(); }, 2000);
+      introTimeout(function() { introTextOverlay.remove(); }, 2000);
     }, textFadeTime);
   }
 
@@ -239,16 +245,16 @@ function init() {
     // Kick off intro phases after the text overlay has fully faded out
     var introStart = textFadeTime + 2000;
     var introIconItems = introOverlay.querySelectorAll('.intro-icon-item');
-    setTimeout(function() {
+    introTimeout(function() {
       introOverlay.classList.add('phase-1');
-      setTimeout(function() { introOverlay.classList.add('phase-2'); }, 4500);
+      introTimeout(function() { introOverlay.classList.add('phase-2'); }, 4500);
 
       var soloStart = 9500;
       var soloDuration = 2600;
-      setTimeout(function() { introOverlay.classList.add('phase-3-solo'); }, soloStart);
+      introTimeout(function() { introOverlay.classList.add('phase-3-solo'); }, soloStart);
       for (var s = 0; s < 4; s++) {
         (function(idx) {
-          setTimeout(function() {
+          introTimeout(function() {
             introIconItems.forEach(function(el) { el.classList.remove('solo-active'); });
             if (introIconItems[idx]) introIconItems[idx].classList.add('solo-active');
           }, soloStart + 500 + idx * soloDuration);
@@ -258,7 +264,7 @@ function init() {
       // phase-3 group — pin icons to opacity:0 first so the last solo icon's
       // opacity:1 doesn't bleed into the staggered group transition.
       var groupStart = soloStart + 500 + 4 * soloDuration + 400;
-      setTimeout(function() {
+      introTimeout(function() {
         introIconItems.forEach(function(el) {
           el.classList.remove('solo-active');
           el.style.transition = 'none';
@@ -279,8 +285,29 @@ function init() {
       // Phase-4 final resting — title above + horizontal logo below. Waits
       // for the slower phase-3 stagger to fully settle before revealing.
       // Icons settle at ~24500 (groupStart 20800 + 1.5s stagger + 2.2s transition).
-      setTimeout(function() { introOverlay.classList.add('phase-4'); }, 25000);
+      introTimeout(function() { introOverlay.classList.add('phase-4'); }, 25000);
     }, introStart);
+  }
+
+  // Jump the intro to its final resting state immediately (skip-intro).
+  // Overhead stays on phase-4 until the first zone activation triggers dismissIntro().
+  function skipIntroToRest() {
+    introTimeouts.forEach(function(id) { clearTimeout(id); });
+    introTimeouts.length = 0;
+    if (introTextOverlay && introTextOverlay.parentNode) introTextOverlay.remove();
+    if (!introOverlay) return;
+    var iconItems = introOverlay.querySelectorAll('.intro-icon-item');
+    iconItems.forEach(function(el) {
+      el.classList.remove('solo-active');
+      el.style.transition = 'none';
+      el.style.opacity = '';
+      el.style.transform = '';
+      el.style.filter = '';
+    });
+    introOverlay.classList.remove('phase-1', 'phase-2', 'phase-3-solo');
+    void introOverlay.offsetWidth;
+    iconItems.forEach(function(el) { el.style.transition = ''; });
+    introOverlay.classList.add('phase-3', 'phase-4');
   }
 
   // Click on intro overlay unlocks audio
@@ -302,6 +329,8 @@ function init() {
   channel.onmessage = function(e) {
     if (e.data.type === 'refresh-overhead') {
       location.reload();
+    } else if (e.data.type === 'skip-intro') {
+      skipIntroToRest();
     } else if (e.data.type === 'zone-activate') {
       dismissIntro();
       showActivation(e.data);
