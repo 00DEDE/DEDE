@@ -599,6 +599,17 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   margin-left: 16px;
 }
 
+/* Same anchoring as label-right, nudged up slightly. */
+.marker-label.label-right-up {
+  top: 50%;
+  left: 100%;
+  bottom: auto;
+  transform: translateY(-50%);
+  margin-top: -6px;
+  margin-bottom: 0;
+  margin-left: 16px;
+}
+
 .marker-label.label-left {
   top: 50%;
   left: auto;
