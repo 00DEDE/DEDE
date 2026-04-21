@@ -194,18 +194,93 @@ function init() {
   contextCivilization = document.getElementById('context-civilization');
   contextInsight      = document.getElementById('context-insight');
 
-  // Intro overlay choreography — mirrors table display's 4-phase sequence:
-  //   t=0     UNESCO logo drifts in
-  //   t=2s    logo out, splash title in
-  //   t=3.8s  splash out, icons stagger in
-  //   t=5.5s  mask-reveal title + horizontal logo
+  // Introduction paragraphs — play first, then the intro overlay takes over.
+  //   1. paragraphs fade in/out one at a time on the text overlay
+  //   2. text overlay fades out
+  //   3. intro overlay plays phase-1 → phase-2 → phase-3-solo → phase-3 → phase-4
+  var introTextOverlay = document.getElementById('intro-text-overlay');
+  var textFadeTime = 0;
+  if (introTextOverlay) {
+    var paragraphs = document.querySelectorAll('#intro-text-content p');
+    var paraFadeIn = 2500;
+    var paraFadeOut = 2000;
+    var paraGap = 800;
+    var paraHolds = [7800, 13700, 7800];
+
+    var cursor = 0;
+    for (var p = 0; p < paragraphs.length; p++) {
+      (function(idx, t) {
+        setTimeout(function() {
+          paragraphs[idx].classList.add('para-visible');
+        }, t);
+        setTimeout(function() {
+          paragraphs[idx].classList.remove('para-visible');
+          paragraphs[idx].classList.add('para-exit');
+        }, t + paraFadeIn + paraHolds[idx]);
+      })(p, cursor);
+      cursor += paraFadeIn + paraHolds[p] + paraFadeOut + paraGap;
+    }
+
+    textFadeTime = cursor - paraGap + 500;
+    setTimeout(function() {
+      introTextOverlay.classList.add('fade-out');
+      setTimeout(function() { introTextOverlay.remove(); }, 2000);
+    }, textFadeTime);
+  }
+
+  // Intro overlay choreography — mirrors table display's pacing:
+  //   t=0        UNESCO logo drifts in (phase-1)
+  //   t=4.5s     logo out, Digital Atlas splash in (phase-2)
+  //   t=9.5s     splash out, each icon cycles solo at center (phase-3-solo)
+  //   t=20.8s    all four icons stagger in as a row (phase-3 group)
+  //   t=23.6s    phase-4 final resting: title above + horizontal logo below
+  //              → this is the state that persists until a zone activates.
   if (introOverlay) {
-    requestAnimationFrame(function() {
+    // Kick off intro phases after the text overlay has fully faded out
+    var introStart = textFadeTime + 2000;
+    var introIconItems = introOverlay.querySelectorAll('.intro-icon-item');
+    setTimeout(function() {
       introOverlay.classList.add('phase-1');
-      setTimeout(function() { introOverlay.classList.add('phase-2'); }, 2000);
-      setTimeout(function() { introOverlay.classList.add('phase-3'); }, 3800);
-      setTimeout(function() { introOverlay.classList.add('phase-4'); }, 5500);
-    });
+      setTimeout(function() { introOverlay.classList.add('phase-2'); }, 4500);
+
+      var soloStart = 9500;
+      var soloDuration = 2600;
+      setTimeout(function() { introOverlay.classList.add('phase-3-solo'); }, soloStart);
+      for (var s = 0; s < 4; s++) {
+        (function(idx) {
+          setTimeout(function() {
+            introIconItems.forEach(function(el) { el.classList.remove('solo-active'); });
+            if (introIconItems[idx]) introIconItems[idx].classList.add('solo-active');
+          }, soloStart + 500 + idx * soloDuration);
+        })(s);
+      }
+
+      // phase-3 group — pin icons to opacity:0 first so the last solo icon's
+      // opacity:1 doesn't bleed into the staggered group transition.
+      var groupStart = soloStart + 500 + 4 * soloDuration + 400;
+      setTimeout(function() {
+        introIconItems.forEach(function(el) {
+          el.classList.remove('solo-active');
+          el.style.transition = 'none';
+          el.style.opacity = '0';
+        });
+        introOverlay.classList.remove('phase-3-solo');
+        void introOverlay.offsetWidth;
+        requestAnimationFrame(function() {
+          introIconItems.forEach(function(el) {
+            el.style.transition = '';
+            el.style.opacity = '';
+          });
+          void introOverlay.offsetWidth;
+          introOverlay.classList.add('phase-3');
+        });
+      }, groupStart);
+
+      // Phase-4 final resting — title above + horizontal logo below. Waits
+      // for the slower phase-3 stagger to fully settle before revealing.
+      // Icons settle at ~24500 (groupStart 20800 + 1.5s stagger + 2.2s transition).
+      setTimeout(function() { introOverlay.classList.add('phase-4'); }, 25000);
+    }, introStart);
   }
 
   // Click on intro overlay unlocks audio

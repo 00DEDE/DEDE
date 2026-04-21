@@ -380,9 +380,9 @@ function init() {
       });
 
       // Fade out overlay after the group row has fully settled.
-      // groupStart = 9500+500+10400+400 = 20800; last icon stagger 0.5s + 0.8s ease
-      // → settled ~22100; hold ~1500ms; fade begins ~23600.
-      var introFadeTime = 23600;
+      // groupStart = 9500+500+10400+400 = 20800; last icon stagger 1.5s + 2.2s
+      // → settled ~24500; hold ~1500ms; fade begins ~26000.
+      var introFadeTime = 26000;
       introTimeout(function() {
         introOverlay.classList.add('fade-out');
         introTimeout(function() { introOverlay.remove(); }, 1800);
