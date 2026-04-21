@@ -736,6 +736,20 @@ function transitionToSitesPhase() {
 
   // Make sure no stray world-highlight survives into the sites phase
   WORLD_PHASE_ORDER.forEach(quietlyClearWorld);
+
+  // Fade in the closing "Thank You" page — the guided tour of the 4 worlds
+  // is complete (monuments / nature / intangible / language).
+  if (!closingShown) {
+    closingShown = true;
+    var closingOverlay = document.getElementById('closing-overlay');
+    console.log('[closing] world phase complete — overlay element:', closingOverlay);
+    if (closingOverlay) {
+      setTimeout(function() {
+        closingOverlay.classList.add('visible');
+        console.log('[closing] overlay.visible applied');
+      }, 1200);
+    }
+  }
 }
 
 // ==========================================================================
