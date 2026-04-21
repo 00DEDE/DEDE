@@ -349,11 +349,37 @@ function init() {
             }, soloStart + 500 + idx * soloDuration);
           })(s);
         }
+
+        // phase-3 group: solo wraps up, all 4 icons stagger into a row
+        // (pin icons to opacity:0 first so the last solo icon doesn't bleed
+        // its opacity:1 into the group transition)
+        var groupStart = soloStart + 500 + 4 * soloDuration + 400;
+        setTimeout(function() {
+          introIconItems.forEach(function(el) {
+            el.classList.remove('solo-active');
+            el.style.transition = 'none';
+            el.style.opacity = '0';
+          });
+          introOverlay.classList.remove('phase-3-solo');
+          void introOverlay.offsetWidth;
+          requestAnimationFrame(function() {
+            introIconItems.forEach(function(el) {
+              el.style.transition = '';
+              el.style.opacity = '';
+            });
+            void introOverlay.offsetWidth;
+            introOverlay.classList.add('phase-3');
+          });
+        }, groupStart);
+
+        // phase-disperse: after group settles, icons drift to their corners
+        var disperseStart = groupStart + 2400;
+        setTimeout(function() { introOverlay.classList.add('phase-disperse'); }, disperseStart);
       });
 
-      // Fade out overlay after last solo has held briefly
-      // soloStart(9500) + 500 + 4*2600 = 20400; +1s hold → fade at 21400
-      var introFadeTime = 21400;
+      // Fade out overlay after disperse completes and holds briefly
+      // groupStart = 9500+500+10400+400 = 20800; disperseStart = 23200; +2s = 25200; hold 600ms
+      var introFadeTime = 25800;
       setTimeout(function() {
         introOverlay.classList.add('fade-out');
         setTimeout(function() { introOverlay.remove(); }, 1800);
