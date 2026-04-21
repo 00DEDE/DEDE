@@ -101,6 +101,12 @@ var arrowIncentive = null;
 var stageEl = null;
 var arrowTimeout = null;
 
+// Closing overlay — fades in after the 4 world-tour videos (zones 1-4) have
+// all been watched and dismissed. Shown once per session.
+var CLOSING_ZONES = [1, 2, 3, 4];
+var closingVisitedZones = {};
+var closingShown = false;
+
 // Ambient background audio — quietly plays at all times, ducks during overhead
 var ambientAudio = null;
 var ambientFadeRAF = null;
@@ -773,6 +779,25 @@ function deactivateZone() {
 
   // Tell overhead to gracefully close the video and dismiss its context panel
   channel.postMessage({ type: 'zone-deactivate' });
+
+  // After the 4 world-tour videos (zones 1-4) are all watched+dismissed,
+  // fade in the closing "Thank You" page. Fires once per session.
+  if (!closingShown && currentIndex >= 0) {
+    var justDeactivated = SEQUENCE[currentIndex];
+    if (justDeactivated && CLOSING_ZONES.indexOf(justDeactivated.zone) >= 0) {
+      closingVisitedZones[justDeactivated.zone] = true;
+      var allVisited = CLOSING_ZONES.every(function(z) { return closingVisitedZones[z]; });
+      if (allVisited) {
+        closingShown = true;
+        var closingOverlay = document.getElementById('closing-overlay');
+        if (closingOverlay) {
+          // Delay the fade-in so it trails the overhead's close animation,
+          // giving the viewer a beat before the reflection appears.
+          setTimeout(function() { closingOverlay.classList.add('visible'); }, 1200);
+        }
+      }
+    }
+  }
 }
 
 function activateZone(index) {

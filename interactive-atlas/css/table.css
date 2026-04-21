@@ -1014,6 +1014,70 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
 }
 
 /* ========================
+   CLOSING OVERLAY — fades in over the map once all 4 world-tour videos have
+   been watched. Bold "Thank You" title + closing prose.
+   ======================== */
+.closing-overlay {
+  position: absolute;
+  inset: 0;
+  background: #1a1413;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 160;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 2.5s ease;
+}
+
+.closing-overlay.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.closing-grid {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.04;
+  pointer-events: none;
+}
+
+.closing-content {
+  position: relative;
+  width: 60cqw;
+  padding: 2rem;
+  text-align: center;
+  z-index: 1;
+}
+
+.closing-title {
+  font-family: 'ABCDiatype', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 3rem;
+  font-weight: 800;
+  color: #e7e2de;
+  letter-spacing: 0.04em;
+  margin: 0 0 1.75rem;
+  line-height: 1;
+}
+
+.closing-body {
+  font-family: 'ABCDiatype', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 1.15rem;
+  line-height: 1.75;
+  color: rgba(231, 226, 222, 0.78);
+  letter-spacing: 0.01em;
+  margin: 0 0 1.25rem;
+  text-wrap: pretty;
+}
+
+.closing-body:last-child {
+  margin-bottom: 0;
+}
+
+/* ========================
    INTRODUCTION TEXT OVERLAY — appears before the intro animation.
    Full-screen, brown background with grid, centered prose.
    Sits outside .stage so it isn't clipped by the frame mask.
