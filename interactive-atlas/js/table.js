@@ -36,7 +36,7 @@ var WORLD_INFO = {
   intangible: {
     eyebrow: 'World Three',
     title:   'Intangible Traditions',
-    desc:    'Songs, dances, ceremonies, and crafts. Heritage carried in the body and passed down by repetition — the parts of culture that exist only when someone is doing them.'
+    desc:    'Songs, dances, ceremonies, and crafts. Heritage carried in the\u00a0body and passed down by repetition — the\u00a0parts of culture that exist only when someone is doing them.'
   },
   language: {
     eyebrow: 'World Four',
