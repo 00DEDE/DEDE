@@ -736,20 +736,6 @@ function transitionToSitesPhase() {
 
   // Make sure no stray world-highlight survives into the sites phase
   WORLD_PHASE_ORDER.forEach(quietlyClearWorld);
-
-  // Fade in the closing "Thank You" page — the guided tour of the 4 worlds
-  // is complete (monuments / nature / intangible / language).
-  if (!closingShown) {
-    closingShown = true;
-    var closingOverlay = document.getElementById('closing-overlay');
-    console.log('[closing] world phase complete — overlay element:', closingOverlay);
-    if (closingOverlay) {
-      setTimeout(function() {
-        closingOverlay.classList.add('visible');
-        console.log('[closing] overlay.visible applied');
-      }, 1200);
-    }
-  }
 }
 
 // ==========================================================================
@@ -794,27 +780,15 @@ function deactivateZone() {
   // Tell overhead to gracefully close the video and dismiss its context panel
   channel.postMessage({ type: 'zone-deactivate' });
 
-  // After the 4 world-tour videos (zones 1-4) are all watched+dismissed,
+  // After the viewer deactivates the 4th site (Backstrap Loom Weaving, zone 4),
   // fade in the closing "Thank You" page. Fires once per session.
   if (!closingShown && currentIndex >= 0) {
     var justDeactivated = SEQUENCE[currentIndex];
-    if (justDeactivated && CLOSING_ZONES.indexOf(justDeactivated.zone) >= 0) {
-      closingVisitedZones[justDeactivated.zone] = true;
-      var visitedList = Object.keys(closingVisitedZones).sort();
-      console.log('[closing] zone ' + justDeactivated.zone + ' deactivated. visited:', visitedList.join(','));
-      var allVisited = CLOSING_ZONES.every(function(z) { return closingVisitedZones[z]; });
-      if (allVisited) {
-        closingShown = true;
-        var closingOverlay = document.getElementById('closing-overlay');
-        console.log('[closing] all 4 zones visited — overlay element:', closingOverlay);
-        if (closingOverlay) {
-          // Delay the fade-in so it trails the overhead's close animation,
-          // giving the viewer a beat before the reflection appears.
-          setTimeout(function() {
-            closingOverlay.classList.add('visible');
-            console.log('[closing] overlay.visible applied');
-          }, 1200);
-        }
+    if (justDeactivated && justDeactivated.zone === 4) {
+      closingShown = true;
+      var closingOverlay = document.getElementById('closing-overlay');
+      if (closingOverlay) {
+        setTimeout(function() { closingOverlay.classList.add('visible'); }, 1200);
       }
     }
   }
