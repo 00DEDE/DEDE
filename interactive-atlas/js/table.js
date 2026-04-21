@@ -67,7 +67,7 @@ var SEQUENCE = [
   // 9. Jazz
   { zone: 9,  world: 'intangible', location: 'Jazz',                     pronunciation: '[JAZ]',    coordinates: '29.9511\u00b0 N, 90.0715\u00b0 W',                                              region: 'New Orleans, United States', civilization: 'New Orleans, Louisiana \u00b7 UNESCO inscribed 2011', keyInsight: 'Born of African American musical traditions; influenced swing, bebop, rock, and hip-hop.',                                        desc: 'Born in the vibrant cultural city of New Orleans, jazz transformed music by placing improvisation at its core. Emerging from African American communities in the late nineteenth and early twentieth centuries, jazz blended blues, spirituals, ragtime, and marching band traditions into a new musical language. Musicians responded to one another spontaneously, creating performances that were never repeated exactly the same way.',                                          page: 66, left: 35, top: 45, labelPos: 'above' },
   // 10. Socotra
-  { zone: 10, world: 'nature',     location: 'Socotra Archipelago',      pronunciation: '[soh-KOH-trah ar-ki-PEL-ah-go]',    coordinates: '12.5087\u00b0 N, 53.9065\u00b0 E',                     region: 'Arabian Sea, Yemen',         civilization: 'UNESCO inscribed 2008 \u00b7 ~3,796 sq km',    keyInsight: 'Home to 700+ endemic species and the iconic Dragon\u2019s Blood Tree (Dracaena cinnabari).',                                                 desc: 'Isolated in the Arabian Sea, the Socotra Archipelago contains one of the most unique ecosystems on Earth. Over millions of years, the islands evolved in isolation, allowing plants and animals to develop forms found nowhere else. The iconic dragon blood tree, with its umbrella-shaped canopy, stands as a symbol of this extraordinary biological heritage and the fragile beauty of island ecosystems.',                                              page: 48, left: 61, top: 63, labelPos: 'right' },
+  { zone: 10, world: 'nature',     location: 'Socotra Archipelago',      pronunciation: '[soh-KOH-trah ar-ki-PEL-ah-go]',    coordinates: '12.5087\u00b0 N, 53.9065\u00b0 E',                     region: 'Arabian Sea, Yemen',         civilization: 'UNESCO inscribed 2008 \u00b7 ~3,796 sq km',    keyInsight: 'Home to 700+ endemic species and the iconic Dragon\u2019s Blood Tree (Dracaena cinnabari).',                                                 desc: 'Isolated in the Arabian Sea, the Socotra Archipelago contains one of the most unique ecosystems on Earth. Over millions of years, the islands evolved in isolation, allowing plants and animals to develop forms found nowhere else. The iconic dragon blood tree, with its umbrella-shaped canopy, stands as a symbol of this extraordinary biological heritage and the fragile beauty of island ecosystems.',                                              page: 48, left: 61, top: 63, labelPos: 'above-far' },
   // 11. Timbuktu
   { zone: 11, world: 'monuments',  location: 'Timbuktu',                 pronunciation: '[tim-buhk-TOO]',    coordinates: '16.7735\u00b0 N, 3.0074\u00b0 W',                                     region: 'Mali, West Africa',          civilization: 'Mali and Songhai Empires \u00b7 c.12th century', keyInsight: 'A hub of trans-Saharan trade and a major center of Islamic scholarship.',                                 desc: 'At the southern edge of the Sahara Desert, Timbuktu emerged as one of the most influential centers of scholarship and trade in medieval Africa. Merchants carried gold, salt, manuscripts, and ideas across vast desert routes, transforming Timbuktu into a hub of intellectual life. Its famous mosques and universities attracted scholars from across the Islamic world, and thousands of handwritten manuscripts preserved knowledge of science, philosophy, and law.',                                       page: 36, left: 52, top: 57, labelPos: 'above' },
   // 12. ʻŌlelo Hawaiʻi
@@ -85,7 +85,7 @@ var SEQUENCE = [
   // 18. Grand Canyon
   { zone: 18, world: 'nature',     location: 'Grand Canyon',             pronunciation: '[grand KAN-yun]',    coordinates: '36.0544\u00b0 N, 112.1401\u00b0 W',                                    region: 'Arizona, United States',     civilization: 'UNESCO inscribed 1979 \u00b7 ~446 km long, ~1,800 m deep', keyInsight: 'Geological layers record ~2 billion years of Earth\u2019s history \u2014 a sacred landscape for the Havasupai and Hopi.',                                           desc: 'Believed to have been carved over millions of years by the relentless flow of the Colorado River, the Grand Canyon reveals one of the most extraordinary geological records on Earth. Layer upon layer of exposed rock tells a story of ancient oceans, deserts, and shifting continents. The canyon\u2019s immense scale stretches for hundreds of kilometers across the Arizona desert, holding deep spiritual and cultural significance for Indigenous peoples.',                                   page: 54, left: 31, top: 46 },
   // 19. Nan Madol
-  { zone: 19, world: 'monuments',  location: 'Nan Madol',                pronunciation: '[nahn mah-DOHL]',    coordinates: '6.8436\u00b0 N, 158.3319\u00b0 E',                                    region: 'Pohnpei, Micronesia',        civilization: 'Saudeleur Dynasty \u00b7 c.1200\u20131600 CE',  keyInsight: 'Political and ritual capital of ancient Micronesia \u2014 one of the most mysterious sites in Oceania.',                                                desc: 'Rising from a lagoon along the island of Pohnpei, Nan Madol forms one of the most remarkable urban landscapes in the Pacific Ocean. Constructed between the twelfth and seventeenth centuries by the Saudeleur dynasty, the city was built upon a network of artificial islets connected by canals. Massive basalt columns, transported from distant quarries, were stacked into towering walls enclosing temples, residences, and ceremonial compounds.',                                 page: 38, left: 77, top: 62 },
+  { zone: 19, world: 'monuments',  location: 'Nan Madol',                pronunciation: '[nahn mah-DOHL]',    coordinates: '6.8436\u00b0 N, 158.3319\u00b0 E',                                    region: 'Pohnpei, Micronesia',        civilization: 'Saudeleur Dynasty \u00b7 c.1200\u20131600 CE',  keyInsight: 'Political and ritual capital of ancient Micronesia \u2014 one of the most mysterious sites in Oceania.',                                                desc: 'Rising from a lagoon along the island of Pohnpei, Nan Madol forms one of the most remarkable urban landscapes in the Pacific Ocean. Constructed between the twelfth and seventeenth centuries by the Saudeleur dynasty, the city was built upon a network of artificial islets connected by canals. Massive basalt columns, transported from distant quarries, were stacked into towering walls enclosing temples, residences, and ceremonial compounds.',                                 page: 38, left: 77, top: 62, labelPos: 'above' },
   // 20. Joya de Cerén
   { zone: 20, world: 'monuments',  location: 'Joya de Cer\u00e9n',       pronunciation: '[HOY-ah deh seh-REHN]',    coordinates: '13.8264\u00b0 N, 89.3583\u00b0 W',                              region: 'La Libertad, El Salvador',   civilization: 'Maya \u00b7 Buried by volcanic eruption ~600 CE', keyInsight: 'Preserved entirely in volcanic ash \u2014 homes, gardens, storage spaces, and workshops intact.',                                     desc: 'Joya de Cer\u00e9n preserves an extraordinary snapshot of daily life in a Maya farming village. Around 600 CE, the nearby Loma Caldera volcano erupted, covering the settlement in ash and perfectly preserving homes, tools, crops, and communal buildings. Unlike many archaeological sites that highlight royal monuments, Joya de Cer\u00e9n reveals how ordinary people lived, worked, and organized their community.',                  page: 30, left: 35, top: 56, labelPos: 'above' }
 ];
@@ -100,6 +100,47 @@ var legend = null;
 var arrowIncentive = null;
 var stageEl = null;
 var arrowTimeout = null;
+
+// Ambient background audio — quietly plays at all times, ducks during overhead
+var ambientAudio = null;
+var ambientFadeRAF = null;
+var AMBIENT_BASE_VOLUME = 0.15;
+var AMBIENT_FADE_MS = 1500;
+
+function fadeAmbient(targetVolume) {
+  if (!ambientAudio) return;
+  if (ambientFadeRAF) cancelAnimationFrame(ambientFadeRAF);
+  var startVolume = ambientAudio.volume;
+  var startTime = performance.now();
+  function tick(now) {
+    var t = Math.min(1, (now - startTime) / AMBIENT_FADE_MS);
+    ambientAudio.volume = startVolume + (targetVolume - startVolume) * t;
+    if (t < 1) ambientFadeRAF = requestAnimationFrame(tick);
+    else ambientFadeRAF = null;
+  }
+  ambientFadeRAF = requestAnimationFrame(tick);
+}
+
+function startAmbient() {
+  if (!ambientAudio) return;
+  ambientAudio.volume = 0;
+  var attempt = function() {
+    var p = ambientAudio.play();
+    if (p && typeof p.then === 'function') {
+      p.then(function() { fadeAmbient(AMBIENT_BASE_VOLUME); })
+       .catch(function() {
+         var onFirst = function() {
+           document.removeEventListener('click', onFirst, true);
+           document.removeEventListener('keydown', onFirst, true);
+           attempt();
+         };
+         document.addEventListener('click', onFirst, true);
+         document.addEventListener('keydown', onFirst, true);
+       });
+    }
+  };
+  attempt();
+}
 
 // World phase state
 var phase = 'world';            // 'world' | 'sites'
@@ -160,6 +201,8 @@ function init() {
   legend = document.getElementById('legend');
   arrowIncentive = document.getElementById('arrow-incentive');
   stageEl = document.querySelector('.stage');
+  ambientAudio = document.getElementById('ambient-audio');
+  startAmbient();
 
   // Build arrow indicators (8 arrows in a ring)
   if (arrowIncentive) {
@@ -649,6 +692,9 @@ function deactivateZone() {
   }
   if (stageEl) stageEl.classList.remove('overhead-active');
 
+  // Ambient returns as overhead backs away
+  fadeAmbient(AMBIENT_BASE_VOLUME);
+
   // Tell overhead to gracefully close the video and dismiss its context panel
   channel.postMessage({ type: 'zone-deactivate' });
 }
@@ -741,6 +787,9 @@ function activateZone(index) {
     }
     if (stageEl) stageEl.classList.add('overhead-active');
   }, 3500);
+
+  // Duck the ambient audio while the overhead takes the stage
+  fadeAmbient(0);
 
   // Broadcast to overhead display
   channel.postMessage({

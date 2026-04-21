@@ -510,6 +510,13 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   margin-bottom: 16px;
 }
 
+.marker-label.label-above-far {
+  top: auto;
+  bottom: 100%;
+  margin-top: 0;
+  margin-bottom: 60px;
+}
+
 .marker-label.label-right {
   top: 50%;
   left: 100%;
