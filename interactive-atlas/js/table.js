@@ -104,16 +104,18 @@ var arrowTimeout = null;
 // Ambient background audio — quietly plays at all times, ducks during overhead
 var ambientAudio = null;
 var ambientFadeRAF = null;
-var AMBIENT_BASE_VOLUME = 0.15;
+var ambientManuallyPaused = false;
+var AMBIENT_BASE_VOLUME = 0.1125;  // 25% quieter than the original 0.15
 var AMBIENT_FADE_MS = 1500;
 
-function fadeAmbient(targetVolume) {
+function fadeAmbient(targetVolume, durationMs) {
   if (!ambientAudio) return;
   if (ambientFadeRAF) cancelAnimationFrame(ambientFadeRAF);
+  var duration = durationMs || AMBIENT_FADE_MS;
   var startVolume = ambientAudio.volume;
   var startTime = performance.now();
   function tick(now) {
-    var t = Math.min(1, (now - startTime) / AMBIENT_FADE_MS);
+    var t = Math.min(1, (now - startTime) / duration);
     ambientAudio.volume = startVolume + (targetVolume - startVolume) * t;
     if (t < 1) ambientFadeRAF = requestAnimationFrame(tick);
     else ambientFadeRAF = null;
@@ -121,13 +123,14 @@ function fadeAmbient(targetVolume) {
   ambientFadeRAF = requestAnimationFrame(tick);
 }
 
-function startAmbient() {
-  if (!ambientAudio) return;
+function startAmbient(fadeInMs) {
+  if (!ambientAudio || ambientManuallyPaused) return;
   ambientAudio.volume = 0;
+  var dur = fadeInMs || AMBIENT_FADE_MS;
   var attempt = function() {
     var p = ambientAudio.play();
     if (p && typeof p.then === 'function') {
-      p.then(function() { fadeAmbient(AMBIENT_BASE_VOLUME); })
+      p.then(function() { fadeAmbient(AMBIENT_BASE_VOLUME, dur); })
        .catch(function() {
          var onFirst = function() {
            document.removeEventListener('click', onFirst, true);
@@ -202,7 +205,28 @@ function init() {
   arrowIncentive = document.getElementById('arrow-incentive');
   stageEl = document.querySelector('.stage');
   ambientAudio = document.getElementById('ambient-audio');
-  startAmbient();
+
+  // Music toggle button — sits outside the stage frame
+  var ambientToggle = document.getElementById('ambient-toggle');
+  if (ambientToggle) {
+    ambientToggle.addEventListener('click', function() {
+      if (!ambientAudio) return;
+      if (ambientAudio.paused) {
+        ambientManuallyPaused = false;
+        ambientAudio.play().then(function() {
+          fadeAmbient(AMBIENT_BASE_VOLUME, 800);
+        }).catch(function() {});
+        ambientToggle.classList.remove('paused');
+        ambientToggle.setAttribute('title', 'Pause music');
+      } else {
+        ambientManuallyPaused = true;
+        if (ambientFadeRAF) cancelAnimationFrame(ambientFadeRAF);
+        ambientAudio.pause();
+        ambientToggle.classList.add('paused');
+        ambientToggle.setAttribute('title', 'Play music');
+      }
+    });
+  }
 
   // Build arrow indicators (8 arrows in a ring)
   if (arrowIncentive) {
@@ -327,8 +351,11 @@ function init() {
       var paraFadeIn = 2500;
       var paraFadeOut = 2000;
       var paraGap = 800;       // brief breathing room between paragraphs
-      // Per-paragraph hold times: P1 +30%, P2 +50% more than P1/P3, P3 +30%
-      var paraHolds = [7800, 11700, 7800];
+      // Per-paragraph hold times: P1 +30%, P2 longer (+2s on top of prior length), P3 +30%
+      var paraHolds = [7800, 13700, 7800];
+
+      // Ambient music fades in alongside the first paragraph — silent before that
+      setTimeout(function() { startAmbient(paraFadeIn); }, textStart);
 
       var cursor = textStart;
       for (var p = 0; p < paragraphs.length; p++) {
@@ -703,8 +730,8 @@ function deactivateZone() {
   }
   if (stageEl) stageEl.classList.remove('overhead-active');
 
-  // Ambient returns as overhead backs away
-  fadeAmbient(AMBIENT_BASE_VOLUME);
+  // Ambient returns as overhead backs away (unless user manually paused it)
+  if (!ambientManuallyPaused) fadeAmbient(AMBIENT_BASE_VOLUME);
 
   // Tell overhead to gracefully close the video and dismiss its context panel
   channel.postMessage({ type: 'zone-deactivate' });

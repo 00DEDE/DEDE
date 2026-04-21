@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>UNESCO Atlas — Table Display</title>
-  <link rel="stylesheet" href="css/table.css?v=20260420e">
+  <link rel="stylesheet" href="css/table.css?v=20260420g">
 </head>
 <body>
 <div class="stage">
@@ -123,7 +123,9 @@
 
   <!-- Ambient background audio — loops continuously, fades out during overhead playback -->
   <audio id="ambient-audio" src="assets/videos/ambient%20sounds_video%201.mp4" loop preload="auto"></audio>
+  <!-- Music play/pause — lives outside the stage frame so it's never visible inside the display -->
+  <button id="ambient-toggle" class="ambient-toggle" aria-label="Toggle music" title="Pause music">&#9834;</button>
 
-  <script src="js/table.js?v=20260420f"></script>
+  <script src="js/table.js?v=20260420g"></script>
 </body>
 </html>
