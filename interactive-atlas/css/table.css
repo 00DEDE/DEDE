@@ -605,7 +605,7 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   left: 100%;
   bottom: auto;
   transform: translateY(-50%);
-  margin-top: -6px;
+  margin-top: -12px;
   margin-bottom: 0;
   margin-left: 16px;
 }
