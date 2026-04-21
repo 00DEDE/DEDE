@@ -264,42 +264,53 @@ function init() {
   if (introOverlay) {
     channel.postMessage({ type: 'intro-show' });
 
-    // Phase 1-4: animated intro overlay
     var introIconItems = document.querySelectorAll('.intro-icon-item');
     requestAnimationFrame(function() {
       introOverlay.classList.add('phase-1');
       setTimeout(function() { introOverlay.classList.add('phase-2'); }, 2000);
 
-      // Phase 3 solo: show each icon one at a time (1.8s each)
+      // Phase 3 solo: cycle each icon at center, one at a time
       var soloStart = 3800;
       var soloDuration = 1800;
       setTimeout(function() { introOverlay.classList.add('phase-3-solo'); }, soloStart);
       for (var s = 0; s < 4; s++) {
         (function(idx) {
-          // Show this icon
           setTimeout(function() {
             introIconItems.forEach(function(el) { el.classList.remove('solo-active'); });
             if (introIconItems[idx]) introIconItems[idx].classList.add('solo-active');
           }, soloStart + 200 + idx * soloDuration);
-          // Hide this icon before next (except the last — hidden by group transition)
         })(s);
       }
 
-      // Phase 3 group: all 4 icons appear together in fluid sequence
+      // Phase 3 group: solo wraps up, then all 4 icons stagger in together
+      // exactly like the overhead display. We explicitly pin every icon to
+      // opacity:0 with transitions disabled, flush the style, clear the pins,
+      // and only then add phase-3 — this guarantees the final solo icon
+      // (language) restarts at 0 instead of bleeding its opacity:1 forward.
       var groupStart = soloStart + 200 + 4 * soloDuration + 400;
       setTimeout(function() {
-        introIconItems.forEach(function(el) { el.classList.remove('solo-active'); });
+        introIconItems.forEach(function(el) {
+          el.classList.remove('solo-active');
+          el.style.transition = 'none';
+          el.style.opacity = '0';
+        });
         introOverlay.classList.remove('phase-3-solo');
-        // Force browser to register opacity:0 before starting group transition
         void introOverlay.offsetWidth;
-        introOverlay.classList.add('phase-3');
+        requestAnimationFrame(function() {
+          introIconItems.forEach(function(el) {
+            el.style.transition = '';
+            el.style.opacity = '';
+          });
+          void introOverlay.offsetWidth;
+          introOverlay.classList.add('phase-3');
+        });
       }, groupStart);
 
-      // Phase 4: title + logo mask reveals
+      // Phase 4: title + bottom logo drift in — after group stagger finishes
       setTimeout(function() { introOverlay.classList.add('phase-4'); }, groupStart + 1800);
     });
 
-    // Intro overlay fades out after phase 4 completes
+    // Intro overlay fades out after phase 4 has settled
     var introFadeTime = 16000;
     setTimeout(function() {
       introOverlay.classList.add('fade-out');
