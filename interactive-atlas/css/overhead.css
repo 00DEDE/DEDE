@@ -400,7 +400,7 @@ html, body {
    intentional rather than abrupt. */
 .overhead-video.fading-out {
   opacity: 0;
-  transition: opacity 4s ease;
+  transition: opacity 7s ease;
 }
 
 .video-fade-overlay {
@@ -426,14 +426,12 @@ html, body {
   left: 0;
   right: 0;
   bottom: 0;
-  height: 38%;
+  height: 12%;
   background: linear-gradient(
     to bottom,
     transparent 0%,
-    rgba(26, 20, 19, 0.18) 30%,
-    rgba(26, 20, 19, 0.48) 60%,
-    rgba(26, 20, 19, 0.72) 82%,
-    rgba(26, 20, 19, 0.35) 100%
+    rgba(26, 20, 19, 0.35) 45%,
+    rgba(26, 20, 19, 0.9) 100%
   );
   pointer-events: none;
   opacity: 0;

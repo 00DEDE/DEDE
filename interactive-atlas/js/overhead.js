@@ -73,7 +73,7 @@ function rampVolume(durationSec, fromVol, toVol) {
   }, interval);
 }
 
-var AUDIO_FADE_OUT_SEC = 4;
+var AUDIO_FADE_OUT_SEC = 7;
 var audioFadeOutTriggered = false;
 function onVideoEnded() { gracefulClose(); }
 function onTimeUpdateAudioFadeOut() {
@@ -621,7 +621,7 @@ function showActivation(data) {
         beginPlay();
       }
 
-      // Context overlay appears 20s into the video, lingers 10s, then fades.
+      // Context overlay appears 18s into the video, lingers 10s, then fades.
       // Video frame darkens underneath while the text is on screen.
       contextShowTimer = setTimeout(function() {
         if (videoFrame) videoFrame.classList.add('dim');
@@ -637,7 +637,7 @@ function showActivation(data) {
           }
           if (videoFrame) videoFrame.classList.remove('dim');
         }, 10000);
-      }, 20000);
+      }, 18000);
 
       videoFadeTimer = setTimeout(function() {
         if (videoFadeOverlay) videoFadeOverlay.classList.add('fading');
