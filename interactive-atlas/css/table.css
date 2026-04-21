@@ -961,24 +961,27 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
 }
 
 .legend-label {
-  font-size: 0.62rem;
+  /* 40% smaller than before (was 0.62rem) */
+  font-size: 0.372rem;
   font-weight: 700;
   letter-spacing: 0.14em;
   line-height: 1.4;
   text-transform: uppercase;
   text-align: center;
   opacity: 0.7;
+  /* Pull the label up by one grid cell (grid cell = 90 / 2160 = 4.1667cqh) */
+  transform: translateY(-4.1667cqh);
   transition: opacity 0.5s ease;
 }
 
-/* Active world — currently being introduced */
+/* Active world — currently being introduced. During the legend tour we
+   keep the icon at its natural scale and rely on color/glow to signal
+   "active" rather than a size bump. */
 .legend-item.world-active {
   opacity: 1;
-  transform: scale(1.15);
 }
 
 .legend-item.world-active .legend-icon {
-  transform: scale(1.15);
   filter: drop-shadow(0 0 18px currentColor) drop-shadow(0 0 6px currentColor);
 }
 
