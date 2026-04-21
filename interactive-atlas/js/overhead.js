@@ -487,6 +487,11 @@ function showActivation(data) {
     } else if (data.world === 'language') {
       videoFrame.classList.add('frame-language');
     }
+    // Nüshu: softens the harsh edge where the video's bottom black band
+    // meets the video content, without covering the burned subtitles.
+    if (data.location && data.location.indexOf('\u00fcshu') >= 0) {
+      videoFrame.classList.add('has-bottom-fade');
+    }
     var c = data.color;
     videoFrame.style.setProperty('--frame-glow', c + '18');
     videoFrame.style.setProperty('--frame-glow-wide', c + '0a');

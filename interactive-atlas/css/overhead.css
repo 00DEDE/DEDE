@@ -416,6 +416,35 @@ html, body {
   opacity: 1;
 }
 
+/* Soft gradient band covering the bottom of the video frame. Used to soften
+   the harsh edge where video content meets the black negative-space strip at
+   the bottom of the Nüshu video (where burned subtitles sit). The gradient
+   stays transparent at the very bottom so the burned subtitles remain fully
+   visible. Toggled by the has-bottom-fade class on .video-frame. */
+.video-bottom-fade {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 38%;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(26, 20, 19, 0.18) 30%,
+    rgba(26, 20, 19, 0.48) 60%,
+    rgba(26, 20, 19, 0.72) 82%,
+    rgba(26, 20, 19, 0.35) 100%
+  );
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1s ease;
+  z-index: 3;
+}
+
+.video-frame.has-bottom-fade .video-bottom-fade {
+  opacity: 1;
+}
+
 /* Category accent line */
 .accent-line {
   width: 60px;
