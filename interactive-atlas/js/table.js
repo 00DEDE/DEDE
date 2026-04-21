@@ -786,14 +786,20 @@ function deactivateZone() {
     var justDeactivated = SEQUENCE[currentIndex];
     if (justDeactivated && CLOSING_ZONES.indexOf(justDeactivated.zone) >= 0) {
       closingVisitedZones[justDeactivated.zone] = true;
+      var visitedList = Object.keys(closingVisitedZones).sort();
+      console.log('[closing] zone ' + justDeactivated.zone + ' deactivated. visited:', visitedList.join(','));
       var allVisited = CLOSING_ZONES.every(function(z) { return closingVisitedZones[z]; });
       if (allVisited) {
         closingShown = true;
         var closingOverlay = document.getElementById('closing-overlay');
+        console.log('[closing] all 4 zones visited — overlay element:', closingOverlay);
         if (closingOverlay) {
           // Delay the fade-in so it trails the overhead's close animation,
           // giving the viewer a beat before the reflection appears.
-          setTimeout(function() { closingOverlay.classList.add('visible'); }, 1200);
+          setTimeout(function() {
+            closingOverlay.classList.add('visible');
+            console.log('[closing] overlay.visible applied');
+          }, 1200);
         }
       }
     }
