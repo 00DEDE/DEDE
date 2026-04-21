@@ -961,8 +961,8 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
 }
 
 .legend-label {
-  /* 40% smaller than before (was 0.62rem) */
-  font-size: 0.372rem;
+  /* 40% smaller than original (0.62rem), then enlarged 15% */
+  font-size: 0.4278rem;
   font-weight: 700;
   letter-spacing: 0.14em;
   line-height: 1.4;
