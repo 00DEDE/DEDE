@@ -67,7 +67,7 @@ var SEQUENCE = [
   // 9. Jazz
   { zone: 9,  world: 'intangible', location: 'Jazz',                     pronunciation: '[JAZ]',    coordinates: '29.9511\u00b0 N, 90.0715\u00b0 W',                                              region: 'New Orleans, United States', civilization: 'New Orleans, Louisiana \u00b7 UNESCO inscribed 2011', keyInsight: 'Born of African American musical traditions; influenced swing, bebop, rock, and hip-hop.',                                        desc: 'Born in the vibrant cultural city of New Orleans, jazz transformed music by placing improvisation at its core. Emerging from African American communities in the late nineteenth and early twentieth centuries, jazz blended blues, spirituals, ragtime, and marching band traditions into a new musical language. Musicians responded to one another spontaneously, creating performances that were never repeated exactly the same way.',                                          page: 66, left: 35, top: 45, labelPos: 'above' },
   // 10. Socotra
-  { zone: 10, world: 'nature',     location: 'Socotra Archipelago',      pronunciation: '[soh-KOH-trah ar-ki-PEL-ah-go]',    coordinates: '12.5087\u00b0 N, 53.9065\u00b0 E',                     region: 'Arabian Sea, Yemen',         civilization: 'UNESCO inscribed 2008 \u00b7 ~3,796 sq km',    keyInsight: 'Home to 700+ endemic species and the iconic Dragon\u2019s Blood Tree (Dracaena cinnabari).',                                                 desc: 'Isolated in the Arabian Sea, the Socotra Archipelago contains one of the most unique ecosystems on Earth. Over millions of years, the islands evolved in isolation, allowing plants and animals to develop forms found nowhere else. The iconic dragon blood tree, with its umbrella-shaped canopy, stands as a symbol of this extraordinary biological heritage and the fragile beauty of island ecosystems.',                                              page: 48, left: 61, top: 63, labelPos: 'below-right' },
+  { zone: 10, world: 'nature',     location: 'Socotra Archipelago',      pronunciation: '[soh-KOH-trah ar-ki-PEL-ah-go]',    coordinates: '12.5087\u00b0 N, 53.9065\u00b0 E',                     region: 'Arabian Sea, Yemen',         civilization: 'UNESCO inscribed 2008 \u00b7 ~3,796 sq km',    keyInsight: 'Home to 700+ endemic species and the iconic Dragon\u2019s Blood Tree (Dracaena cinnabari).',                                                 desc: 'Isolated in the Arabian Sea, the Socotra Archipelago contains one of the most unique ecosystems on Earth. Over millions of years, the islands evolved in isolation, allowing plants and animals to develop forms found nowhere else. The iconic dragon blood tree, with its umbrella-shaped canopy, stands as a symbol of this extraordinary biological heritage and the fragile beauty of island ecosystems.',                                              page: 48, left: 61, top: 50.5, labelPos: 'below-right' },
   // 11. Timbuktu
   { zone: 11, world: 'monuments',  location: 'Timbuktu',                 pronunciation: '[tim-buhk-TOO]',    coordinates: '16.7735\u00b0 N, 3.0074\u00b0 W',                                     region: 'Mali, West Africa',          civilization: 'Mali and Songhai Empires \u00b7 c.12th century', keyInsight: 'A hub of trans-Saharan trade and a major center of Islamic scholarship.',                                 desc: 'At the southern edge of the Sahara Desert, Timbuktu emerged as one of the most influential centers of scholarship and trade in medieval Africa. Merchants carried gold, salt, manuscripts, and ideas across vast desert routes, transforming Timbuktu into a hub of intellectual life. Its famous mosques and universities attracted scholars from across the Islamic world, and thousands of handwritten manuscripts preserved knowledge of science, philosophy, and law.',                                       page: 36, left: 52, top: 57, labelPos: 'above' },
   // 12. ʻŌlelo Hawaiʻi
@@ -278,110 +278,105 @@ function init() {
   });
 
   // Intro sequence:
-  //   1. Intro overlay plays phases 1-4 (0–8.5s)
-  //   2. Intro overlay fades out → text overlay behind it becomes visible
-  //   3. Text paragraphs animate in
-  //   4. Text overlay fades out → map revealed
+  //   1. Text paragraphs animate in (music fades in with first paragraph)
+  //   2. Text overlay fades out
+  //   3. Intro overlay plays phases 1-4 (title + logo appear alongside icon group)
+  //   4. Intro overlay fades out → map revealed
   var introOverlay = document.getElementById('intro-overlay');
   var introTextOverlay = document.getElementById('intro-text-overlay');
 
-  if (introOverlay) {
-    channel.postMessage({ type: 'intro-show' });
+  // Hide intro overlay so text paragraphs (z-index 50) are visible first.
+  if (introOverlay) introOverlay.style.display = 'none';
 
-    var introIconItems = document.querySelectorAll('.intro-icon-item');
-    requestAnimationFrame(function() {
-      introOverlay.classList.add('phase-1');
-      setTimeout(function() { introOverlay.classList.add('phase-2'); }, 2000);
+  var textFadeTime = 0;
+  if (introTextOverlay) {
+    var paragraphs = document.querySelectorAll('#intro-text-content p');
+    var paraFadeIn = 2500;
+    var paraFadeOut = 2000;
+    var paraGap = 800;
+    var paraHolds = [7800, 13700, 7800];
 
-      // Phase 3 solo: cycle each icon at center, one at a time
-      var soloStart = 3800;
-      var soloDuration = 1800;
-      setTimeout(function() { introOverlay.classList.add('phase-3-solo'); }, soloStart);
-      for (var s = 0; s < 4; s++) {
-        (function(idx) {
-          setTimeout(function() {
-            introIconItems.forEach(function(el) { el.classList.remove('solo-active'); });
-            if (introIconItems[idx]) introIconItems[idx].classList.add('solo-active');
-          }, soloStart + 200 + idx * soloDuration);
-        })(s);
-      }
+    // Music fades in at t=0 alongside the first paragraph — silent before that
+    startAmbient(paraFadeIn);
 
-      // Phase 3 group: solo wraps up, then all 4 icons stagger in together
-      // exactly like the overhead display. We explicitly pin every icon to
-      // opacity:0 with transitions disabled, flush the style, clear the pins,
-      // and only then add phase-3 — this guarantees the final solo icon
-      // (language) restarts at 0 instead of bleeding its opacity:1 forward.
-      var groupStart = soloStart + 200 + 4 * soloDuration + 400;
-      setTimeout(function() {
-        introIconItems.forEach(function(el) {
-          el.classList.remove('solo-active');
-          el.style.transition = 'none';
-          el.style.opacity = '0';
-        });
-        introOverlay.classList.remove('phase-3-solo');
-        void introOverlay.offsetWidth;
-        requestAnimationFrame(function() {
-          introIconItems.forEach(function(el) {
-            el.style.transition = '';
-            el.style.opacity = '';
-          });
-          void introOverlay.offsetWidth;
-          introOverlay.classList.add('phase-3');
-        });
-      }, groupStart);
-
-      // Phase 4: title + bottom logo drift in — after group stagger finishes
-      setTimeout(function() { introOverlay.classList.add('phase-4'); }, groupStart + 1800);
-    });
-
-    // Intro overlay fades out after phase 4 has settled
-    var introFadeTime = 16000;
-    setTimeout(function() {
-      introOverlay.classList.add('fade-out');
-      setTimeout(function() { introOverlay.remove(); }, 1800);
-    }, introFadeTime);
-
-    // t=9.5s: text paragraphs stagger in (delays: 0.9s, 4.2s, 7.5s; transitions ~4.5s)
-    // All text fully visible at ~t=21.5s, leave up 12s, exit at ~t=33.5s
-    if (introTextOverlay) {
-      var introTextContent = document.getElementById('intro-text-content');
-
-      var textStart = introFadeTime + 1500;
-      var paragraphs = document.querySelectorAll('#intro-text-content p');
-      var paraFadeIn = 2500;
-      var paraFadeOut = 2000;
-      var paraGap = 800;       // brief breathing room between paragraphs
-      // Per-paragraph hold times: P1 +30%, P2 longer (+2s on top of prior length), P3 +30%
-      var paraHolds = [7800, 13700, 7800];
-
-      // Ambient music fades in alongside the first paragraph — silent before that
-      setTimeout(function() { startAmbient(paraFadeIn); }, textStart);
-
-      var cursor = textStart;
-      for (var p = 0; p < paragraphs.length; p++) {
-        (function(idx, t) {
-          setTimeout(function() {
-            paragraphs[idx].classList.add('para-visible');
-          }, t);
-          setTimeout(function() {
-            paragraphs[idx].classList.remove('para-visible');
-            paragraphs[idx].classList.add('para-exit');
-          }, t + paraFadeIn + paraHolds[idx]);
-        })(p, cursor);
-        cursor += paraFadeIn + paraHolds[p] + paraFadeOut + paraGap;
-      }
-
-      var textFadeTime = cursor - paraGap + 500;
-      setTimeout(function() {
-        introTextOverlay.classList.add('fade-out');
-        setTimeout(function() { introTextOverlay.remove(); }, 2000);
-      }, textFadeTime);
-
-      // Legend tour is driven by arrow keys via the existing world phase.
-      // Markers get world colors when the user completes the tour (transitionToSitesPhase).
+    var cursor = 0;
+    for (var p = 0; p < paragraphs.length; p++) {
+      (function(idx, t) {
+        setTimeout(function() {
+          paragraphs[idx].classList.add('para-visible');
+        }, t);
+        setTimeout(function() {
+          paragraphs[idx].classList.remove('para-visible');
+          paragraphs[idx].classList.add('para-exit');
+        }, t + paraFadeIn + paraHolds[idx]);
+      })(p, cursor);
+      cursor += paraFadeIn + paraHolds[p] + paraFadeOut + paraGap;
     }
-  } else if (introTextOverlay) {
-    introTextOverlay.remove();
+
+    textFadeTime = cursor - paraGap + 500;
+    setTimeout(function() {
+      introTextOverlay.classList.add('fade-out');
+      setTimeout(function() { introTextOverlay.remove(); }, 2000);
+    }, textFadeTime);
+  }
+
+  if (introOverlay) {
+    // Start intro overlay phases after the text overlay has fully faded out
+    var introStart = textFadeTime + 2000;
+
+    setTimeout(function() {
+      channel.postMessage({ type: 'intro-show' });
+      introOverlay.style.display = '';
+      void introOverlay.offsetWidth;
+
+      var introIconItems = document.querySelectorAll('.intro-icon-item');
+      requestAnimationFrame(function() {
+        introOverlay.classList.add('phase-1');
+        setTimeout(function() { introOverlay.classList.add('phase-2'); }, 2000);
+
+        // Phase 3 solo: cycle each icon at center, one at a time
+        var soloStart = 3800;
+        var soloDuration = 1800;
+        setTimeout(function() { introOverlay.classList.add('phase-3-solo'); }, soloStart);
+        for (var s = 0; s < 4; s++) {
+          (function(idx) {
+            setTimeout(function() {
+              introIconItems.forEach(function(el) { el.classList.remove('solo-active'); });
+              if (introIconItems[idx]) introIconItems[idx].classList.add('solo-active');
+            }, soloStart + 200 + idx * soloDuration);
+          })(s);
+        }
+
+        // Phase 3 group + phase 4: icon stagger, title, and bottom logo all
+        // appear together (pin icons to opacity:0 first so the final solo icon
+        // restarts at 0 instead of bleeding opacity:1 forward).
+        var groupStart = soloStart + 200 + 4 * soloDuration + 400;
+        setTimeout(function() {
+          introIconItems.forEach(function(el) {
+            el.classList.remove('solo-active');
+            el.style.transition = 'none';
+            el.style.opacity = '0';
+          });
+          introOverlay.classList.remove('phase-3-solo');
+          void introOverlay.offsetWidth;
+          requestAnimationFrame(function() {
+            introIconItems.forEach(function(el) {
+              el.style.transition = '';
+              el.style.opacity = '';
+            });
+            void introOverlay.offsetWidth;
+            introOverlay.classList.add('phase-3');
+            introOverlay.classList.add('phase-4');
+          });
+        }, groupStart);
+      });
+
+      var introFadeTime = 16000;
+      setTimeout(function() {
+        introOverlay.classList.add('fade-out');
+        setTimeout(function() { introOverlay.remove(); }, 1800);
+      }, introFadeTime);
+    }, introStart);
   }
 
   // Create progress dots
@@ -730,8 +725,9 @@ function deactivateZone() {
   }
   if (stageEl) stageEl.classList.remove('overhead-active');
 
-  // Ambient returns as overhead backs away (unless user manually paused it)
-  if (!ambientManuallyPaused) fadeAmbient(AMBIENT_BASE_VOLUME);
+  // Ambient returns as overhead backs away (unless user manually paused it).
+  // Fade-in takes 2.5s (1s longer than default) for a gentler return.
+  if (!ambientManuallyPaused) fadeAmbient(AMBIENT_BASE_VOLUME, 2500);
 
   // Tell overhead to gracefully close the video and dismiss its context panel
   channel.postMessage({ type: 'zone-deactivate' });
