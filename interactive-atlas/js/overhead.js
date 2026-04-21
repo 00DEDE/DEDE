@@ -139,9 +139,50 @@ var contextPanel = null;
 var contextLocation = null;
 var contextPronunciation = null;
 var contextCoordinates = null;
-var contextRegion = null;
 var contextCivilization = null;
 var contextInsight = null;
+
+// Closing overlay state — mirrors table.js. Fires once, after zone 4.
+var lastActivatedZone = 0;
+var closingShown = false;
+
+// Wrap each visual line of every .closing-body paragraph in a span so the CSS
+// can reveal them one at a time with --line-index-based staggered delays.
+function splitClosingIntoLines() {
+  var paragraphs = document.querySelectorAll('.closing-body');
+  if (!paragraphs.length) return;
+  var globalIndex = 0;
+  paragraphs.forEach(function(p) {
+    var tokens = p.textContent.split(' ');
+    p.innerHTML = tokens.map(function(t) {
+      return '<span class="closing-word">' + t + '</span>';
+    }).join(' ');
+    var words = p.querySelectorAll('.closing-word');
+    var lines = [];
+    var curLine = [];
+    var lastTop = null;
+    words.forEach(function(w) {
+      var top = w.offsetTop;
+      if (lastTop !== null && top !== lastTop) {
+        lines.push(curLine);
+        curLine = [];
+      }
+      curLine.push(w.textContent);
+      lastTop = top;
+    });
+    if (curLine.length) lines.push(curLine);
+    p.innerHTML = lines.map(function(line) {
+      var html = '<span class="closing-line" style="--line-index:' + globalIndex + ';">' + line.join(' ') + '</span>';
+      globalIndex++;
+      return html;
+    }).join('');
+  });
+  var bottomLogo = document.querySelector('.closing-bottom-logo');
+  if (bottomLogo) {
+    var logoDelay = 4 + (globalIndex - 1) * 1.6 + 1.2;
+    bottomLogo.style.setProperty('--logo-delay', logoDelay + 's');
+  }
+}
 
 var VIDEO_DURATION = 240;
 var FADE_OUT_START = 230;
@@ -218,9 +259,12 @@ function init() {
   contextLocation     = document.getElementById('context-location');
   contextPronunciation = document.getElementById('context-pronunciation');
   contextCoordinates  = document.getElementById('context-coordinates');
-  contextRegion       = document.getElementById('context-region');
   contextCivilization = document.getElementById('context-civilization');
   contextInsight      = document.getElementById('context-insight');
+
+  // Pre-split the closing overlay's prose into one-span-per-line so the CSS
+  // can stagger their fade-in via --line-index.
+  splitClosingIntoLines();
 
   // Introduction paragraphs — play first, then the intro overlay takes over.
   //   1. paragraphs fade in/out one at a time on the text overlay
@@ -361,9 +405,20 @@ function init() {
       skipIntroToRest();
     } else if (e.data.type === 'zone-activate') {
       dismissIntro();
+      lastActivatedZone = e.data.zone || 0;
       showActivation(e.data);
     } else if (e.data.type === 'zone-deactivate') {
       gracefulClose();
+      // Fire the closing overlay in step with the table display: after the
+      // fourth site (Backstrap Loom, zone 4) is dismissed, fade in the
+      // "Thank You" page once per session.
+      if (!closingShown && lastActivatedZone === 4) {
+        closingShown = true;
+        var closingOverlay = document.getElementById('closing-overlay');
+        if (closingOverlay) {
+          setTimeout(function() { closingOverlay.classList.add('visible'); }, 1200);
+        }
+      }
     } else if (e.data.type === 'media-mute') {
       if (overheadVideo) overheadVideo.muted = !overheadVideo.muted;
     } else if (e.data.type === 'media-pause') {
@@ -552,7 +607,6 @@ function showActivation(data) {
     if (contextCoordinates) {
       contextCoordinates.textContent = data.coordinates || '';
     }
-    contextRegion.textContent = data.region;
     contextCivilization.textContent = data.civilization || '';
     contextInsight.textContent = data.keyInsight || '';
     contextPanel.classList.remove('active', 'exit');

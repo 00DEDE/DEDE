@@ -1098,15 +1098,15 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
 .closing-line {
   display: block;
   opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 1.4s ease,
-              transform 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+  transform: translateY(14px);
+  transition: opacity 2.4s ease,
+              transform 2.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .closing-overlay.visible .closing-line {
   opacity: 1;
   transform: translateY(0);
-  transition-delay: calc(4s + var(--line-index, 0) * 0.9s);
+  transition-delay: calc(4s + var(--line-index, 0) * 1.6s);
 }
 
 .closing-bottom-logo {

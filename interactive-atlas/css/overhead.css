@@ -231,7 +231,7 @@ html, body {
   font-size: clamp(3rem, 8cqw, 7rem);
   font-weight: 700;
   letter-spacing: -0.03em;
-  line-height: 0.95;
+  line-height: 1.08;
   text-align: center;
   max-width: 80%;
   transition: color 0.6s ease;
@@ -463,16 +463,9 @@ html, body {
   max-width: 500px;
 }
 
-/* Sequence counter */
+/* Sequence counter — hidden per design; kept in DOM for state parity */
 .sequence-counter {
-  position: absolute;
-  bottom: 3rem;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 0.6rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  opacity: 0.25;
+  display: none;
 }
 
 /* Transition flash */
@@ -894,4 +887,114 @@ html, body {
   margin-top: 1.1rem;
   color: #eee8df;
   font-style: italic;
+}
+
+/* ========================
+   CLOSING OVERLAY — mirrors the table-side "Thank You" page.
+   Shown on the overhead display after the fourth marker (Backstrap Loom)
+   is deactivated, in sync with the table's closing overlay.
+   ======================== */
+.closing-overlay {
+  position: absolute;
+  inset: 0;
+  background: #1a1413;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 2.5s ease;
+}
+
+.closing-overlay.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.closing-content {
+  position: relative;
+  width: 60cqw;
+  padding: 2rem;
+  text-align: center;
+  z-index: 1;
+}
+
+.closing-title-svg {
+  display: block;
+  width: 49cqw;
+  aspect-ratio: 720 / 113.86;
+  margin: 0 auto 2.4rem;
+  background-color: #e7e2de;
+  -webkit-mask-image: url('../assets/graphic/THANK\ YOU.svg');
+  mask-image: url('../assets/graphic/THANK\ YOU.svg');
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  opacity: 0;
+  transform: translateY(14cqh);
+  transition: opacity 1.8s ease,
+              transform 2s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: 0.5s, 2.8s;
+}
+
+.closing-overlay.visible .closing-title-svg {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.closing-body {
+  font-family: 'ABCDiatype', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 1.15rem;
+  line-height: 1.75;
+  color: rgba(231, 226, 222, 0.78);
+  letter-spacing: 0.01em;
+  margin: 0 0 1.25rem;
+  text-wrap: pretty;
+}
+
+.closing-body:last-child {
+  margin-bottom: 0;
+}
+
+.closing-line {
+  display: block;
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 2.4s ease,
+              transform 2.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.closing-overlay.visible .closing-line {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: calc(4s + var(--line-index, 0) * 1.6s);
+}
+
+.closing-bottom-logo {
+  position: absolute;
+  bottom: 8cqh;
+  left: 50%;
+  transform: translateX(-50%);
+  width: clamp(160px, 18cqw, 320px);
+  aspect-ratio: 1152 / 216;
+  background-color: #e7e2de;
+  -webkit-mask-image: url('../assets/graphic/UNESCO_HORIZONTAL\ LOGO.svg');
+  mask-image: url('../assets/graphic/UNESCO_HORIZONTAL\ LOGO.svg');
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  opacity: 0;
+  transition: opacity 1.8s ease;
+}
+
+.closing-overlay.visible .closing-bottom-logo {
+  opacity: 0.5;
+  transition-delay: var(--logo-delay, 16s);
 }
