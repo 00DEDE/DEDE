@@ -621,8 +621,10 @@ function showActivation(data) {
         beginPlay();
       }
 
-      // Context overlay appears 18s into the video, lingers 10s, then fades.
-      // Video frame darkens underneath while the text is on screen.
+      // Context overlay appears after a per-site delay (default 20s, set on the
+      // SEQUENCE entry via contextStart), lingers 10s, then fades. Video frame
+      // darkens underneath while the text is on screen.
+      var contextDelay = data.contextStart || 20000;
       contextShowTimer = setTimeout(function() {
         if (videoFrame) videoFrame.classList.add('dim');
         if (contextPanel) {
@@ -637,7 +639,7 @@ function showActivation(data) {
           }
           if (videoFrame) videoFrame.classList.remove('dim');
         }, 10000);
-      }, 18000);
+      }, contextDelay);
 
       videoFadeTimer = setTimeout(function() {
         if (videoFadeOverlay) videoFadeOverlay.classList.add('fading');
