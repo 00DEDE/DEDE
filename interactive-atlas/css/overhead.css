@@ -152,16 +152,17 @@ html, body {
   pointer-events: none;
 }
 
-/* World category bar — sits centered inside the top of the video frame */
+/* World category bar — icon pinned top-left, text pinned top-right inside the frame */
 .world-bar {
   position: absolute;
-  top: 9%;
-  left: 50%;
-  transform: translateX(-50%);
+  top: 6%;
+  left: 8%;
+  right: 8%;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  gap: 0.55rem;
+  justify-content: space-between;
+  gap: 1rem;
   font-size: 0.7rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
