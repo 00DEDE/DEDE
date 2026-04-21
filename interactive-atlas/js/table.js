@@ -197,6 +197,13 @@ function buildOceanRows() {
 }
 
 function init() {
+  // Table is authoritative for the intro sequence — when it reloads, pull the
+  // overhead along so both pages restart their intros in lockstep. Fire
+  // immediately and once more on a short delay in case overhead is mid-boot
+  // and hasn't attached its listener yet.
+  channel.postMessage({ type: 'refresh-overhead' });
+  setTimeout(function() { channel.postMessage({ type: 'refresh-overhead' }); }, 400);
+
   buildOceanRows();
 
   worldIndicator = document.getElementById('world-indicator');

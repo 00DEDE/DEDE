@@ -300,7 +300,9 @@ function init() {
 
   // Listen for messages from table display
   channel.onmessage = function(e) {
-    if (e.data.type === 'zone-activate') {
+    if (e.data.type === 'refresh-overhead') {
+      location.reload();
+    } else if (e.data.type === 'zone-activate') {
       dismissIntro();
       showActivation(e.data);
     } else if (e.data.type === 'zone-deactivate') {
