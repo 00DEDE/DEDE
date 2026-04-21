@@ -152,20 +152,22 @@ html, body {
   pointer-events: none;
 }
 
-/* World category bar — icon pinned top-left, text pinned top-right inside the frame */
+/* World category bar — icon pinned top-left, text pinned top-right inside the frame.
+   Padding keeps both elements clear of the frame SVG's notched corners. */
 .world-bar {
   position: absolute;
-  top: 6%;
-  left: 8%;
-  right: 8%;
+  top: 11%;
+  left: 14%;
+  right: 14%;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
+  line-height: 1.4;
   transition: color 0.6s ease, opacity 0.6s ease;
   opacity: 0;
   z-index: 8;
@@ -174,6 +176,7 @@ html, body {
 
 .world-bar-text {
   display: inline-block;
+  text-align: right;
   transition: opacity 0.7s ease;
 }
 
@@ -182,12 +185,13 @@ html, body {
 }
 
 .video-frame.expanded ~ .world-bar {
-  opacity: 0.85;
+  opacity: 0.9;
 }
 
 .world-bar-icon {
-  width: 68px;
-  height: 68px;
+  width: 76px;
+  height: 76px;
+  flex-shrink: 0;
   opacity: 0;
   transition: opacity 0.8s ease;
   -webkit-mask-size: contain;

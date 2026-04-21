@@ -143,6 +143,21 @@ var CATEGORY_LABELS = {
 var labelToggleInterval = null;
 var labelTogglePhase = 0; // 0 = short, 1 = long
 
+// Render a world-bar label on two lines. Long names like "The World Built Through Us"
+// break after "The World"; short category labels ("Built Monuments") break at the
+// first space.
+function twoLineLabel(s) {
+  if (!s) return '';
+  var escape = function(t) {
+    return t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  };
+  var worldMatch = s.match(/^(The World)\s+(.+)$/i);
+  if (worldMatch) return escape(worldMatch[1]) + '<br>' + escape(worldMatch[2]);
+  var spaceIdx = s.indexOf(' ');
+  if (spaceIdx > 0) return escape(s.slice(0, spaceIdx)) + '<br>' + escape(s.slice(spaceIdx + 1));
+  return escape(s);
+}
+
 function startLabelToggle(shortText, longText) {
   if (labelToggleInterval) clearInterval(labelToggleInterval);
   labelTogglePhase = 0;
@@ -151,7 +166,7 @@ function startLabelToggle(shortText, longText) {
     worldBarText.classList.add('swap');
     setTimeout(function() {
       labelTogglePhase = 1 - labelTogglePhase;
-      worldBarText.textContent = labelTogglePhase === 0 ? shortText : longText;
+      worldBarText.innerHTML = twoLineLabel(labelTogglePhase === 0 ? shortText : longText);
       worldBarText.classList.remove('swap');
     }, 700);
   }, 10000);
@@ -495,7 +510,7 @@ function showActivation(data) {
   var shortLabel = CATEGORY_LABELS[data.world] || '';
   var longLabel  = data.worldName || WORLD_NAMES[data.world] || '';
   worldBarText.classList.remove('swap');
-  worldBarText.textContent = shortLabel;
+  worldBarText.innerHTML = twoLineLabel(shortLabel);
   worldBar.style.color = data.color;
   startLabelToggle(shortLabel, longLabel);
 
