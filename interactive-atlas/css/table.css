@@ -1054,13 +1054,14 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
 }
 
 .closing-title {
-  font-family: 'ABCDiatype', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-size: 3rem;
+  font-family: 'Inter Tight', 'Helvetica Neue', sans-serif;
+  font-size: 6rem;
   font-weight: 800;
   color: #e7e2de;
   letter-spacing: 0.04em;
   margin: 0 0 1.75rem;
   line-height: 1;
+  text-transform: uppercase;
 }
 
 .closing-body {
