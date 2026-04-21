@@ -552,6 +552,17 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   margin-left: 16px;
 }
 
+.marker-label.label-above-right-far {
+  top: auto;
+  bottom: 100%;
+  left: 100%;
+  right: auto;
+  transform: none;
+  margin-top: 0;
+  margin-bottom: 100px;
+  margin-left: 16px;
+}
+
 .marker-label.label-right {
   top: 50%;
   left: 100%;
@@ -977,7 +988,7 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 50;
+  z-index: 150;
   transition: opacity 1.8s ease;
 }
 
@@ -1092,9 +1103,9 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   mask-position: center;
   opacity: 0;
   filter: blur(10px);
-  transition: opacity 1.2s ease,
-              transform 2s cubic-bezier(0.16, 1, 0.3, 1),
-              filter 1.8s ease;
+  transition: opacity 2s ease,
+              transform 3s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 2.5s ease;
 }
 
 /* Logo drifts inward from scale(3.5) to scale(3), deblurs, and fades up */
@@ -1109,9 +1120,9 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   opacity: 0;
   transform: translate(-50%, -50%) scale(2.5);
   filter: blur(6px);
-  transition: opacity 0.9s ease,
-              transform 1s ease-in,
-              filter 0.9s ease;
+  transition: opacity 1.8s ease,
+              transform 2s ease-in,
+              filter 1.8s ease;
 }
 
 /* --- Phase 2-3: splash "Digital Atlas" at center ---------------------- */
@@ -1133,9 +1144,9 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   mask-position: center;
   opacity: 0;
   filter: blur(10px);
-  transition: opacity 1.2s ease,
-              transform 2s cubic-bezier(0.16, 1, 0.3, 1),
-              filter 1.8s ease;
+  transition: opacity 2s ease,
+              transform 3s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 2.5s ease;
 }
 
 /* Title drifts inward from scale(1.12) → scale(1), deblurs, and fades up */
@@ -1151,9 +1162,9 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   opacity: 0;
   transform: translate(-50%, -50%) scale(0.92);
   filter: blur(6px);
-  transition: opacity 0.9s ease,
-              transform 1s ease-in,
-              filter 0.9s ease;
+  transition: opacity 1.8s ease,
+              transform 2s ease-in,
+              filter 1.8s ease;
 }
 
 /* --- Phase 4: title positioned above icons — drift-in + deblur -------- */
@@ -1248,7 +1259,7 @@ h1, h2, h3, .world-indicator .world-name, .context-location {
   transform: translate(-50%, -50%);
   opacity: 0;
   filter: blur(6px);
-  transition: opacity 1s ease, filter 1s ease;
+  transition: opacity 1.6s ease, filter 1.6s ease;
 }
 
 .intro-overlay.phase-3-solo .intro-icon-item.solo-active {

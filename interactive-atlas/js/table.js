@@ -67,7 +67,7 @@ var SEQUENCE = [
   // 9. Jazz
   { zone: 9,  world: 'intangible', location: 'Jazz',                     pronunciation: '[JAZ]',    coordinates: '29.9511\u00b0 N, 90.0715\u00b0 W',                                              region: 'New Orleans, United States', civilization: 'New Orleans, Louisiana \u00b7 UNESCO inscribed 2011', keyInsight: 'Born of African American musical traditions; influenced swing, bebop, rock, and hip-hop.',                                        desc: 'Born in the vibrant cultural city of New Orleans, jazz transformed music by placing improvisation at its core. Emerging from African American communities in the late nineteenth and early twentieth centuries, jazz blended blues, spirituals, ragtime, and marching band traditions into a new musical language. Musicians responded to one another spontaneously, creating performances that were never repeated exactly the same way.',                                          page: 66, left: 35, top: 45, labelPos: 'above' },
   // 10. Socotra
-  { zone: 10, world: 'nature',     location: 'Socotra Archipelago',      pronunciation: '[soh-KOH-trah ar-ki-PEL-ah-go]',    coordinates: '12.5087\u00b0 N, 53.9065\u00b0 E',                     region: 'Arabian Sea, Yemen',         civilization: 'UNESCO inscribed 2008 \u00b7 ~3,796 sq km',    keyInsight: 'Home to 700+ endemic species and the iconic Dragon\u2019s Blood Tree (Dracaena cinnabari).',                                                 desc: 'Isolated in the Arabian Sea, the Socotra Archipelago contains one of the most unique ecosystems on Earth. Over millions of years, the islands evolved in isolation, allowing plants and animals to develop forms found nowhere else. The iconic dragon blood tree, with its umbrella-shaped canopy, stands as a symbol of this extraordinary biological heritage and the fragile beauty of island ecosystems.',                                              page: 48, left: 61, top: 50.5, labelPos: 'below-right' },
+  { zone: 10, world: 'nature',     location: 'Socotra Archipelago',      pronunciation: '[soh-KOH-trah ar-ki-PEL-ah-go]',    coordinates: '12.5087\u00b0 N, 53.9065\u00b0 E',                     region: 'Arabian Sea, Yemen',         civilization: 'UNESCO inscribed 2008 \u00b7 ~3,796 sq km',    keyInsight: 'Home to 700+ endemic species and the iconic Dragon\u2019s Blood Tree (Dracaena cinnabari).',                                                 desc: 'Isolated in the Arabian Sea, the Socotra Archipelago contains one of the most unique ecosystems on Earth. Over millions of years, the islands evolved in isolation, allowing plants and animals to develop forms found nowhere else. The iconic dragon blood tree, with its umbrella-shaped canopy, stands as a symbol of this extraordinary biological heritage and the fragile beauty of island ecosystems.',                                              page: 48, left: 61, top: 63, labelPos: 'above-right-far' },
   // 11. Timbuktu
   { zone: 11, world: 'monuments',  location: 'Timbuktu',                 pronunciation: '[tim-buhk-TOO]',    coordinates: '16.7735\u00b0 N, 3.0074\u00b0 W',                                     region: 'Mali, West Africa',          civilization: 'Mali and Songhai Empires \u00b7 c.12th century', keyInsight: 'A hub of trans-Saharan trade and a major center of Islamic scholarship.',                                 desc: 'At the southern edge of the Sahara Desert, Timbuktu emerged as one of the most influential centers of scholarship and trade in medieval Africa. Merchants carried gold, salt, manuscripts, and ideas across vast desert routes, transforming Timbuktu into a hub of intellectual life. Its famous mosques and universities attracted scholars from across the Islamic world, and thousands of handwritten manuscripts preserved knowledge of science, philosophy, and law.',                                       page: 36, left: 52, top: 57, labelPos: 'above' },
   // 12. ʻŌlelo Hawaiʻi
@@ -285,8 +285,10 @@ function init() {
   var introOverlay = document.getElementById('intro-overlay');
   var introTextOverlay = document.getElementById('intro-text-overlay');
 
-  // Hide intro overlay so text paragraphs (z-index 50) are visible first.
-  if (introOverlay) introOverlay.style.display = 'none';
+  // Text overlay now sits at z-index 150 (above intro overlay at 100), so text
+  // renders on top while intro overlay (same dark background) sits behind it.
+  // When text fades out, the intro overlay's empty dark background is already
+  // painted — no flash of the map underneath.
 
   var textFadeTime = 0;
   if (introTextOverlay) {
@@ -326,52 +328,32 @@ function init() {
 
     setTimeout(function() {
       channel.postMessage({ type: 'intro-show' });
-      introOverlay.style.display = '';
-      void introOverlay.offsetWidth;
 
       var introIconItems = document.querySelectorAll('.intro-icon-item');
       requestAnimationFrame(function() {
+        // phase-1: UNESCO logo fades in at center
         introOverlay.classList.add('phase-1');
-        setTimeout(function() { introOverlay.classList.add('phase-2'); }, 2000);
 
-        // Phase 3 solo: cycle each icon at center, one at a time
-        var soloStart = 3800;
-        var soloDuration = 1800;
+        // phase-2: logo fades out, Digital Atlas splash title fades in
+        setTimeout(function() { introOverlay.classList.add('phase-2'); }, 4500);
+
+        // phase-3-solo: title fades out, each icon cycles solo at center
+        var soloStart = 9500;
+        var soloDuration = 2600;
         setTimeout(function() { introOverlay.classList.add('phase-3-solo'); }, soloStart);
         for (var s = 0; s < 4; s++) {
           (function(idx) {
             setTimeout(function() {
               introIconItems.forEach(function(el) { el.classList.remove('solo-active'); });
               if (introIconItems[idx]) introIconItems[idx].classList.add('solo-active');
-            }, soloStart + 200 + idx * soloDuration);
+            }, soloStart + 500 + idx * soloDuration);
           })(s);
         }
-
-        // Phase 3 group + phase 4: icon stagger, title, and bottom logo all
-        // appear together (pin icons to opacity:0 first so the final solo icon
-        // restarts at 0 instead of bleeding opacity:1 forward).
-        var groupStart = soloStart + 200 + 4 * soloDuration + 400;
-        setTimeout(function() {
-          introIconItems.forEach(function(el) {
-            el.classList.remove('solo-active');
-            el.style.transition = 'none';
-            el.style.opacity = '0';
-          });
-          introOverlay.classList.remove('phase-3-solo');
-          void introOverlay.offsetWidth;
-          requestAnimationFrame(function() {
-            introIconItems.forEach(function(el) {
-              el.style.transition = '';
-              el.style.opacity = '';
-            });
-            void introOverlay.offsetWidth;
-            introOverlay.classList.add('phase-3');
-            introOverlay.classList.add('phase-4');
-          });
-        }, groupStart);
       });
 
-      var introFadeTime = 16000;
+      // Fade out overlay after last solo has held briefly
+      // soloStart(9500) + 500 + 4*2600 = 20400; +1s hold → fade at 21400
+      var introFadeTime = 21400;
       setTimeout(function() {
         introOverlay.classList.add('fade-out');
         setTimeout(function() { introOverlay.remove(); }, 1800);
