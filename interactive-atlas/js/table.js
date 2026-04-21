@@ -280,10 +280,16 @@ function init() {
   // Intro sequence:
   //   1. Text paragraphs animate in (music fades in with first paragraph)
   //   2. Text overlay fades out
-  //   3. Intro overlay plays phases 1-4 (title + logo appear alongside icon group)
+  //   3. Intro overlay plays phases 1/2/3-solo/3-group
   //   4. Intro overlay fades out → map revealed
   var introOverlay = document.getElementById('intro-overlay');
   var introTextOverlay = document.getElementById('intro-text-overlay');
+  var introTimeouts = [];
+  function introTimeout(fn, delay) {
+    var id = setTimeout(fn, delay);
+    introTimeouts.push(id);
+    return id;
+  }
 
   // Text overlay now sits at z-index 150 (above intro overlay at 100), so text
   // renders on top while intro overlay (same dark background) sits behind it.
@@ -304,10 +310,10 @@ function init() {
     var cursor = 0;
     for (var p = 0; p < paragraphs.length; p++) {
       (function(idx, t) {
-        setTimeout(function() {
+        introTimeout(function() {
           paragraphs[idx].classList.add('para-visible');
         }, t);
-        setTimeout(function() {
+        introTimeout(function() {
           paragraphs[idx].classList.remove('para-visible');
           paragraphs[idx].classList.add('para-exit');
         }, t + paraFadeIn + paraHolds[idx]);
@@ -316,9 +322,9 @@ function init() {
     }
 
     textFadeTime = cursor - paraGap + 500;
-    setTimeout(function() {
+    introTimeout(function() {
       introTextOverlay.classList.add('fade-out');
-      setTimeout(function() { introTextOverlay.remove(); }, 2000);
+      introTimeout(function() { introTextOverlay.remove(); }, 2000);
     }, textFadeTime);
   }
 
@@ -326,7 +332,7 @@ function init() {
     // Start intro overlay phases after the text overlay has fully faded out
     var introStart = textFadeTime + 2000;
 
-    setTimeout(function() {
+    introTimeout(function() {
       channel.postMessage({ type: 'intro-show' });
 
       var introIconItems = document.querySelectorAll('.intro-icon-item');
@@ -335,26 +341,26 @@ function init() {
         introOverlay.classList.add('phase-1');
 
         // phase-2: logo fades out, Digital Atlas splash title fades in
-        setTimeout(function() { introOverlay.classList.add('phase-2'); }, 4500);
+        introTimeout(function() { introOverlay.classList.add('phase-2'); }, 4500);
 
         // phase-3-solo: title fades out, each icon cycles solo at center
         var soloStart = 9500;
         var soloDuration = 2600;
-        setTimeout(function() { introOverlay.classList.add('phase-3-solo'); }, soloStart);
+        introTimeout(function() { introOverlay.classList.add('phase-3-solo'); }, soloStart);
         for (var s = 0; s < 4; s++) {
           (function(idx) {
-            setTimeout(function() {
+            introTimeout(function() {
               introIconItems.forEach(function(el) { el.classList.remove('solo-active'); });
               if (introIconItems[idx]) introIconItems[idx].classList.add('solo-active');
             }, soloStart + 500 + idx * soloDuration);
           })(s);
         }
 
-        // phase-3 group: solo wraps up, all 4 icons stagger into a row
-        // (pin icons to opacity:0 first so the last solo icon doesn't bleed
-        // its opacity:1 into the group transition)
+        // phase-3 group: solo wraps up, all 4 icons stagger into a row.
+        // Pin icons to opacity:0 first so the last solo icon doesn't bleed
+        // its opacity:1 into the group transition.
         var groupStart = soloStart + 500 + 4 * soloDuration + 400;
-        setTimeout(function() {
+        introTimeout(function() {
           introIconItems.forEach(function(el) {
             el.classList.remove('solo-active');
             el.style.transition = 'none';
@@ -371,20 +377,39 @@ function init() {
             introOverlay.classList.add('phase-3');
           });
         }, groupStart);
-
-        // phase-disperse: after group settles, icons drift to their corners
-        var disperseStart = groupStart + 2400;
-        setTimeout(function() { introOverlay.classList.add('phase-disperse'); }, disperseStart);
       });
 
-      // Fade out overlay after disperse completes and holds briefly
-      // groupStart = 9500+500+10400+400 = 20800; disperseStart = 23200; +2s = 25200; hold 600ms
-      var introFadeTime = 25800;
-      setTimeout(function() {
+      // Fade out overlay after the group row has fully settled.
+      // groupStart = 9500+500+10400+400 = 20800; last icon stagger 0.5s + 0.8s ease
+      // → settled ~22100; hold ~1500ms; fade begins ~23600.
+      var introFadeTime = 23600;
+      introTimeout(function() {
         introOverlay.classList.add('fade-out');
-        setTimeout(function() { introOverlay.remove(); }, 1800);
+        introTimeout(function() { introOverlay.remove(); }, 1800);
       }, introFadeTime);
     }, introStart);
+  }
+
+  // Skip Intro — tear down the intro sequence immediately and reveal the map
+  var skipIntroBtn = document.getElementById('skip-intro');
+  if (skipIntroBtn) {
+    skipIntroBtn.addEventListener('click', function() {
+      introTimeouts.forEach(function(id) { clearTimeout(id); });
+      introTimeouts.length = 0;
+      if (introTextOverlay && introTextOverlay.parentNode) introTextOverlay.remove();
+      if (introOverlay && introOverlay.parentNode) introOverlay.remove();
+      if (ambientAudio && ambientAudio.paused && !ambientManuallyPaused) {
+        startAmbient(800);
+      }
+      skipIntroBtn.classList.add('hidden');
+    });
+    // Auto-hide the button once the intro overlay has been removed
+    var skipWatcher = setInterval(function() {
+      if (!document.getElementById('intro-overlay') && !document.getElementById('intro-text-overlay')) {
+        skipIntroBtn.classList.add('hidden');
+        clearInterval(skipWatcher);
+      }
+    }, 500);
   }
 
   // Create progress dots
