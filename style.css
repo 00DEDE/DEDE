@@ -2672,8 +2672,11 @@ h2.fw-section-heading,
     line-height: 1.6;
   }
 
-  .fw-icon { width: 40px; margin-bottom: 0.75rem; }
-  .fw-world-content h2 { font-size: 1.4rem; margin-bottom: 0.5rem; }
+  .fw-icon { width: 52px; margin-bottom: 0.25rem; }
+  /* Tie the title tight to its icon — the browser-default h2 top margin
+     was making the icon feel equidistant between the previous world and
+     its own title, which read as ambiguous. */
+  .fw-world-content h2 { font-size: 1.4rem; margin: 0 0 0.5rem; }
 
   .fw-stat { margin-bottom: 0.75rem; }
   .fw-stat-number { font-size: 2rem; }
