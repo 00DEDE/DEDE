@@ -1607,6 +1607,12 @@ img { max-width: 100%; display: block; }
   gap: 0.65rem 1.4rem;
   margin: 0 0 2.75rem;
 }
+.atlas-world-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
 .atlas-world-dot {
   display: inline-block;
   width: 26px;
@@ -1615,10 +1621,11 @@ img { max-width: 100%; display: block; }
   background: var(--c);
   box-shadow: 0 0 14px 0 var(--c);
   animation: atlasPulse 2.8s ease-in-out infinite;
+  flex-shrink: 0;
 }
-.atlas-world-dot:nth-of-type(2) { animation-delay: 0.4s; }
-.atlas-world-dot:nth-of-type(3) { animation-delay: 0.8s; }
-.atlas-world-dot:nth-of-type(4) { animation-delay: 1.2s; }
+.atlas-world-item:nth-of-type(2) .atlas-world-dot { animation-delay: 0.4s; }
+.atlas-world-item:nth-of-type(3) .atlas-world-dot { animation-delay: 0.8s; }
+.atlas-world-item:nth-of-type(4) .atlas-world-dot { animation-delay: 1.2s; }
 @keyframes atlasPulse {
   0%, 100% { box-shadow: 0 0 10px 0 var(--c); opacity: 0.9; }
   50%      { box-shadow: 0 0 26px 3px var(--c); opacity: 1; }
@@ -1629,7 +1636,6 @@ img { max-width: 100%; display: block; }
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: rgba(231, 226, 222, 0.6);
-  margin-right: 0.4rem;
 }
 
 .atlas-cta-btn {
