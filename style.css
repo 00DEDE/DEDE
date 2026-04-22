@@ -2647,25 +2647,25 @@ h2.fw-section-heading,
   /* Mobile-only image positioning within each frame.
      All frames remain filled (cover) — position only shifts the crop anchor. */
   #built .fw-stack-img:nth-child(1),
-  #built .fw-stack-img:nth-child(2),
+  #built .fw-stack-img:nth-child(2) { background-position: center bottom; }
   #built .fw-stack-img:nth-child(3),
   #built .fw-stack-img:nth-child(4),
   #built .fw-stack-img:nth-child(5) { background-position: center 15%; }
   #built .fw-stack-img:nth-child(6) { background-position: center top; }
 
   #sustains .fw-stack-img:nth-child(1),
+  #sustains .fw-stack-img:nth-child(3) { background-position: center 15%; }
   #sustains .fw-stack-img:nth-child(2),
-  #sustains .fw-stack-img:nth-child(3),
-  #sustains .fw-stack-img:nth-child(4),
-  #sustains .fw-stack-img:nth-child(5) { background-position: center 15%; }
-  #sustains .fw-stack-img:nth-child(6) { background-position: center top; }
+  #sustains .fw-stack-img:nth-child(5) { background-position: center 35%; }
+  #sustains .fw-stack-img:nth-child(4) { background-position: center 55%; }
+  #sustains .fw-stack-img:nth-child(6) { background-position: center 60%; }
 
-  #moves .fw-stack-img:nth-child(2),
-  #moves .fw-stack-img:nth-child(3) { background-position: center top; }
+  #moves .fw-stack-img:nth-child(2) { background-position: center 20%; }
+  #moves .fw-stack-img:nth-child(3) { background-position: center 40%; }
   #moves .fw-stack-img:nth-child(4) { background-position: center bottom; }
 
   #remembers .fw-stack-img:nth-child(2) { background-position: center bottom; }
-  #remembers .fw-stack-img:nth-child(4) { background-position: center top; }
+  #remembers .fw-stack-img:nth-child(4) { background-position: center 40%; }
 
   .fw-world-content p {
     font-size: 0.9rem;
