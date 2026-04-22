@@ -78,6 +78,21 @@ document.querySelectorAll('.stat-card, .world-block, .stats-heading, .worlds-hea
   observer.observe(el);
 });
 
+// Pause perpetually-animating decorative elements when off-screen to stop
+// the compositor from burning cycles on invisible work. Visual output is
+// identical when visible; resumes exactly where it left off.
+(function() {
+  var animSelector = '.brand-friend, .atlas-current-1, .atlas-current-2, .atlas-current-3, .atlas-current-4, .fw-stack-img, .fw-stack-hint, .ltBtnPulse, .lt-btn, .atlas-pulse, .atlas-btn';
+  var animated = document.querySelectorAll(animSelector);
+  if (!animated.length || !('IntersectionObserver' in window)) return;
+  var animObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      entry.target.style.animationPlayState = entry.isIntersecting ? 'running' : 'paused';
+    });
+  }, { rootMargin: '100px' });
+  animated.forEach(function(el) { animObserver.observe(el); });
+})();
+
 // Rotating text with gaussian blur transition
 const rotatingItems = document.querySelectorAll('.rotating-text-item');
 if (rotatingItems.length > 0) {
@@ -237,7 +252,11 @@ if (document.fonts && document.fonts.ready) {
 } else {
   window.addEventListener('load', _runSizers);
 }
-window.addEventListener('resize', _runSizers);
+var _resizeTimer = null;
+window.addEventListener('resize', function() {
+  if (_resizeTimer) clearTimeout(_resizeTimer);
+  _resizeTimer = setTimeout(_runSizers, 150);
+});
 
 // Header scroll state — translucent + cream contents while scrolled,
 // reverts to the default opaque header at the top of the page.
@@ -291,26 +310,28 @@ if (document.body.dataset.page !== 'living-traces') {
     numberFadeObserver.observe(el);
   });
 
-  // Subtle parallax on hero backgrounds (desktop only)
+  // Subtle parallax on hero backgrounds (desktop only) + scroll progress bar.
+  // Coalesce all per-scroll style writes into one rAF tick to avoid layout thrash.
   var heroSlideshow = document.querySelector('.hero-slideshow');
   var pageHero = document.querySelector('.page-hero');
-  if (heroSlideshow || pageHero) {
-    window.addEventListener('scroll', function() {
-      var y = window.scrollY;
-      if (y > window.innerHeight) return;
-      var isMobile = window.innerWidth <= 600;
-      if (heroSlideshow && !isMobile) heroSlideshow.style.transform = 'translateY(' + (y * 0.18) + 'px)';
-      if (pageHero) pageHero.style.backgroundPositionY = (y * 0.12) + 'px';
-    }, { passive: true });
-  }
-
-  // Scroll progress bar
   var progressBar = document.createElement('div');
   progressBar.className = 'scroll-progress';
   document.body.appendChild(progressBar);
-  window.addEventListener('scroll', function() {
+
+  var _scrollRAF = 0;
+  function _onScrollFrame() {
+    _scrollRAF = 0;
+    var y = window.scrollY;
     var docHeight = document.documentElement.scrollHeight - window.innerHeight;
-    progressBar.style.width = (docHeight > 0 ? (window.scrollY / docHeight) * 100 : 0) + '%';
+    progressBar.style.width = (docHeight > 0 ? (y / docHeight) * 100 : 0) + '%';
+    if ((heroSlideshow || pageHero) && y <= window.innerHeight) {
+      var isMobile = window.innerWidth <= 600;
+      if (heroSlideshow && !isMobile) heroSlideshow.style.transform = 'translateY(' + (y * 0.18) + 'px)';
+      if (pageHero) pageHero.style.backgroundPositionY = (y * 0.12) + 'px';
+    }
+  }
+  window.addEventListener('scroll', function() {
+    if (!_scrollRAF) _scrollRAF = requestAnimationFrame(_onScrollFrame);
   }, { passive: true });
 
   // Active nav link highlight

@@ -1710,7 +1710,6 @@ img { max-width: 100%; display: block; }
   z-index: 1;
   transition: opacity 0.6s ease, transform 0.6s ease;
   animation: friendBob 6s ease-in-out infinite;
-  will-change: transform;
   -webkit-mask-size: contain;
   mask-size: contain;
   -webkit-mask-repeat: no-repeat;
@@ -2294,7 +2293,6 @@ h2.fw-section-heading,
     transform 1.15s cubic-bezier(0.22, 1, 0.36, 1) 0.15s,
     filter 0.9s ease 0.15s,
     opacity 0.7s ease 0.1s;
-  will-change: clip-path, transform, filter, opacity;
 }
 
 /* 3D swing-in from the right edge with de-blur — applied to all four blocks */
