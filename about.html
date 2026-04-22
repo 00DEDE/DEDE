@@ -142,12 +142,7 @@
   <!-- Digital Atlas CTA — styled to feel like the Atlas experience -->
   <section class="atlas-cta">
     <div class="atlas-cta-grid"></div>
-    <div class="atlas-cta-currents">
-      <div class="atlas-current atlas-current-1"></div>
-      <div class="atlas-current atlas-current-2"></div>
-      <div class="atlas-current atlas-current-3"></div>
-      <div class="atlas-current atlas-current-4"></div>
-    </div>
+    <div class="atlas-cta-currents" id="atlas-cta-currents" aria-hidden="true"></div>
     <div class="atlas-cta-inner">
       <span class="atlas-cta-label">— An Interactive Experience</span>
       <h2 class="atlas-cta-title">Discover<br>the&nbsp;Atlas</h2>
@@ -158,14 +153,13 @@
       <div class="atlas-cta-worlds">
         <span class="atlas-world-item"><span class="atlas-world-dot" style="--c:#2491d0;"></span><span class="atlas-world-label">Built Monuments</span></span>
         <span class="atlas-world-item"><span class="atlas-world-dot" style="--c:#9dd3b2;"></span><span class="atlas-world-label">Natural Sites</span></span>
-        <span class="atlas-world-item"><span class="atlas-world-dot" style="--c:#f8e166;"></span><span class="atlas-world-label">Endangered Languages</span></span>
         <span class="atlas-world-item"><span class="atlas-world-dot" style="--c:#e7e2de;"></span><span class="atlas-world-label">Intangible Traditions</span></span>
+        <span class="atlas-world-item"><span class="atlas-world-dot" style="--c:#f8e166;"></span><span class="atlas-world-label">Endangered Languages</span></span>
       </div>
       <a href="interactive-atlas/index.html" class="atlas-cta-btn">
         <span>Open the Digital Atlas</span>
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       </a>
-      <span class="atlas-cta-meta">194 Member States &nbsp;·&nbsp; 1,223 Heritage Sites &nbsp;·&nbsp; 7,000 Living Languages</span>
     </div>
   </section>
 
@@ -269,6 +263,36 @@
         setTimeout(function() { img.style.transition = ''; }, 400);
       });
     });
+
+    // Populate the Atlas CTA background with drifting brand-friend rows
+    (function() {
+      var layer = document.getElementById('atlas-cta-currents');
+      if (!layer) return;
+      var FRIEND_TOTAL = 11;
+      var ROWS = [
+        [4, 'row-1'],
+        [8, 'row-2'],
+        [5, 'row-3'],
+        [3, 'row-4'],
+        [7, 'row-5'],
+        [4, 'row-6']
+      ];
+      ROWS.forEach(function(spec, rowIdx) {
+        var count = spec[0];
+        var row = document.createElement('div');
+        row.className = 'atlas-cta-friend-row ' + spec[1];
+        for (var i = 0; i < count; i++) {
+          var friendNum = ((rowIdx * 3 + i) % FRIEND_TOTAL) + 1;
+          var url = "url('brand-friends/friend-" + friendNum + ".svg')";
+          var el = document.createElement('div');
+          el.className = 'atlas-cta-friend';
+          el.style.webkitMaskImage = url;
+          el.style.maskImage = url;
+          row.appendChild(el);
+        }
+        layer.appendChild(row);
+      });
+    })();
 
     // Expandable journey cards: click to toggle
     document.querySelectorAll('.expandable-card').forEach(function(card) {
