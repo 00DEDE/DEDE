@@ -1962,7 +1962,13 @@ h2.fw-section-heading,
   border-radius: 12px;
   opacity: 0;
   transition: opacity 0.5s ease;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
 }
+
+/* Preserve the original Machu Picchu anchor now that position is no longer inline */
+#built .fw-stack-img:nth-child(1) { background-position: center 20%; }
 
 .fw-stack-img.active {
   opacity: 1;
@@ -2617,11 +2623,49 @@ h2.fw-section-heading,
     padding: 0 1.5rem;
   }
 
+  /* Mobile reflow: world info → image → site info.
+     Flatten .fw-world-content so its children become direct flex items
+     of .fw-world, then position the image and site-info via order. */
+  .fw-world,
+  .fw-world-reverse {
+    display: flex;
+    flex-direction: column;
+    min-height: auto;
+  }
+  .fw-world-content {
+    display: contents;
+  }
+  .fw-world .fw-world-image,
+  .fw-world-reverse .fw-world-image {
+    order: 2;
+    margin: 1.25rem 0 0.5rem;
+  }
+  .fw-stack-info { order: 3; }
+
   .fw-world-image { aspect-ratio: 16 / 8; }
 
-  .fw-world-content {
-    padding: 1.5rem 0;
-  }
+  /* Mobile-only image positioning within each frame.
+     All frames remain filled (cover) — position only shifts the crop anchor. */
+  #built .fw-stack-img:nth-child(1),
+  #built .fw-stack-img:nth-child(2),
+  #built .fw-stack-img:nth-child(3),
+  #built .fw-stack-img:nth-child(4),
+  #built .fw-stack-img:nth-child(5) { background-position: center 15%; }
+  #built .fw-stack-img:nth-child(6) { background-position: center top; }
+
+  #sustains .fw-stack-img:nth-child(1),
+  #sustains .fw-stack-img:nth-child(2),
+  #sustains .fw-stack-img:nth-child(3),
+  #sustains .fw-stack-img:nth-child(4),
+  #sustains .fw-stack-img:nth-child(5) { background-position: center 15%; }
+  #sustains .fw-stack-img:nth-child(6) { background-position: center top; }
+
+  #moves .fw-stack-img:nth-child(2),
+  #moves .fw-stack-img:nth-child(3) { background-position: center top; }
+  #moves .fw-stack-img:nth-child(4) { background-position: center bottom; }
+
+  #remembers .fw-stack-img:nth-child(2) { background-position: center bottom; }
+  #remembers .fw-stack-img:nth-child(4) { background-position: center top; }
 
   .fw-world-content p {
     font-size: 0.9rem;
