@@ -817,9 +817,9 @@ img { max-width: 100%; display: block; }
 .ft-blue { color: #2490cf; }
 .ft-brown { color: #675d52; }
 .ft-green { color: #9dd3b2; }
-.kern-apos { display: inline-block; margin: 0 0.04em; }
+.kern-apos { display: inline-block; margin: 0 0.02em; }
 .kern-r { letter-spacing: 0.015em; }
-.kern-y { letter-spacing: 0.06em; }
+.kern-y { letter-spacing: 0.03em; }
 
 /* World block links (home page) */
 .world-block-link {
