@@ -247,9 +247,9 @@
       position: relative; overflow: hidden;
     }
     .lt-traditions .section-label { margin-bottom: 80px; position: relative; z-index: 2; }
-    /* ---- UBUNTU ---- */
+    /* ---- UBUNTU / TEXTURE ---- */
     .lt-ubuntu {
-      background: #000; padding: 160px 48px; position: relative;
+      background: #000; padding: 0; position: relative;
       overflow: hidden; text-align: center;
     }
     .lt-ubuntu-text {
@@ -263,8 +263,9 @@
       color: rgba(255,255,255,0.3); margin-top: 40px; position: relative; z-index: 2;
     }
     .lt-ubuntu-image {
-      display: block; max-width: min(100%, 900px); height: auto;
-      margin: 0 auto; position: relative; z-index: 2;
+      display: block; width: 100%; height: auto;
+      aspect-ratio: 2 / 1; object-fit: cover;
+      margin: 0; position: relative; z-index: 2;
     }
 
     /* ---- CLOSING ---- */
@@ -285,14 +286,14 @@
     /* ---- LANGUAGE VISUALIZER ---- */
     .lt-language-visualizer {
       display: flex; flex-direction: column; align-items: center;
-      padding: 40px 24px 40px; margin-top: 15vh; position: relative; overflow: visible;
+      padding: 40px 24px 40px; position: relative; overflow: visible;
     }
     .lt-lang-heading {
       font-family: 'PPTelegrafLight', sans-serif; font-size: clamp(18px, 3vw, 32px);
       letter-spacing: 0.06em; color: rgba(255,255,255,0.7);
       text-align: center; margin-bottom: -160px; position: relative; z-index: 2;
     }
-    .lt-lang-orb-wrap { position: relative; width: 100%; max-width: 1125px; aspect-ratio: 1/1; }
+    .lt-lang-orb-wrap { position: relative; width: 100%; max-width: 1125px; aspect-ratio: 1/1; transform: translateY(15%); }
     .lt-lang-orb-wrap canvas { width: 100%; height: 100%; }
 
     /* ---- VIDEO PLAY OVERLAY ---- */
@@ -356,7 +357,7 @@
       .lt-languages-head { flex-direction: column; gap: 24px; }
       .culture-grid, .tradition-grid { grid-template-columns: 1fr; }
       .lt-greetings { padding: 80px 24px; }
-      .lt-ubuntu { padding: 100px 24px; }
+      .lt-ubuntu { padding: 0; }
       .lt-closing { padding: 80px 24px 140px; }
       .lt-language-visualizer { padding: 40px 0; overflow: hidden; }
       .lt-lang-orb-wrap { max-width: none; width: 150vw; }
